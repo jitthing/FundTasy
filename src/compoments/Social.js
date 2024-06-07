@@ -11,6 +11,7 @@ export default function Social() {
 
 const Div = styled.div`
     display: flex;
+    align-content: flex-end;
     max-width: 320px;
     width: 25vw;
     height: 100vh;
@@ -22,6 +23,7 @@ const Div = styled.div`
     margin: 0px;
     padding: 0px 30px;
     border-left:1px solid #d9d9d9;
+    margin-left: auto;
 `
 
 const SearchBar = styled.input`
