@@ -1,9 +1,9 @@
-import React, { useState, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { PresentationControls, useGLTF, Stage, Html } from '@react-three/drei';
-import styled from 'styled-components';
-import Navbar from '../compoments/Navbar';
-import Social from '../compoments/Social';
+import React, { useState, Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
+import styled from "styled-components";
+import Navbar from "../compoments/Navbar";
+import Social from "../compoments/Social";
 
 function Model(props) {
   const { scene } = useGLTF(props.modelPath);
@@ -12,7 +12,7 @@ function Model(props) {
 
 function ModelDisplay(props) {
   return (
-    <div style={{ height: '50vh', width: '50vw' }}>
+    <div style={{ height: "50vh", width: "50vw" }}>
       <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }}>
         <PresentationControls speed={1.5} global>
           <Stage>
@@ -27,10 +27,10 @@ function ModelDisplay(props) {
 }
 
 function HomePage() {
-  const [modelUrl, setModelUrl] = useState('models/basic.glb');
+  const [modelUrl, setModelUrl] = useState("models/basic.glb");
 
   const selectModel = (model) => {
-    setModelUrl('models/' + model + '.glb');
+    setModelUrl("models/" + model + ".glb");
   };
 
   return (
@@ -38,16 +38,18 @@ function HomePage() {
       <Navbar />
       <Display>
         <ModelDisplay modelUrl={modelUrl} />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <SkinButton onClick={() => selectModel('basic')}>Basic</SkinButton>
-          <SkinButton onClick={() => selectModel('copper')}>Copper</SkinButton>
-          <SkinButton onClick={() => selectModel('steel')}>Steel</SkinButton>
-          <SkinButton onClick={() => selectModel('24k')}>24K</SkinButton>
-          <SkinButton onClick={() => selectModel('conjoined')}>Conjoined</SkinButton>
-          <SkinButton onClick={() => selectModel('green')}>Green</SkinButton>
-          <SkinButton onClick={() => selectModel('ninja')}>Ninja</SkinButton>
-          <SkinButton onClick={() => selectModel('santa')}>Santa</SkinButton>
-          <SkinButton onClick={() => selectModel('chef')}>Chef</SkinButton>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <SkinButton onClick={() => selectModel("basic")}>Basic</SkinButton>
+          <SkinButton onClick={() => selectModel("copper")}>Copper</SkinButton>
+          <SkinButton onClick={() => selectModel("steel")}>Steel</SkinButton>
+          <SkinButton onClick={() => selectModel("24k")}>24K</SkinButton>
+          <SkinButton onClick={() => selectModel("conjoined")}>
+            Conjoined
+          </SkinButton>
+          <SkinButton onClick={() => selectModel("green")}>Green</SkinButton>
+          <SkinButton onClick={() => selectModel("ninja")}>Ninja</SkinButton>
+          <SkinButton onClick={() => selectModel("santa")}>Santa</SkinButton>
+          <SkinButton onClick={() => selectModel("chef")}>Chef</SkinButton>
         </div>
       </Display>
       <Social />
@@ -55,15 +57,15 @@ function HomePage() {
   );
 }
 
-useGLTF.preload('models/basic.glb');
-useGLTF.preload('models/copper.glb');
-useGLTF.preload('models/steel.glb');
-useGLTF.preload('models/24k.glb');
-useGLTF.preload('models/conjoined.glb');
-useGLTF.preload('models/green.glb');
-useGLTF.preload('models/ninja.glb');
-useGLTF.preload('models/santa.glb');
-useGLTF.preload('models/chef.glb');
+useGLTF.preload("models/basic.glb");
+useGLTF.preload("models/copper.glb");
+useGLTF.preload("models/steel.glb");
+useGLTF.preload("models/24k.glb");
+useGLTF.preload("models/conjoined.glb");
+useGLTF.preload("models/green.glb");
+useGLTF.preload("models/ninja.glb");
+useGLTF.preload("models/santa.glb");
+useGLTF.preload("models/chef.glb");
 
 function Loading() {
   return (
@@ -81,7 +83,7 @@ const SkinButton = styled.button`
   cursor: pointer;
   user-select: none;
   margin: 10px;
-  :hover {
+  &:hover {
     background-color: yellow;
   }
 `;

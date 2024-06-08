@@ -2,36 +2,35 @@ import * as React from "react";
 import styled from "styled-components";
 
 export default function Navbar() {
-
   return (
     <Div>
       <Div2>FundTasy</Div2>
       <Menu>
         <MenuItem>
-            <MenuImg loading="lazy" srcSet="icons/home.png" />
-            <MenuText>Home</MenuText>
+          <MenuImg loading="lazy" srcSet="icons/home.png" />
+          <MenuText>Home</MenuText>
         </MenuItem>
         <MenuItem>
-            <MenuImg loading="lazy" srcSet="icons/mypigs.png" />
-            <MenuText>My Pigs</MenuText>
+          <MenuImg loading="lazy" srcSet="icons/mypigs.png" />
+          <MenuText>My Pigs</MenuText>
         </MenuItem>
         <MenuItem>
-            <MenuImg loading="lazy" srcSet="icons/wishlist.png" />
-            <MenuText>Wishlist</MenuText>
+          <MenuImg loading="lazy" srcSet="icons/wishlist.png" />
+          <MenuText>Wishlist</MenuText>
         </MenuItem>
         <MenuItem>
-            <MenuImg loading="lazy" srcSet="icons/shop.png" />
-            <MenuText>Shop</MenuText>
+          <MenuImg loading="lazy" srcSet="icons/shop.png" />
+          <MenuText>Shop</MenuText>
         </MenuItem>
       </Menu>
       <Info>
         <InfoItem>
-            <InfoImg loading="lazy" srcSet="icons/profile.png" />
-            <InfoText>Profile</InfoText>
+          <InfoImg loading="lazy" srcSet="icons/profile.png" />
+          <InfoText>Profile</InfoText>
         </InfoItem>
         <InfoItem>
-            <InfoImg loading="lazy" srcSet="icons/settings.png" />
-            <InfoText>Settings</InfoText>
+          <InfoImg loading="lazy" srcSet="icons/settings.png" />
+          <InfoText>Settings</InfoText>
         </InfoItem>
       </Info>
     </Div>
@@ -50,7 +49,7 @@ const Div = styled.div`
   font: 700 32px Inter, sans-serif;
   margin: 0px;
   padding: 0px 30px;
-  border-right:1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
 `;
 
 const Div2 = styled.div`
@@ -61,10 +60,10 @@ const Div2 = styled.div`
 `;
 
 const Menu = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-top: 80px;
 `;
 
 const MenuItem = styled.div`
@@ -72,6 +71,7 @@ const MenuItem = styled.div`
   gap: 20px;
   padding: 10px 0px;
   white-space: nowrap;
+  cursor: pointer;
 `;
 
 const MenuImg = styled.img`
@@ -83,18 +83,18 @@ const MenuImg = styled.img`
 `;
 
 const MenuText = styled.div`
-    font-size: 24px;
-    flex-grow: 1;
-    flex-basis: auto;
-    margin: auto 0;
+  font-size: 24px;
+  flex-grow: 1;
+  flex-basis: auto;
+  margin: auto 0;
 `;
 
 const Info = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    margin: auto 0px 0px 0px;
-    padding: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin: auto 0px 0px 0px;
+  padding: 30px 0px;
 `;
 
 const InfoItem = styled.div`
@@ -113,9 +113,8 @@ const InfoImg = styled.img`
 `;
 
 const InfoText = styled.div`
-    font-size: 20px;
-    flex-grow: 1;
-    flex-basis: auto;
-    margin: auto 0;
+  font-size: 20px;
+  flex-grow: 1;
+  flex-basis: auto;
+  margin: auto 0;
 `;
-
