@@ -2,8 +2,8 @@ import React, { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
 import styled from "styled-components";
-import Navbar from "../compoments/Navbar";
-import Social from "../compoments/Social";
+import Navbar from "../components/Navbar";
+import Social from "../components/Social";
 
 function Model(props) {
   const { scene } = useGLTF(props.modelPath);
