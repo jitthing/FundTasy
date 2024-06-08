@@ -13,7 +13,7 @@ function Model(props) {
 function ModelDisplay(props) {
   return (
     <div style={{ height: "50vh", width: "50vw" }}>
-      <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }}>
+      <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }} >
         <PresentationControls speed={1.5} global>
           <Stage>
             <Suspense fallback={<Loading />}>
@@ -70,7 +70,7 @@ useGLTF.preload("models/chef.glb");
 function Loading() {
   return (
     <Html>
-      <h2>Loading...</h2>
+      <div style={{ position:"relative", font: "700 20px Inter, sans-serif" }}>Loading...</div>
     </Html>
   );
 }
