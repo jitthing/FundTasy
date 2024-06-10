@@ -1,36 +1,38 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export default function Navbar() {
+export default function Navbar(props) {
+  const { page } = props;
+  
   return (
     <Div>
       <Div2>FundTasy</Div2>
       <Menu>
         <MenuItem>
-          <MenuImg loading="lazy" srcSet="icons/home.png" />
-          <MenuText>Home</MenuText>
+          <MenuImg srcSet="icons/home.png" style={{ opacity: page==="home" ? 1:0.5 }} />
+          <MenuText style={{ color: page==="home" ? "#000":"#7b7b7b" }} >Home</MenuText>
         </MenuItem>
         <MenuItem>
-          <MenuImg loading="lazy" srcSet="icons/mypigs.png" />
-          <MenuText>My Pigs</MenuText>
+          <MenuImg srcSet="icons/mypigs.png" style={{ opacity: page==="mypigs" ? 1:0.5 }} />
+          <MenuText style={{ color: page==="mypigs" ? "#000":"#7b7b7b" }} >My Pigs</MenuText>
         </MenuItem>
         <MenuItem>
-          <MenuImg loading="lazy" srcSet="icons/wishlist.png" />
-          <MenuText>Wishlist</MenuText>
+          <MenuImg srcSet="icons/wishlist.png" style={{ opacity: page==="wishlist" ? 1:0.5 }} />
+          <MenuText style={{ color: page==="wishlist" ? "#000":"#7b7b7b" }} >Wishlist</MenuText>
         </MenuItem>
         <MenuItem>
-          <MenuImg loading="lazy" srcSet="icons/shop.png" />
-          <MenuText>Shop</MenuText>
+          <MenuImg srcSet="icons/shop.png" style={{ opacity: page==="shop" ? 1:0.5 }} />
+          <MenuText style={{ color: page==="shop" ? "#000":"#7b7b7b" }} >Shop</MenuText>
         </MenuItem>
       </Menu>
       <Info>
         <InfoItem>
-          <InfoImg loading="lazy" srcSet="icons/profile.png" />
-          <InfoText>Profile</InfoText>
+          <InfoImg srcSet="icons/profile.png" style={{ opacity: page==="profile" ? 1:0.5 }} />
+          <InfoText style={{ color: page==="profile" ? "#000":"#7b7b7b" }} >Profile</InfoText>
         </InfoItem>
         <InfoItem>
-          <InfoImg loading="lazy" srcSet="icons/settings.png" />
-          <InfoText>Settings</InfoText>
+          <InfoImg srcSet="icons/settings.png" style={{ opacity: page==="settings" ? 1:0.5 }} />
+          <InfoText style={{ color: page==="settings" ? "#000":"#7b7b7b" }} >Settings</InfoText>
         </InfoItem>
       </Info>
     </Div>

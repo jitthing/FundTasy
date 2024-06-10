@@ -35,7 +35,7 @@ function HomePage() {
 
   return (
     <PageContainer>
-      <Navbar />
+      <Navbar page="home" />
       <Display>
         <ModelDisplay modelUrl={modelUrl} />
         <div style={{ position: "relative", zIndex: 1 }}>
