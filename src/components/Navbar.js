@@ -1,38 +1,42 @@
 import * as React from "react";
+import css from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar(props) {
   const { page } = props;
-  
+
+  const navigate = useNavigate();
+
   return (
     <Div>
       <Div2>FundTasy</Div2>
       <Menu>
-        <MenuItem>
-          <MenuImg srcSet="icons/home.png" style={{ opacity: page==="home" ? 1:0.5 }} />
-          <MenuText style={{ color: page==="home" ? "#000":"#7b7b7b" }} >Home</MenuText>
+        <MenuItem onClick={() => navigate("/home")} >
+          <MenuImg srcSet="icons/home.png" active={page === "home"} />
+          <MenuText active={page === "home"} >Home</MenuText>
         </MenuItem>
-        <MenuItem>
-          <MenuImg srcSet="icons/mypigs.png" style={{ opacity: page==="mypigs" ? 1:0.5 }} />
-          <MenuText style={{ color: page==="mypigs" ? "#000":"#7b7b7b" }} >My Pigs</MenuText>
+        <MenuItem onClick={() => navigate("/my-pigs")} >
+          <MenuImg srcSet="icons/mypigs.png" active={page === "mypigs"} />
+          <MenuText active={page === "mypigs"} >My Pigs</MenuText>
         </MenuItem>
-        <MenuItem>
-          <MenuImg srcSet="icons/wishlist.png" style={{ opacity: page==="wishlist" ? 1:0.5 }} />
-          <MenuText style={{ color: page==="wishlist" ? "#000":"#7b7b7b" }} >Wishlist</MenuText>
+        <MenuItem onClick={() => navigate("/wishlist")} >
+          <MenuImg srcSet="icons/wishlist.png" active={page === "wishlist"} />
+          <MenuText active={page === "wishlist"} >Wishlist</MenuText>
         </MenuItem>
-        <MenuItem>
-          <MenuImg srcSet="icons/shop.png" style={{ opacity: page==="shop" ? 1:0.5 }} />
-          <MenuText style={{ color: page==="shop" ? "#000":"#7b7b7b" }} >Shop</MenuText>
+        <MenuItem onClick={() => navigate("/shop")} >
+          <MenuImg srcSet="icons/shop.png" active={page === "shop"} />
+          <MenuText active={page === "shop"} >Shop</MenuText>
         </MenuItem>
       </Menu>
       <Info>
-        <InfoItem>
-          <InfoImg srcSet="icons/profile.png" style={{ opacity: page==="profile" ? 1:0.5 }} />
-          <InfoText style={{ color: page==="profile" ? "#000":"#7b7b7b" }} >Profile</InfoText>
+        <InfoItem onClick={() => navigate("/profile")} >
+          <InfoImg srcSet="icons/profile.png" active={page === "profile"} />
+          <InfoText active={page === "profile"} >Profile</InfoText>
         </InfoItem>
-        <InfoItem>
-          <InfoImg srcSet="icons/settings.png" style={{ opacity: page==="settings" ? 1:0.5 }} />
-          <InfoText style={{ color: page==="settings" ? "#000":"#7b7b7b" }} >Settings</InfoText>
+        <InfoItem onClick={() => navigate("/settings")} >
+          <InfoImg srcSet="icons/settings.png" active={page === "settings"} />
+          <InfoText active={page === "settings"} >Settings</InfoText>
         </InfoItem>
       </Info>
     </Div>
@@ -82,6 +86,10 @@ const MenuImg = styled.img`
   object-position: center;
   height: 32px;
   width: 50px;
+  ${MenuItem}:hover & {
+    opacity: 0.7;
+  }
+  opacity: ${(props) => props.active ? 1:0.5}
 `;
 
 const MenuText = styled.div`
@@ -89,6 +97,10 @@ const MenuText = styled.div`
   flex-grow: 1;
   flex-basis: auto;
   margin: auto 0;
+  color: ${(props) => props.active ? "#000":"#7b7b7b"};
+  ${MenuItem}:hover & {
+    filter: brightness(0.7);
+  }
 `;
 
 const Info = styled.div`
@@ -104,6 +116,7 @@ const InfoItem = styled.div`
   gap: 10px;
   white-space: nowrap;
   padding: 5px 0px;
+  cursor: pointer;
 `;
 
 const InfoImg = styled.img`
@@ -112,6 +125,10 @@ const InfoImg = styled.img`
   object-position: center;
   height: 24px;
   width: 50px;
+  ${InfoItem}:hover & {
+    opacity: 0.7;
+  }
+  opacity: ${(props) => props.active ? 1:0.5}
 `;
 
 const InfoText = styled.div`
@@ -119,4 +136,8 @@ const InfoText = styled.div`
   flex-grow: 1;
   flex-basis: auto;
   margin: auto 0;
+  color: ${(props) => props.active ? "#000":"#7b7b7b"}
+  ${InfoItem}:hover & {
+    filter: brightness(0.7);
+  }
 `;
