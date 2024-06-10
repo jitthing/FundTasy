@@ -1,5 +1,4 @@
 import * as React from "react";
-import css from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +11,7 @@ export default function Navbar(props) {
     <Div>
       <Div2>FundTasy</Div2>
       <Menu>
-        <MenuItem onClick={() => navigate("/home")} >
+        <MenuItem onClick={() => navigate("/")} >
           <MenuImg srcSet="icons/home.png" active={page === "home"} />
           <MenuText active={page === "home"} >Home</MenuText>
         </MenuItem>
@@ -27,6 +26,10 @@ export default function Navbar(props) {
         <MenuItem onClick={() => navigate("/shop")} >
           <MenuImg srcSet="icons/shop.png" active={page === "shop"} />
           <MenuText active={page === "shop"} >Shop</MenuText>
+        </MenuItem>
+        <MenuItem onClick={() => navigate("/new-transaction")} >
+          <MenuImg srcSet="icons/add.png" active={page === "newtransaction"} />
+          <MenuText active={page === "newtransaction"} >New Transaction</MenuText>
         </MenuItem>
       </Menu>
       <Info>
@@ -45,8 +48,8 @@ export default function Navbar(props) {
 
 const Div = styled.div`
   display: flex;
-  max-width: 320px;
-  width: 15vw;
+  max-width: 360px;
+  width: 20vw;
   height: 100vh;
   flex-direction: column;
   font-size: 24px;
@@ -84,16 +87,16 @@ const MenuImg = styled.img`
   aspect-ratio: 1;
   object-fit: contain;
   object-position: center;
-  height: 32px;
-  width: 50px;
+  height: 28px;
+  width: 45px;
   ${MenuItem}:hover & {
-    opacity: 0.7;
+    opacity: ${(props) => props.active ? 1:0.7};
   }
   opacity: ${(props) => props.active ? 1:0.5}
 `;
 
 const MenuText = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   flex-grow: 1;
   flex-basis: auto;
   margin: auto 0;
@@ -113,7 +116,7 @@ const Info = styled.div`
 
 const InfoItem = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 20px;
   white-space: nowrap;
   padding: 5px 0px;
   cursor: pointer;
@@ -126,7 +129,7 @@ const InfoImg = styled.img`
   height: 24px;
   width: 50px;
   ${InfoItem}:hover & {
-    opacity: 0.7;
+    opacity: ${(props) => props.active ? 1:0.7};
   }
   opacity: ${(props) => props.active ? 1:0.5}
 `;
@@ -136,8 +139,8 @@ const InfoText = styled.div`
   flex-grow: 1;
   flex-basis: auto;
   margin: auto 0;
-  color: ${(props) => props.active ? "#000":"#7b7b7b"}
   ${InfoItem}:hover & {
     filter: brightness(0.7);
   }
+  color: ${(props) => props.active ? "#000":"#7b7b7b"}
 `;

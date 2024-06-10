@@ -27,7 +27,7 @@ const Div = styled.div`
 `
 
 const SearchBar = styled.input`
-    width: 90%;
+    width: 100%;
     height: 30px;
     border: 1px solid #bdbdbd;
     border-radius: 15px;
