@@ -14,9 +14,10 @@ const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
  */
 
-  // Form hadling function
-  function test(e) {
+  // Form handling function
+  function formSubmission(e) {
     e.preventDefault();
+    // The data can be taken directly from the form submission or from the state variables 'email' and 'password'
     const formElements = e.target.elements;
     const formName = e.target.name;
     const email = formElements.email.value;
@@ -33,7 +34,7 @@ const Modal = ({ handleEmailChange, handlePasswordChange, closeModal }) => (
       <button onClick={closeModal} className='place-self-end'><X size={30} /></button>
       <h1 className='text-2xl font-bold leading-9 tracking-tight text-gray-900'>Register</h1>
       <p className='text-xs leading-7 mb-4 tracking-widest'>It's quick and easy.</p>
-      <form name='signup' className="space-y-5" onSubmit={test}>
+      <form name='signup' className="space-y-5" onSubmit={formSubmission}>
         <EmailInput handleEmailChange={handleEmailChange} />
         <PasswordInput handlePasswordChange={handlePasswordChange} />
         <SubmitButton text='Sign up' />
@@ -183,11 +184,11 @@ export default function LoginPage() {
   function handleModal() {
     setModal(prevModal => !prevModal);
   }
-  function handleEmailChange(event) {
+  function updateEmailState(event) {
     setEmail(event.target.value);
     console.log(event.target.value);
   }
-  function handlePasswordChange(event) {
+  function updatePasswordState(event) {
     setPassword(event.target.value);
     console.log(event.target.value);
   }
@@ -195,9 +196,9 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <Logo />
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form name='register' className="space-y-6" onSubmit={test}>
-          <EmailInput handleEmailChange={handleEmailChange} />
-          <PasswordInput handlePasswordChange={handlePasswordChange} text='Forgot password?' />
+        <form name='register' className="space-y-6" onSubmit={formSubmission}>
+          <EmailInput handleEmailChange={updateEmailState} />
+          <PasswordInput handlePasswordChange={updatePasswordState} text='Forgot password?' />
           <SubmitButton text='Sign in' />
         </form>
         <SignUp showModal={handleModal} />
@@ -207,7 +208,7 @@ export default function LoginPage() {
           <ContinueWithApple />
         </div>
       </div>
-      {modal && <Modal closeModal={handleModal} handlePasswordChange={handlePasswordChange} handleEmailChange={handleEmailChange} />}
+      {modal && <Modal closeModal={handleModal} handleEmailChange={updateEmailState}  handlePasswordChange={updatePasswordState}/>}
     </div>
   );
 }
