@@ -8,6 +8,10 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "canvas-confetti": "^1.9.3",
+    "dotenv": "^16.4.5",
+    "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.394.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
@@ -40,6 +44,9 @@
     ]
   },
   "devDependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.2.10",
+    "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.4"
   }
 }
