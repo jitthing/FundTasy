@@ -155,11 +155,28 @@ const SignUp = ({ showModal }) => (
 );
 
 // ContinueWithGoogle component
-const ContinueWithGoogle = () => {
-  const handleCallbackResponse = (response) => {
+const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
+  const handleCallbackResponse = async (response) => {
     console.log("JWT ID token: " + response.credential);
     const userObject = jwtDecode(response.credential);
     console.log(userObject);
+
+    // Send the token to the backend
+    try {
+      const backendResponse = await axios.post("http://localhost:8000/google_login", {
+        token: response.credential,
+      });
+
+      if (backendResponse.status === 200) {
+        console.log("Token sent successfully! User is logged in.");
+        setValidCredentials(true);
+        navigate("/");
+      } else {
+        console.error("Failed to create an account. Try signing up with email.");
+      }
+    } catch (error) {
+      console.error("An error occurred while sending the token to the backend", error);
+    }
   };
 
   useEffect(() => {
@@ -214,13 +231,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
+  const [validCredentials, setValidCredentials] = useState(true);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [signUpError, setSignUpError] = useState("");
   const [isLoginInputInvalid, setInputInvalid] = useState(false);
   const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
   const [isSignUpPasswordInvalid, setSignUpPasswordInvalid] = useState(false);
-  
 
   function handleModal() {
     setModal((prevModal) => !prevModal);
@@ -298,7 +315,7 @@ export default function LoginPage() {
         <SignUp showModal={handleModal} />
         <p className="mt-3">OR</p>
         <div class="mt-10 grid space-y-4">
-          <ContinueWithGoogle />
+          <ContinueWithGoogle setValidCredentials={setValidCredentials} navigate={navigate} />
           <ContinueWithApple />
         </div>
       </div>

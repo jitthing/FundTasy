@@ -6,3 +6,11 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Users", userSchema);
+
+/* show what's in the database
+1. mongosh
+2. use fundtasy / show dbs
+3. show collections
+4. db.users.find().pretty()  db.{COLLECTION_NAME}.find().pretty()
+- Delete all data db.dropDatabase()
+*/
