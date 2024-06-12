@@ -30,7 +30,12 @@ function formSubmission(e) {
   }
 }
 
-const Modal = ({ handleEmailChange, handlePasswordChange, closeModal }) => (
+const Modal = ({
+  handleEmailChange,
+  handlePasswordChange,
+  closeModal,
+  handleSignUp,
+}) => (
   <div className="fixed w-full inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
     <div className="sm:mx-auto sm:w-3/4 sm:max-w-xs bg-indigo-200 flex flex-col rounded-xl p-5">
       <button onClick={closeModal} className="place-self-end">
@@ -42,11 +47,10 @@ const Modal = ({ handleEmailChange, handlePasswordChange, closeModal }) => (
       <p className="text-xs leading-7 mb-4 tracking-widest">
         It's quick and easy.
       </p>
-      <form name="signup" className="space-y-5" onSubmit={formSubmission}>
-        <EmailInput handleEmailChange={handleEmailChange} />
-        <PasswordInput handlePasswordChange={handlePasswordChange} />
-        <SubmitButton text="Sign up" />
-      </form>
+      <EmailInput handleEmailChange={handleEmailChange} />
+      <PasswordInput handlePasswordChange={handlePasswordChange} />
+      <br />
+      <SubmitButton text="Sign up" handleClick={handleSignUp} />
     </div>
   </div>
 );
@@ -240,6 +244,27 @@ export default function LoginPage() {
     }
   };
 
+  const handleSignUp = async () => {
+    const inputEmail = email;
+    const inputPassword = password;
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/create_account",
+        {
+          username: inputEmail,
+          password: inputPassword,
+        }
+      );
+
+      if (response.status === 200) {
+        navigate("/");
+      }
+    } catch (error) {
+      setError("Invalid username or password");
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <Logo />
@@ -263,6 +288,7 @@ export default function LoginPage() {
           closeModal={handleModal}
           handleEmailChange={updateEmailState}
           handlePasswordChange={updatePasswordState}
+          handleSignUp={handleSignUp}
         />
       )}
     </div>
