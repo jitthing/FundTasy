@@ -23,6 +23,11 @@ const create_account = async (req, res) => {
   if (foundUser !== null) {
     return res.status(400).json({ message: "Username already exists" });
   }
+
+  if (newUser.password.length < 4) {
+    return res.status(400).json({ message: "Password is too short" });
+  }
+
   const createdUser = await Users.create(newUser);
 
   return res.status(200).json(createdUser);
