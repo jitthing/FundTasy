@@ -35,7 +35,9 @@ const Modal = ({
   handlePasswordChange,
   closeModal,
   handleSignUp,
-  valid,
+  isSignUpEmailInvalid,
+  isSignUpPasswordInvalid,
+  signUpError,
 }) => (
   <div className="fixed w-full inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
     <div className="sm:mx-auto sm:w-3/4 sm:max-w-xs bg-indigo-200 flex flex-col rounded-xl p-5">
@@ -48,12 +50,10 @@ const Modal = ({
       <p className="text-xs leading-7 mb-4 tracking-widest">
         It's quick and easy.
       </p>
-      <EmailInput handleEmailChange={handleEmailChange} valid={valid} />
-      <PasswordInput
-        handlePasswordChange={handlePasswordChange}
-        valid={valid}
-      />
+      <EmailInput handleEmailChange={handleEmailChange} isSignUpEmailInvalid={isSignUpEmailInvalid} />
+      <PasswordInput handlePasswordChange={handlePasswordChange} isSignUpPasswordInvalid={isSignUpPasswordInvalid} />
       <br />
+      <p className="text-red-500 mb-5">{signUpError}</p>
       <SubmitButton text="Sign up" handleClick={handleSignUp} />
     </div>
   </div>
@@ -74,80 +74,60 @@ const Logo = () => (
 );
 
 // Email Input component
-const EmailInput = ({ handleEmailChange, valid }) => {
-  let labelClass = "flex text-sm font-medium leading-6";
-  let inputClass =
-    "block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6";
-
-  if (!valid) {
-    labelClass += " text-red-400";
-    inputClass += " placeholder:text-red-100 bg-red-100 border-red-500";
-  } else {
-    labelClass += " text-stone-900";
-    inputClass += " placeholder:text-gray-400";
-  }
-  return (
-    <div>
-      <label htmlFor="email" className={labelClass}>
-        Email address
-      </label>
-      <div className="mt-2">
-        <input
-          onChange={handleEmailChange}
-          id="email"
-          name="email"
-          type="text" // set to text for now for ease of testing
-          autoComplete="email"
-          required
-          className={inputClass}
-        />
-      </div>
+const EmailInput = ({ handleEmailChange, isInvalid, isSignUpEmailInvalid }) => (
+  <div>
+    <label
+      htmlFor="email"
+      className="flex text-sm font-medium leading-6 text-gray-900"
+    >
+      Email address
+    </label>
+    <div className="mt-2">
+      <input
+        onChange={handleEmailChange}
+        id="email"
+        name="email"
+        type="text" // set to text for now for ease of testing
+        autoComplete="email"
+        required
+        className={`${isInvalid||isSignUpEmailInvalid ? 'bg-red-200': ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+      />
     </div>
-  );
-};
+  </div>
+);
 
 // Password Input component
-const PasswordInput = ({ handlePasswordChange, text, valid }) => {
-  let labelClass = "block text-sm font-medium leading-6 text-gray-900";
-  let inputClass =
-    "block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6";
-
-  if (!valid) {
-    labelClass += " text-red-400";
-    inputClass += " placeholder:text-red-100 bg-red-100 border-red-100";
-  } else {
-    labelClass += " text-gray-900";
-    inputClass += " placeholder:text-gray-400";
-  }
-  return (
-    <div>
-      <div className="flex items-center justify-between">
-        <label htmlFor="password" className={labelClass}>
-          Password
-        </label>
-        <div className="text-sm">
-          <a
-            href="#"
-            className="font-semibold text-indigo-600 hover:text-indigo-500"
-          >
-            {text}
-          </a>
-        </div>
-      </div>
-      <div className="mt-2">
-        <input
-          onChange={handlePasswordChange}
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          className={inputClass}
-        />
+const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPasswordInvalid }) => (
+  <div>
+    <div className="flex items-center justify-between">
+      <label
+        htmlFor="password"
+        className="block text-sm font-medium leading-6 text-gray-900"
+      >
+        Password
+      </label>
+      <div className="text-sm">
+        <a
+          href="#"
+          className="font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+          {text}
+        </a>
       </div>
     </div>
-  );
-};
+    <div className="mt-2">
+      <input
+        onChange={handlePasswordChange}
+        id="password"
+        name="password"
+        type="password"
+        autoComplete="current-password"
+        required
+        className={`${isInvalid||isSignUpPasswordInvalid ? 'bg-red-200': ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+      />
+    </div>
+  </div>
+);
 
 // SignInButton component
 const SubmitButton = ({ text, handleClick }) => (
@@ -234,17 +214,17 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
-  const [validCredentials, setValidCredentials] = useState(true);
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [signUpError, setSignUpError] = useState("");
+  const [isLoginInputInvalid, setInputInvalid] = useState(false);
+  const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
+  const [isSignUpPasswordInvalid, setSignUpPasswordInvalid] = useState(false);
+  
 
   function handleModal() {
     setModal((prevModal) => !prevModal);
   }
-
-  /* maybe can change useState to useRef since we do not need to track everything onChange event on the input, and only
-   the value of input field upon submission
-   */
   function updateEmailState(event) {
     setEmail(event.target.value);
     console.log(event.target.value);
@@ -265,12 +245,11 @@ export default function LoginPage() {
       });
 
       if (response.status === 200) {
-        setValidCredentials(true);
         navigate("/");
       }
     } catch (error) {
       setError("Incorrect username or password");
-      setValidCredentials(false);
+      setInputInvalid(true);
       navigate("/login");
     }
   };
@@ -288,13 +267,20 @@ export default function LoginPage() {
       );
 
       if (response.status === 200) {
-        setValidCredentials(true);
         navigate("/");
       }
     } catch (error) {
-      setError("Invalid username or password");
-      setValidCredentials(false);
       navigate("/login");
+      const errorResponse = error.response.data.message;  
+      console.log(errorResponse);
+      if (errorResponse === "Username already exists") {
+        setSignUpInputInvalid(true);
+        setSignUpError(errorResponse);
+        
+      } else if (errorResponse === "Password is too short") {
+        setSignUpPasswordInvalid(true);
+        setSignUpError(errorResponse);
+      }
     }
   };
 
@@ -302,16 +288,10 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <Logo />
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <EmailInput
-          handleEmailChange={updateEmailState}
-          valid={validCredentials}
-        />
-        <PasswordInput
-          handlePasswordChange={updatePasswordState}
-          text="Forgot password?"
-          valid={validCredentials}
-        />
+        <EmailInput handleEmailChange={updateEmailState} isInvalid={isLoginInputInvalid} />
+        <PasswordInput handlePasswordChange={updatePasswordState} isInvalid={isLoginInputInvalid} text="Forgot password?"/>
         <br />
+        <p className="text-red-500 mb-5">{error}</p>
         <SubmitButton text="Sign in" handleClick={handleLogin} />
         <SignUp showModal={handleModal} />
         <p className="mt-3">OR</p>
@@ -326,9 +306,12 @@ export default function LoginPage() {
           handleEmailChange={updateEmailState}
           handlePasswordChange={updatePasswordState}
           handleSignUp={handleSignUp}
-          valid={validCredentials}
+          isSignUpEmailInvalid={isSignUpEmailInvalid}
+          isSignUpPasswordInvalid={isSignUpPasswordInvalid}
+          signUpError={signUpError}
         />
       )}
     </div>
   );
 }
+
