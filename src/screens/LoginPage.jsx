@@ -274,10 +274,12 @@ export default function LoginPage() {
       const errorResponse = error.response.data.message;  
       console.log(errorResponse);
       if (errorResponse === "Username already exists") {
+        setSignUpPasswordInvalid(false); // reset the state to original
         setSignUpInputInvalid(true);
         setSignUpError(errorResponse);
         
       } else if (errorResponse === "Password is too short") {
+        setSignUpInputInvalid(false); // reset the state to original
         setSignUpPasswordInvalid(true);
         setSignUpError(errorResponse);
       }
@@ -314,4 +316,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
