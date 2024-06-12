@@ -1,30 +1,8 @@
-import React, { useState, Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Social from "../components/Social";
-
-function Model(props) {
-  const { scene } = useGLTF(props.modelPath);
-  return <primitive object={scene} {...props} />;
-}
-
-function ModelDisplay(props) {
-  return (
-    <div style={{ height: "50vh", width: "50vw" }}>
-      <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }} >
-        <PresentationControls speed={1.5} global>
-          <Stage>
-            <Suspense fallback={<Loading />}>
-              <Model modelPath={props.modelUrl} scale={0.1} />
-            </Suspense>
-          </Stage>
-        </PresentationControls>
-      </Canvas>
-    </div>
-  );
-}
+import ModelDisplay from "../components/ModelDisplay";
 
 function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -43,35 +21,21 @@ function HomePage() {
           <SkinButton onClick={() => selectModel("copper")}>Copper</SkinButton>
           <SkinButton onClick={() => selectModel("steel")}>Steel</SkinButton>
           <SkinButton onClick={() => selectModel("24k")}>24K</SkinButton>
-          <SkinButton onClick={() => selectModel("conjoined")}>
-            Conjoined
-          </SkinButton>
+          <SkinButton onClick={() => selectModel("conjoined")}>Conjoined</SkinButton>
           <SkinButton onClick={() => selectModel("green")}>Green</SkinButton>
+          <SkinButton onClick={() => selectModel("panda")}>Panda</SkinButton>
+          <SkinButton onClick={() => selectModel("coke")}>Coke</SkinButton>
+          <SkinButton onClick={() => selectModel("fanta")}>Fanta</SkinButton>
           <SkinButton onClick={() => selectModel("ninja")}>Ninja</SkinButton>
           <SkinButton onClick={() => selectModel("santa")}>Santa</SkinButton>
           <SkinButton onClick={() => selectModel("chef")}>Chef</SkinButton>
+          <SkinButton onClick={() => selectModel("evil")}>Devil</SkinButton>
+          <SkinButton onClick={() => selectModel("angel")}>Angel</SkinButton>
+          <SkinButton onClick={() => selectModel("cowboy")}>Cowboy</SkinButton>
         </div>
       </Display>
       <Social />
     </PageContainer>
-  );
-}
-
-useGLTF.preload("models/basic.glb");
-useGLTF.preload("models/copper.glb");
-useGLTF.preload("models/steel.glb");
-useGLTF.preload("models/24k.glb");
-useGLTF.preload("models/conjoined.glb");
-useGLTF.preload("models/green.glb");
-useGLTF.preload("models/ninja.glb");
-useGLTF.preload("models/santa.glb");
-useGLTF.preload("models/chef.glb");
-
-function Loading() {
-  return (
-    <Html>
-      <div style={{ position:"relative", font: "700 20px Inter, sans-serif" }}>Loading...</div>
-    </Html>
   );
 }
 
@@ -100,7 +64,7 @@ const Display = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  width: 60vw;
+  width: 50vw;
 `;
 
 export default HomePage;

@@ -9,7 +9,7 @@ export default function Navbar(props) {
 
   return (
     <Div>
-      <Div2>FundTasy</Div2>
+      <AppName onClick={() => navigate("/")} >FundTasy</AppName>
       <Menu>
         <MenuItem onClick={() => navigate("/")} >
           <MenuImg srcSet="icons/home.png" active={page === "home"} />
@@ -61,11 +61,12 @@ const Div = styled.div`
   border-right: 1px solid #d9d9d9;
 `;
 
-const Div2 = styled.div`
+const AppName = styled.div`
   color: #000;
   font: 700 32px Inter, sans-serif;
   margin-top: 30px;
   padding-left: 10px;
+  cursor: pointer;
 `;
 
 const Menu = styled.div`
