@@ -4,6 +4,7 @@ const {
   create_account,
   authenticateUser,
   google_login,
+  getAllModels,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -12,5 +13,6 @@ router.post("/login", authenticateUser);
 router.post("/create_account", create_account);
 router.post("/forgot_password", resetPassword);
 router.post("/google_login", google_login);
+router.post("/all_models", getAllModels);
 
 module.exports = router;

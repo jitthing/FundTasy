@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
+const Models = require("../models/modelModel");
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(CLIENT_ID);
 
 const authenticateUser = async (req, res) => {
@@ -75,8 +76,8 @@ const google_login = async (req, res) => {
       audience: CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    const userid = payload['sub'];
-    const email = payload['email'];
+    const userid = payload["sub"];
+    const email = payload["email"];
 
     let user = await Users.findOne({ username: email });
     if (!user) {
@@ -97,5 +98,18 @@ const google_login = async (req, res) => {
   }
 };
 
+const getAllModels = async (res) => {
+  const Models = await Models.find({}).toArray();
+  if (Models === null) {
+    return res.status(400).json({ message: "No Models Found" });
+  }
+  return res.status(200).json(Models);
+};
 
-module.exports = { authenticateUser, create_account, resetPassword, google_login };
+module.exports = {
+  authenticateUser,
+  create_account,
+  resetPassword,
+  google_login,
+  getAllModels,
+};
