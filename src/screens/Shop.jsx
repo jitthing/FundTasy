@@ -91,6 +91,7 @@ const BigCoin = styled.img`
 const SmallCoin = styled.img`
     height: 20px;
     width: 20px;
+    vertical-align: middle;
     margin: 5px 0px 5px auto;
 `
 
@@ -112,8 +113,10 @@ const ShopBody = styled.div`
 `
 
 const CardDiv = styled.div`
-    width: 360px;
-    height: 300px;
+    width: calc((80vw - 140px)/3);
+    height: calc((100vh - 140px)/2);
+    min-width: 240px;
+    min-height: 200px;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -135,6 +138,7 @@ const CardInfo = styled.div`
     display: flex;
     font-size: 20px;
     align-items: center;
+    vertical-align: middle;
 `
 
 const CardTitle = styled.div`
@@ -142,7 +146,8 @@ const CardTitle = styled.div`
     font-weight:bold;
     margin-right: auto;
     text-align: left;
-    padding: 10px;
+    vertical-align: middle;
+    padding: 0px 10px;
 `
 
 const CardPrice = styled.div`
@@ -151,7 +156,8 @@ const CardPrice = styled.div`
 
 const OwnedOption = styled.div`
     text-align: right;
-    padding: 4px 10px;
+    padding: 0px 10px;
+    vertical-align: middle;
     color: green;
     font-weight: bold;
 `
@@ -163,7 +169,8 @@ const BuyOption = styled.div`
     background-color: #645df2;
     color: #fff;
     display: flex;
-    padding: 4px 10px;
+    align-items: center;
+    padding: 0px 10px;
     border-radius: 8px;
     cursor: pointer;
     &:hover {
@@ -175,5 +182,5 @@ const BuyOption = styled.div`
 const BuyText = styled.div`
     margin-right: auto;
     font-size: 16px;
-    padding: 3px;
+    vertical-align: middle;
 `
