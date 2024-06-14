@@ -21,7 +21,7 @@ const mypigs = {
 export default mypigs;
 
 const getModels = async () => {
-  const response = await axios.post("http://localhost:8000/get_models");
+  const response = await axios.post("http://localhost:8000/all_models");
   return response.body;
 };
 
