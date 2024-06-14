@@ -25,7 +25,7 @@ const getModels = async () => {
   return response.body;
 };
 
-const mypigstry = getModels();
+// const mypigstry = getModels();
 /* 
 eventually this code will be replaced by retrieving all available models from the database
 */
