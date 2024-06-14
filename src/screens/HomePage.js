@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Social from "../components/Social";
 import ModelDisplay from "../components/ModelDisplay";
+import mypigs from "../modelinfo";
 
 function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -17,21 +18,9 @@ function HomePage() {
       <Display>
         <ModelDisplay modelUrl={modelUrl} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <SkinButton onClick={() => selectModel("basic")}>Basic</SkinButton>
-          <SkinButton onClick={() => selectModel("copper")}>Copper</SkinButton>
-          <SkinButton onClick={() => selectModel("steel")}>Steel</SkinButton>
-          <SkinButton onClick={() => selectModel("24k")}>24K</SkinButton>
-          <SkinButton onClick={() => selectModel("conjoined")}>Conjoined</SkinButton>
-          <SkinButton onClick={() => selectModel("green")}>Green</SkinButton>
-          <SkinButton onClick={() => selectModel("panda")}>Panda</SkinButton>
-          <SkinButton onClick={() => selectModel("coke")}>Coke</SkinButton>
-          <SkinButton onClick={() => selectModel("fanta")}>Fanta</SkinButton>
-          <SkinButton onClick={() => selectModel("ninja")}>Ninja</SkinButton>
-          <SkinButton onClick={() => selectModel("santa")}>Santa</SkinButton>
-          <SkinButton onClick={() => selectModel("chef")}>Chef</SkinButton>
-          <SkinButton onClick={() => selectModel("evil")}>Devil</SkinButton>
-          <SkinButton onClick={() => selectModel("angel")}>Angel</SkinButton>
-          <SkinButton onClick={() => selectModel("cowboy")}>Cowboy</SkinButton>
+          {Object.keys(mypigs).map((modelname) => (
+            <SkinButton onClick={() => selectModel(modelname)}>{mypigs[modelname]}</SkinButton>
+          ))}
         </div>
       </Display>
       <Social />

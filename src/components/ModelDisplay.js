@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
+import mypigs from "../modelinfo";
 
 function Model(props) {
     const { scene } = useGLTF(props.modelPath);
@@ -23,26 +24,12 @@ export default function ModelDisplay(props) {
     );
 }
 
-useGLTF.preload("models/basic.glb");
-useGLTF.preload("models/copper.glb");
-useGLTF.preload("models/steel.glb");
-useGLTF.preload("models/24k.glb");
-useGLTF.preload("models/conjoined.glb");
-useGLTF.preload("models/green.glb");
-useGLTF.preload("models/panda.glb");
-useGLTF.preload("models/coke.glb");
-useGLTF.preload("models/fanta.glb");
-useGLTF.preload("models/ninja.glb");
-useGLTF.preload("models/santa.glb");
-useGLTF.preload("models/chef.glb");
-useGLTF.preload("models/evil.glb");
-useGLTF.preload("models/angel.glb");
-useGLTF.preload("models/cowboy.glb");
+Object.keys(mypigs).map((modelname) => (useGLTF.preload(`models/${modelname}.glb`)));
 
 function Loading() {
     return (
         <Html>
-        <div style={{ position:"relative", font: "700 20px Inter, sans-serif" }}>Loading...</div>
+            <div style={{ position:"relative", font: "700 20px Inter, sans-serif" }}>Loading...</div>
         </Html>
     );
 }
