@@ -2,11 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 
-export default function NewTransaction() {
+export default function NewRecord() {
     return (
         <PageContainer>
-            <Navbar page="newtransaction" />
-            <div>New Transaction</div>
+            <Navbar page="newrecord" />
+            <div>New Record</div>
         </PageContainer>
     )
 }

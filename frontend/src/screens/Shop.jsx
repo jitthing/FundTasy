@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar.js";
 import mypigs from "../modelinfo.js";
 
 export default function Shop() {

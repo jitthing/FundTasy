@@ -5,6 +5,10 @@ const Models = require("../models/modelModel");
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const jwt = require('jsonwebtoken');
+const SecretKey = messages=[
+  {"role": "system", "content": "You are a helpful assistant."},
+  {"role": "user", "content": "Hello!"}
+]
 console.log(CLIENT_ID);
 console.log(JWT_SECRET);
 const { OAuth2Client } = require("google-auth-library");

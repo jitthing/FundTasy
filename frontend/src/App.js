@@ -6,11 +6,12 @@ import './styles/App.css';
 import HomePage from './screens/HomePage';
 import LoginPage from './screens/LoginPage';
 import MyPigs from './screens/MyPigs';
-import NewTransaction from './screens/NewTransaction';
+import NewRecord from './screens/NewRecord';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import Shop from './screens/Shop';
 import Wishlist from './screens/Wishlist';
+import Transactions from './screens/Transactions';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,10 +22,11 @@ export default function App() {
           {/* TODO logic for logging in */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/my-pigs" element={<MyPigs />} />
-          <Route path="/new-transaction" element={<NewTransaction />} />
+          <Route path="/new-record" element={<NewRecord />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/transactions" element={<Transactions />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/" element={<HomePage />} />
         </Routes>
