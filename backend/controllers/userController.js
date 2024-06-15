@@ -1,7 +1,12 @@
+require ("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
 const Models = require("../models/modelModel");
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
+const jwt = require('jsonwebtoken');
+console.log(CLIENT_ID);
+console.log(JWT_SECRET);
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -17,8 +22,8 @@ const authenticateUser = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({ message: "Password incorrect" });
   }
-
-  return res.status(200).json({ message: "Successful login" });
+  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' });
+  return res.status(200).json({ message: "Successful login", authToken, });
 };
 
 const create_account = async (req, res) => {
@@ -65,12 +70,8 @@ const resetPassword = async (req, res) => {
 const google_login = async (req, res) => {
   try {
     const { token } = req.body;
-    console.log("Received token:", token);
-    console.log(req.body);
-    /* TODO
-    - Create user account if it doesn't exist
-    - Loogin user if it exists
-     */
+    console.log("Received token");
+    // console.log(req.body);
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,
@@ -78,20 +79,17 @@ const google_login = async (req, res) => {
     const payload = ticket.getPayload();
     const userid = payload["sub"];
     const email = payload["email"];
+    console.log("Ticket:" , ticket);
 
     let user = await Users.findOne({ username: email });
     if (!user) {
-      user = new Users({ username: email, password: userid }); // don't really need password. confirm /w others
-      /*
-        const createdUser = await Users.create({
-        username: newUser.username,
-        password: hashedPassword,
-        });
-      */
+      user = new Users({ username: email, password: userid }); 
       await user.save();
     }
+    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' });
+    return res.status(200).json({ message: "Successful login", authToken, });
 
-    res.status(200).send("User logged in");
+
   } catch (error) {
     console.error("Error receiving token:", error);
     res.status(500).send("Internal Server Error");

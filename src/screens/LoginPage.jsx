@@ -8,11 +8,12 @@ import { X } from "lucide-react";
 import confetti from "canvas-confetti";
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 /* TODO
-  - Add logic for signing in and signing up
-  - Hash password and send to server
-  - Add logic Apple sign in
-  - Check if user is signed in with Google / Apple / Email
+  - Storing token of user in local storage
+  - Create middleware to verify the token & extract user information
   - Add logic for forgot password
+    - Check if user is signed in with Google / Apple / Email
+  - Add logic Apple sign in
+  - Fix high memory usage
 
  */
 
@@ -157,7 +158,7 @@ const SignUp = ({ showModal }) => (
 // ContinueWithGoogle component
 const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
   const handleCallbackResponse = async (response) => {
-    console.log("JWT ID token: " + response.credential);
+    // console.log("JWT ID token: " + response.credential);
     const userObject = jwtDecode(response.credential);
     console.log(userObject);
 
@@ -168,9 +169,11 @@ const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
       });
 
       if (backendResponse.status === 200) {
-        console.log("Token sent successfully! User is logged in.");
         setValidCredentials(true);
         navigate("/");
+        console.log(backendResponse.data);
+        // Verify if stored. Developer console -> Application -> Local Storage
+        localStorage.setItem("authToken", backendResponse.data.authToken); 
       } else {
         console.error("Failed to create an account. Try signing up with email.");
       }
@@ -231,7 +234,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
-  const [validCredentials, setValidCredentials] = useState(true);
+  const [validCredentials, setValidCredentials] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [signUpError, setSignUpError] = useState("");
@@ -262,7 +265,10 @@ export default function LoginPage() {
       });
 
       if (response.status === 200) {
+        setValidCredentials(true);
         navigate("/");
+        console.log(response.data);
+        localStorage.setItem("authToken", response.data.authToken); 
       }
     } catch (error) {
       setError("Incorrect username or password");
