@@ -13,7 +13,7 @@ const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   - Add logic for forgot password
     - Check if user is signed in with Google / Apple / Email
   - Add logic Apple sign in
-  - Fix high memory usage
+  - Fix high memory usage https://medium.com/@nouraldin.alsweirki/optimizing-react-memory-optimization-937ab26e9e90
 
  */
 
@@ -290,7 +290,9 @@ export default function LoginPage() {
       );
 
       if (response.status === 200) {
+        localStorage.setItem("authToken", response.data.authToken); 
         navigate("/");
+        console.log(response.data);
       }
     } catch (error) {
       navigate("/login");

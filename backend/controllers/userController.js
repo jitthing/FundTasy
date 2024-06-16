@@ -9,8 +9,6 @@ const SecretKey = messages=[
   {"role": "system", "content": "You are a helpful assistant."},
   {"role": "user", "content": "Hello!"}
 ]
-console.log(CLIENT_ID);
-console.log(JWT_SECRET);
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -26,7 +24,7 @@ const authenticateUser = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({ message: "Password incorrect" });
   }
-  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' });
+  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' }); // bind token to user id
   return res.status(200).json({ message: "Successful login", authToken, });
 };
 
@@ -50,8 +48,8 @@ const create_account = async (req, res) => {
     username: newUser.username,
     password: hashedPassword,
   });
-
-  return res.status(200).json(createdUser);
+  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, { expiresIn: '5h' }); 
+  return res.status(200).json({ message: "Account created succesfully", authToken, });
 };
 
 const resetPassword = async (req, res) => {

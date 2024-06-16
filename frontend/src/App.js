@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './styles/App.css';
 
@@ -12,15 +11,15 @@ import Settings from './screens/Settings';
 import Shop from './screens/Shop';
 import Wishlist from './screens/Wishlist';
 import Transactions from './screens/Transactions';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {/* TODO logic for logging in */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />   {/* Don't comment this line out */}
+
           <Route path="/my-pigs" element={<MyPigs />} />
           <Route path="/new-record" element={<NewRecord />} />
           <Route path="/profile" element={<Profile />} />
@@ -29,6 +28,23 @@ export default function App() {
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/" element={<HomePage />} />
+
+          {
+          /* For ease of testing, block of code below is commented out.
+             When testing login, functionality, uncomment the block of code below. 
+             and comment out the block above.
+           */}
+
+
+          {/* <Route path="/my-pigs" element={<PrivateRoute><MyPigs /></PrivateRoute>} />
+          <Route path="/new-record" element={<PrivateRoute><NewRecord/></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute><Profile/> </PrivateRoute>} />
+          <Route path="/settings" element={<PrivateRoute> <Settings/> </PrivateRoute>} />
+          <Route path="/shop" element={<PrivateRoute> <Shop/> </PrivateRoute>} />
+          <Route path="/transactions" element={<PrivateRoute> <Transactions/> </PrivateRoute>} />
+          <Route path="/wishlist" element={<PrivateRoute> <Wishlist/> </PrivateRoute>} />
+          <Route path="/" element={<PrivateRoute> <HomePage/> </PrivateRoute>} /> */}
+
         </Routes>
       </BrowserRouter>
     </div>
