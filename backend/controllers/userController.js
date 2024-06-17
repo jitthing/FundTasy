@@ -24,7 +24,7 @@ const authenticateUser = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({ message: "Password incorrect" });
   }
-  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' }); // bind token to user id
+  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' }); // bind token to user id
   return res.status(200).json({ message: "Successful login", authToken, });
 };
 
@@ -48,7 +48,7 @@ const create_account = async (req, res) => {
     username: newUser.username,
     password: hashedPassword,
   });
-  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, { expiresIn: '5h' }); 
+  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, { expiresIn: '1hr' }); 
   return res.status(200).json({ message: "Account created succesfully", authToken, });
 };
 
@@ -88,7 +88,7 @@ const google_login = async (req, res) => {
       user = new Users({ username: email, password: userid }); 
       await user.save();
     }
-    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5h' });
+    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' });
     return res.status(200).json({ message: "Successful login", authToken, });
 
 

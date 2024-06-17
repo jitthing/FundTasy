@@ -8,13 +8,10 @@ import { X } from "lucide-react";
 import confetti from "canvas-confetti";
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 /* TODO
-  - Storing token of user in local storage
   - Create middleware to verify the token & extract user information
   - Add logic for forgot password
-    - Check if user is signed in with Google / Apple / Email
-  - Add logic Apple sign in
-  - Fix high memory usage https://medium.com/@nouraldin.alsweirki/optimizing-react-memory-optimization-937ab26e9e90
-
+  - Create Reset password page 
+  - Create banner for errors/messages (logged out successfully/session expired/token tempered/ authToken not found)
  */
 
 // Form handling function
@@ -266,9 +263,9 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         setValidCredentials(true);
+        localStorage.setItem("authToken", response.data.authToken); 
         navigate("/");
         console.log(response.data);
-        localStorage.setItem("authToken", response.data.authToken); 
       }
     } catch (error) {
       setError("Incorrect username or password");

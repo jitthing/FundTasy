@@ -1,21 +1,45 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
 
 const PrivateRoute = ({ children }) => {
-  /* TODO
-  - Verify the token with server (request to middleware) each time the user navigates to a protected route
-  - Right now, just checking if the token is present in localStorage
-   */
   const navigate = useNavigate();
-  const hasToken = localStorage.getItem('authToken');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    if (!hasToken) {
-      navigate('/login');
-    }
-  }, [hasToken, navigate]);
+    const verifyToken = async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('authToken not found in local storage. Try relogging in.');
+        navigate('/login');
+        return;
+      }
 
-  return hasToken ? children : null;
+      try {
+        const response = await axios.get('http://localhost:8000/protected', { 
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 200) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('authToken');
+          alert(response.data.message);
+          navigate('/login');
+        }
+      } catch (error) {
+        localStorage.removeItem('authToken');
+        alert(error.response.data.message);
+        navigate('/login');
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
+  return isAuthenticated ? children : null;
 };
 
 export default PrivateRoute;
