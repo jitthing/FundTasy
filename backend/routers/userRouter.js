@@ -4,8 +4,12 @@ const {
   create_account,
   authenticateUser,
   google_login,
-  getAllModels,
 } = require("../controllers/userController");
+
+const {
+  getAllModels,
+  create_model,
+} = require("../controllers/modelController");
 const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -15,6 +19,9 @@ router.post("/create_account", create_account);
 router.post("/forgot_password", resetPassword);
 router.post("/google_login", google_login);
 router.post("/all_models", getAllModels);
-router.get('/protected', protect, (req, res) => { res.json({ message: 'On the protected route', user: req.user }); });
+router.post("/newModel", create_model);
+router.get("/protected", protect, (req, res) => {
+  res.json({ message: "On the protected route", user: req.user });
+});
 
 module.exports = router;

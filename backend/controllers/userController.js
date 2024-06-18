@@ -1,14 +1,14 @@
-require ("dotenv").config();
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
-const Models = require("../models/modelModel");
+
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
-const jwt = require('jsonwebtoken');
-const SecretKey = messages=[
-  {"role": "system", "content": "You are a helpful assistant."},
-  {"role": "user", "content": "Hello!"}
-]
+const jwt = require("jsonwebtoken");
+const SecretKey = (messages = [
+  { role: "system", content: "You are a helpful assistant." },
+  { role: "user", content: "Hello!" },
+]);
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -24,8 +24,10 @@ const authenticateUser = async (req, res) => {
   if (!isMatch) {
     return res.status(400).json({ message: "Password incorrect" });
   }
-  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' }); // bind token to user id
-  return res.status(200).json({ message: "Successful login", authToken, });
+  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    expiresIn: "1hr",
+  }); // bind token to user id
+  return res.status(200).json({ message: "Successful login", authToken });
 };
 
 const create_account = async (req, res) => {
@@ -48,8 +50,12 @@ const create_account = async (req, res) => {
     username: newUser.username,
     password: hashedPassword,
   });
-  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, { expiresIn: '1hr' }); 
-  return res.status(200).json({ message: "Account created succesfully", authToken, });
+  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, {
+    expiresIn: "1hr",
+  });
+  return res
+    .status(200)
+    .json({ message: "Account created succesfully", authToken });
 };
 
 const resetPassword = async (req, res) => {
@@ -81,29 +87,21 @@ const google_login = async (req, res) => {
     const payload = ticket.getPayload();
     const userid = payload["sub"];
     const email = payload["email"];
-    console.log("Ticket:" , ticket);
+    console.log("Ticket:", ticket);
 
     let user = await Users.findOne({ username: email });
     if (!user) {
-      user = new Users({ username: email, password: userid }); 
+      user = new Users({ username: email, password: userid });
       await user.save();
     }
-    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' });
-    return res.status(200).json({ message: "Successful login", authToken, });
-
-
+    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "1hr",
+    });
+    return res.status(200).json({ message: "Successful login", authToken });
   } catch (error) {
     console.error("Error receiving token:", error);
     res.status(500).send("Internal Server Error");
   }
-};
-
-const getAllModels = async (res) => {
-  const Models = await Models.find({}).toArray();
-  if (Models === null) {
-    return res.status(400).json({ message: "No Models Found" });
-  }
-  return res.status(200).json(Models);
 };
 
 module.exports = {
@@ -111,5 +109,4 @@ module.exports = {
   create_account,
   resetPassword,
   google_login,
-  getAllModels,
 };
