@@ -41,7 +41,6 @@ export default function Shop() {
           {models.map((model) => (
             <PigCard pigname={model.toLowerCase()} pigTitle={model} />
           ))}
-          ;
         </ShopBody>
       </ShopContainer>
     </PageContainer>
