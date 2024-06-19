@@ -9,9 +9,11 @@ function Model(props) {
 }
 
 export default function ModelDisplay(props) {
+    const show = props.show;
+    const newWidth = show ? "calc(60vw - 400px)":"100%";
     return (
-        <div style={{ height: "50vh", width: "100%" }}>
-        <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }} >
+        <div style={{ flex:"1", height: "50vh", width: newWidth }}>
+        <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }} resize={{ debounce: 0 }}>
             <PresentationControls speed={1.5} global>
             <Stage>
                 <Suspense fallback={<Loading />}>
@@ -29,7 +31,7 @@ Object.keys(mypigs).map((modelname) => (useGLTF.preload(`models/${modelname}.glb
 function Loading() {
     return (
         <Html>
-            <div style={{ position:"relative", font: "700 20px Inter, sans-serif" }}>Loading...</div>
+            <div style={{ position:"absolute", font: "700 20px Inter, sans-serif" }}>Loading...</div>
         </Html>
     );
 }

@@ -53,7 +53,7 @@ export default function Navbar(props) {
 const Div = styled.div`
   display: flex;
   max-width: 360px;
-  width: 20vw;
+  min-width: 20vw;
   height: 100vh;
   flex-direction: column;
   font-size: 24px;

@@ -30,7 +30,6 @@ export default function Shop() {
           {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
           ))}
-          ;
         </ShopBody>
       </ShopContainer>
     </PageContainer>

@@ -4,13 +4,29 @@ import Navbar from "../components/Navbar";
 import Social from "../components/Social";
 import ModelDisplay from "../components/ModelDisplay";
 import mypigs from "../modelinfo";
+import SkinSection from "../components/SkinSection";
 
 function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
+  const [modelName, setModelName] = useState("Basic");
+  const [show, setShow] = useState(false);
 
   const selectModel = (model) => {
     setModelUrl("models/" + model + ".glb");
+    setModelName(mypigs[model]);
   };
+
+  const getImagePath = (model) => {
+    return "images/" + model + ".png";
+  }
+
+  const getModelName = () => {
+    return modelName;
+  }
+
+  const toggleShow = () => {
+    setShow(!show);
+  }
 
   return (
     <PageContainer>
@@ -21,12 +37,10 @@ function HomePage() {
           <GoalBox />
           <GoalBox />
         </GoalContainer>
-        <ModelDisplay modelUrl={modelUrl} />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          {Object.keys(mypigs).map((modelname) => (
-            <SkinButton onClick={() => selectModel(modelname)}>{mypigs[modelname]}</SkinButton>
-          ))}
-        </div>
+        <PigDisplay>
+          <ModelDisplay modelUrl={modelUrl} show={show} />
+          <SkinSection getModelName={getModelName} getImagePath={getImagePath} mypigs={mypigs} selectModel={selectModel} show={show} toggle={toggleShow}/>
+        </PigDisplay>
       </Display>
       <Social />
     </PageContainer>
@@ -71,24 +85,12 @@ function ProgressBar(props) {
   )
 }
 
-const SkinButton = styled.button`
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #cecece;
-  border-radius: 20px;
-  cursor: pointer;
-  user-select: none;
-  margin: 10px;
-  &:hover {
-    background-color: yellow;
-  }
-`;
-
 const PageContainer = styled.div`
   display: flex;
   align-items: start;
   margin: 0px;
   padding: 0px;
+  overflow: hidden;
 `;
 
 const Display = styled.div`
@@ -96,9 +98,17 @@ const Display = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 60vw;
-  overflow: scroll;
+  overflow: hidden;
   overflow-x: hidden;
 `;
+
+const PigDisplay = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0px 20px;
+  max-width: 60vw;
+`
 
 const GoalContainer = styled.div`
   display: flex;
