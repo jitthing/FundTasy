@@ -2,16 +2,24 @@ import * as React from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar.js";
 import axios from "axios";
-import mypigs from "../modelinfo.js";
-
-const getModels = async () => {
-  const response = await axios.post("http://localhost:8000/all_models");
-  return response.data;
-};
-
-const pigCards = getModels();
+import { useEffect, useState } from "react";
 
 export default function Shop() {
+  const [models, setModels] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.post("http://localhost:8000/all_models");
+        const data = await response.data;
+        // console.log(data);
+        setModels(data);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    }
+    fetchData();
+  }, []);
   return (
     <PageContainer>
       <Navbar page="shop" />
@@ -27,8 +35,11 @@ export default function Shop() {
         </ShopHead>
         <ShopBody>
           <PigCard pigname="basic" pigTitle="Basic" owned />
-          {Object.keys(mypigs).map((model) => (
+          {/* {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
+          ))} */}
+          {models.map((model) => (
+            <PigCard pigname={model.toLowerCase()} pigTitle={model} />
           ))}
           ;
         </ShopBody>

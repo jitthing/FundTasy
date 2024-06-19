@@ -6,7 +6,11 @@ const getAllModels = async (req, res) => {
   if (cursor === null) {
     return res.status(400).json({ message: "No Models Found" });
   }
-  return res.status(200).json(cursor);
+  let result = [];
+  for (item of cursor) {
+    result.push(item.modelName);
+  }
+  return res.status(200).json(result);
 };
 
 const create_model = async (req, res) => {
