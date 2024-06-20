@@ -1,20 +1,41 @@
 import * as React from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 import { SearchBar } from "../components/WishlistComponents/SearchBar";
 import { SearchResults } from "../components/WishlistComponents/SearchResults";
+import { AddedItems } from "../components/WishlistComponents/AddedItems";
 
 export default function Wishlist() {
   const [results, setResults] = useState([]);
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/adll_wishlist_items"
+        );
+        const data = await response.data;
+        // console.log(data);
+        setItems(data);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <PageContainer>
       <Navbar page="wishlist" />
       <SearchWrapper>
         <SearchBar setResults={setResults} />
-        <SearchResults results={results} />
+        {results && <SearchResults results={results} />}
+        <AddedItems items={items} />
       </SearchWrapper>
     </PageContainer>
   );

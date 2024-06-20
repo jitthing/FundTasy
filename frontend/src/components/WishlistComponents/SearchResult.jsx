@@ -1,11 +1,23 @@
+import axios from "axios";
 import styled from "styled-components";
 
 export const SearchResult = ({ result }) => {
+  const handleClick = async (result) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/add_wishlist_item",
+        result
+      );
+      alert("Item added to wishlist!");
+    } catch (error) {
+      if (error.response) {
+        console.error(error.response.body);
+      }
+    }
+  };
   return (
-    <SearchResultWrapper
-      onClick={(e) => alert(`You clicked on ${result.title}`)}
-    >
-      <img src={result.image} width="40" height="20" />
+    <SearchResultWrapper onClick={() => handleClick(result)}>
+      <img alt="" src={result.image} width="40" height="20" />
       {result.title}
     </SearchResultWrapper>
   );
@@ -17,5 +29,6 @@ const SearchResultWrapper = styled.div`
   flex-direction: row;
   &:hover {
     background-color: #efefef;
+    cursor: pointer;
   }
 `;

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { SearchResult } from "./SearchResult";
+import axios from "axios";
 
 export const SearchResults = ({ results }) => {
   return (
