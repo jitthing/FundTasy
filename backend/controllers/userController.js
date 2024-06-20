@@ -1,7 +1,8 @@
 require("dotenv").config();
+require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
-const Models = require("../models/modelModel");
+
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const EMAIL = process.env.REACT_APP_EMAIL;
@@ -155,16 +156,18 @@ const google_login = async (req, res) => {
     const userid = payload["sub"];
     const email = payload["email"];
     console.log("Ticket:", ticket);
+    console.log("Ticket:", ticket);
 
     let user = await Users.findOne({ username: email });
     if (!user) {
       user = new Users({ username: email, password: userid });
+      user = new Users({ username: email, password: userid });
       await user.save();
     }
-    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' });
-    return res.status(200).json({ message: "Successful login", authToken, });
-
-
+    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+      expiresIn: "1hr",
+    });
+    return res.status(200).json({ message: "Successful login", authToken });
   } catch (error) {
     console.error("Error receiving token:", error);
     res.status(500).send("Internal Server Error");
