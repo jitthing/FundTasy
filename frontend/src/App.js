@@ -12,6 +12,7 @@ import Shop from './screens/Shop';
 import Wishlist from './screens/Wishlist';
 import Transactions from './screens/Transactions';
 import PrivateRoute from './components/PrivateRoute';
+import ChangePassword from './screens/ChangePassword';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />   {/* Don't comment this line out */}
+          <Route path="/resetpassword/:userId/:token" element={<ChangePassword/>} />
 
           {/* <Route path="/my-pigs" element={<MyPigs />} />
           <Route path="/new-record" element={<NewRecord />} />
