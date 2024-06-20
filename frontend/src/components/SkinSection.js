@@ -56,7 +56,7 @@ const SkinButtons = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  gap: 5px;
+  gap: 10px;
   overflow: scroll;
   overflow-x: hidden;
   padding: 5px;
@@ -68,7 +68,7 @@ const SkinImg = styled.img`
   object-fit: cover;
   background-color: #ececec;
   cursor:pointer;
-  border-radius: 8px;
+  border-radius: 4px;
   &:hover {
     filter: brightness(1.05);
     transition: 0.1s;
@@ -131,7 +131,7 @@ const EditButton = styled.div`
     background-color: #645df2;
     color: #fff;
   }
-  margin:0px 20px auto 0px;
+  margin: 10px 0px auto 0px;
 `
 
 const EditIcon = styled.img`
