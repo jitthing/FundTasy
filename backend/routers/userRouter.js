@@ -1,9 +1,12 @@
 const express = require("express");
 const {
-  resetPassword,
+  updatePassword,
   create_account,
   authenticateUser,
   google_login,
+  forgotPassword,
+  userInfo,
+  validateResetToken,
 } = require("../controllers/userController");
 
 const {
@@ -18,12 +21,12 @@ const router = express.Router();
 
 // User Routers
 router.post("/login", authenticateUser);
-router.post("/create_account", create_account);
-router.post("/forgot_password", resetPassword);
 router.post("/google_login", google_login);
+router.post("/create_account", create_account);
 
-// Model Routers
 router.post("/all_models", getAllModels);
+
+router.get("/user_info", userInfo);
 router.post("/newModel", create_model);
 
 // Amazon Scraper Router
@@ -36,5 +39,9 @@ router.post("/add_wishlist_item", addItem);
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });
 });
+
+router.post("/forgot_password", forgotPassword); //forget password step 1
+router.get("/validate_reset_token/:userId/:token", validateResetToken); //step 2 check token validity
+router.post("/updatepassword", updatePassword); //update password in db step 3
 
 module.exports = router;

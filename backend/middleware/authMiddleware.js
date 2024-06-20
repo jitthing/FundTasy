@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../models/userModel');
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
-// Currently not used
 const protect = async (req, res, next) => {
   let token;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {

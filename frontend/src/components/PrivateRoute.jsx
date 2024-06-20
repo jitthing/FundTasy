@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
     const verifyToken = async () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        alert('authToken not found in local storage. Try relogging in.');
+        // alert('authToken not found in local storage. Try relogging in.');
         navigate('/login');
         return;
       }

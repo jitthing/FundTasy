@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +8,10 @@ import { X } from "lucide-react";
 import confetti from "canvas-confetti";
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 /* TODO
-  - Create middleware to verify the token & extract user information
-  - Add logic for forgot password
-  - Create Reset password page 
+  - Fix login error after resetting password (ChangPassword.jsx Line 35)
   - Create banner for errors/messages (logged out successfully/session expired/token tempered/ authToken not found)
+  - blacklist the token if user logs out
+  - implement xss protection
  */
 
 // Form handling function
@@ -32,10 +32,15 @@ const Modal = ({
   handleEmailChange,
   handlePasswordChange,
   closeModal,
-  handleSignUp,
+  handleSubmit,
   isSignUpEmailInvalid,
   isSignUpPasswordInvalid,
-  signUpError,
+  error,
+  title,
+  description,
+  textButton,
+  statusCode,
+  loading
 }) => (
   <div className="fixed w-full inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
     <div className="sm:mx-auto sm:w-3/4 sm:max-w-xs bg-indigo-200 flex flex-col rounded-xl p-5">
@@ -43,16 +48,17 @@ const Modal = ({
         <X size={30} />
       </button>
       <h1 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        Register
+        {title}
       </h1>
       <p className="text-xs leading-7 mb-4 tracking-widest">
-        It's quick and easy.
+        {description}
       </p>
       <EmailInput handleEmailChange={handleEmailChange} isSignUpEmailInvalid={isSignUpEmailInvalid} />
-      <PasswordInput handlePasswordChange={handlePasswordChange} isSignUpPasswordInvalid={isSignUpPasswordInvalid} />
+      {title === "Register" && (<PasswordInput handlePasswordChange={handlePasswordChange} isSignUpPasswordInvalid={isSignUpPasswordInvalid} />)}
+      
       <br />
-      <p className="text-red-500 mb-5">{signUpError}</p>
-      <SubmitButton text="Sign up" handleClick={handleSignUp} />
+      <p className={`${statusCode !== 200?  "text-red-500" : "text-teal-700"} text-lg font-semibold mb-5`} > {loading ? 'Loading...' : error} </p>
+      <SubmitButton text={textButton} handleClick={handleSubmit} />
     </div>
   </div>
 );
@@ -85,7 +91,7 @@ const EmailInput = ({ handleEmailChange, isInvalid, isSignUpEmailInvalid }) => (
         onChange={handleEmailChange}
         id="email"
         name="email"
-        type="text" // set to text for now for ease of testing
+        type="text" 
         autoComplete="email"
         required
         className={`${isInvalid||isSignUpEmailInvalid ? 'bg-red-200': ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
@@ -95,7 +101,7 @@ const EmailInput = ({ handleEmailChange, isInvalid, isSignUpEmailInvalid }) => (
 );
 
 // Password Input component
-const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPasswordInvalid }) => (
+const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPasswordInvalid, toggleForget }) => (
   <div>
     <div className="flex items-center justify-between">
       <label
@@ -105,12 +111,12 @@ const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPassword
         Password
       </label>
       <div className="text-sm">
-        <a
-          href="#"
+        <button
+          onClick={toggleForget}
           className="font-semibold text-indigo-600 hover:text-indigo-500"
         >
           {text}
-        </a>
+        </button>
       </div>
     </div>
     <div className="mt-2">
@@ -140,17 +146,18 @@ const SubmitButton = ({ text, handleClick }) => (
 );
 
 // SignUpLink component
-const SignUp = ({ showModal }) => (
+const SignUp = ({ showSignUp }) => (
   <p className="mt-10 text-center text-sm text-gray-500">
     Don't have an account?{" "}
     <button
-      onClick={showModal}
+      onClick={showSignUp}
       className="font-semibold text-base leading-6 text-indigo-600 hover:text-indigo-500"
     >
       Sign up
     </button>
   </p>
 );
+
 
 // ContinueWithGoogle component
 const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
@@ -228,19 +235,26 @@ const ContinueWithApple = () => (
 
 // LoginPage component
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [modal, setModal] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
+  const [showForget, setForget] = useState(false);
   const [validCredentials, setValidCredentials] = useState(false);
-  const navigate = useNavigate();
   const [error, setError] = useState("");
   const [signUpError, setSignUpError] = useState("");
+  const [statusCode, setStatusCode] = useState(0); 
+  const [forgetError, setForgetError] = useState("");
   const [isLoginInputInvalid, setInputInvalid] = useState(false);
   const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
   const [isSignUpPasswordInvalid, setSignUpPasswordInvalid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleModal() {
-    setModal((prevModal) => !prevModal);
+  function toggleSignUp() {
+    setShowSignUp((prevModal) => !prevModal);
+  }
+  function toggleForget() {
+    setForget((prevModal) => !prevModal);
   }
   function updateEmailState(event) {
     setEmail(event.target.value);
@@ -254,6 +268,7 @@ export default function LoginPage() {
   const handleLogin = async () => {
     const userEmail = email;
     const userPassword = password;
+    setLoading(true);
     try {
       // console.log("success");
       const response = await axios.post("http://localhost:8000/login", {
@@ -266,11 +281,35 @@ export default function LoginPage() {
         localStorage.setItem("authToken", response.data.authToken); 
         navigate("/");
         console.log(response.data);
+        setLoading(false); 
       }
     } catch (error) {
       setError("Incorrect username or password");
+      setStatusCode(error.response.status);
       setInputInvalid(true);
       navigate("/login");
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    setLoading(true);
+    try{
+      const response = await axios.post("http://localhost:8000/forgot_password", {
+        username: email,
+      });
+      if (response.status === 200) {
+        console.log(response.data);
+        setStatusCode(response.status);
+        setForgetError(response.data.message);
+      }
+      setLoading(false);
+    }
+    catch (error) {
+      console.log(error);
+      setStatusCode(error.response.status);
+      setForgetError(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -299,12 +338,19 @@ export default function LoginPage() {
         setSignUpPasswordInvalid(false); // reset the state to original
         setSignUpInputInvalid(true);
         setSignUpError(errorResponse);
+        setStatusCode(error.response.status);
         
       } else if (errorResponse === "Password is too short") {
         setSignUpInputInvalid(false); // reset the state to original
         setSignUpPasswordInvalid(true);
         setSignUpError(errorResponse);
+        setStatusCode(error.response.status);
       }
+      else{
+        setSignUpError(errorResponse);
+        console.log("tetetet");
+        setLoading(false);
+      } 
     }
   };
 
@@ -313,26 +359,44 @@ export default function LoginPage() {
       <Logo />
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <EmailInput handleEmailChange={updateEmailState} isInvalid={isLoginInputInvalid} />
-        <PasswordInput handlePasswordChange={updatePasswordState} isInvalid={isLoginInputInvalid} text="Forgot password?"/>
+        <PasswordInput handlePasswordChange={updatePasswordState} isInvalid={isLoginInputInvalid} text="Forgot password?" toggleForget={ toggleForget}/>
         <br />
         <p className="text-red-500 mb-5">{error}</p>
         <SubmitButton text="Sign in" handleClick={handleLogin} />
-        <SignUp showModal={handleModal} />
+        <SignUp showSignUp={toggleSignUp} />
         <p className="mt-3">OR</p>
         <div class="mt-10 grid space-y-4">
           <ContinueWithGoogle setValidCredentials={setValidCredentials} navigate={navigate} />
           <ContinueWithApple />
         </div>
       </div>
-      {modal && (
+      {showSignUp && (
         <Modal
-          closeModal={handleModal}
+          closeModal={toggleSignUp}
           handleEmailChange={updateEmailState}
           handlePasswordChange={updatePasswordState}
-          handleSignUp={handleSignUp}
+          handleSubmit={handleSignUp}
           isSignUpEmailInvalid={isSignUpEmailInvalid}
           isSignUpPasswordInvalid={isSignUpPasswordInvalid}
-          signUpError={signUpError}
+          error={signUpError}
+          title="Register"
+          description="It's quick and easy."
+          textButton="Sign up"
+          statusCode={statusCode}
+          loading={loading}
+        />
+      )}
+      {showForget && (
+        <Modal
+          closeModal={toggleForget}
+          handleEmailChange={updateEmailState}
+          handleSubmit={handleResetPassword}
+          error={forgetError}
+          title="Reset Password"
+          description="Enter your email to reset your password."
+          textButton="Reset"
+          statusCode={statusCode}
+          loading={loading}
         />
       )}
     </div>
