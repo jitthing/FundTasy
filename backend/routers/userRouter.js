@@ -4,7 +4,6 @@ const {
   create_account,
   authenticateUser,
   google_login,
-  getAllModels,
   forgotPassword,
   userInfo,
   validateResetToken,
