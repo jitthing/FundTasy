@@ -61,17 +61,20 @@ export default function Wishlist() {
   return (
     <PageContainer>
       <Navbar page="wishlist" />
-      <SearchWrapper>
-        <SearchBar setResults={setResults} />
-        {results && (
-          <SearchResults
-            results={results}
-            updateWishlist={handleWishlistUpdate}
-            UserId={userId}
-          />
-        )}
+      <SearchAndItemsWrapper>
+        <SearchWrapper>
+          <SearchBar setResults={setResults} />
+          {results && (
+            <SearchResults
+              results={results}
+              updateWishlist={handleWishlistUpdate}
+              UserId={userId}
+            />
+          )}
+        </SearchWrapper>
+        <WishlistItemHeader>Wishlist Items</WishlistItemHeader>
         <AddedItems items={items} />
-      </SearchWrapper>
+      </SearchAndItemsWrapper>
     </PageContainer>
   );
 }
@@ -86,8 +89,24 @@ const PageContainer = styled.div`
 const SearchWrapper = styled.div`
   padding-top: 7vh;
   padding-left: 7vh;
-  width: 50%;
+  min-width: 80%;
+  max-width: 85%;
   display: flex;
   flex-direction: column;
   min-width: 200px;
+`;
+
+const WishlistItemHeader = styled.div`
+  padding-top: 6vh;
+  padding-bottom: 4vh;
+  font-size: 20px;
+`;
+
+const SearchAndItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 100vh;
+  font-family: Inter, sans-serif;
+  width: 100%;
 `;
