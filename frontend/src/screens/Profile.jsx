@@ -202,6 +202,7 @@ const EditIcon = styled.img`
   width: 20px;
   height: 20px;
   opacity: 1;
+  object-fit: contain;
   cursor: pointer;
   margin-left: 10px; /* Add space between value and icon */
 `;
