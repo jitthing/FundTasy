@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import { SearchResult } from "./SearchResult";
 
-export const SearchResults = ({ results }) => {
+export const SearchResults = ({ results, updateWishlist }) => {
   return (
     <SearchResultsWrapper>
       {results.map((result, id) => {
-        return <SearchResult result={result} key={id} />;
+        return (
+          <SearchResult
+            result={result}
+            key={id}
+            updateWishlist={updateWishlist}
+          />
+        );
       })}
     </SearchResultsWrapper>
   );

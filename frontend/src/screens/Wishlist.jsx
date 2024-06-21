@@ -13,6 +13,12 @@ export default function Wishlist() {
 
   const [items, setItems] = useState([]);
 
+  const [wishlistUpdate, setUpdate] = useState(false);
+
+  const handleWishlistUpdate = () => {
+    setUpdate(!wishlistUpdate);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -27,14 +33,19 @@ export default function Wishlist() {
       }
     }
     fetchData();
-  }, []);
+  }, [wishlistUpdate]);
 
   return (
     <PageContainer>
       <Navbar page="wishlist" />
       <SearchWrapper>
         <SearchBar setResults={setResults} />
-        {results && <SearchResults results={results} />}
+        {results && (
+          <SearchResults
+            results={results}
+            updateWishlist={handleWishlistUpdate}
+          />
+        )}
         <AddedItems items={items} />
       </SearchWrapper>
     </PageContainer>

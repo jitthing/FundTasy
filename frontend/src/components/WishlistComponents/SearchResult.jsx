@@ -1,13 +1,14 @@
 import axios from "axios";
 import styled from "styled-components";
 
-export const SearchResult = ({ result }) => {
+export const SearchResult = ({ result, updateWishlist }) => {
   const handleClick = async (result) => {
     try {
       const response = await axios.post(
         "http://localhost:8000/add_wishlist_item",
         result
       );
+      updateWishlist();
       alert("Item added to wishlist!");
     } catch (error) {
       if (error.response) {
