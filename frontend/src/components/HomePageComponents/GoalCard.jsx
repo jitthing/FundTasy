@@ -35,7 +35,7 @@ function GoalBox(props) {
         <ActiveGoal>
           <GoalInfo>
             <Goal>
-                <div style={{ display:"inline-block", fontWeight:"bold" }}>Save {toSave} in {numDays} days </div>
+                <div style={{ display:"inline-block", fontWeight:"bold" }}>Save ${toSave} in {numDays} days </div>
                 <div style={{ display:"inline-block", fontSize:"12px", color:"grey" }}> ({startDate} - {endDate})</div>
             </Goal>
             <Saved>${currentSaved} <div style={{ display:"inline-block", fontSize:"14px", fontWeight:"normal" }}>saved</div></Saved>
@@ -53,8 +53,8 @@ function GoalBox(props) {
     } else {
       return (
         <EmptyGoal>
-          <AddIcon srcSet="icons/add.png" />
-          Create New Goal
+          <AddIcon srcSet="icons/add-white.png" />
+          Add New Goal
         </EmptyGoal>
       )
     }
@@ -79,7 +79,7 @@ const GoalContainer = styled.div`
   height: 25vh;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0px 0px 2px #bcbcbc;
+  box-shadow: 0px 0px 2px #acacac;
   padding: 5px 20px;
 `;
 
@@ -109,7 +109,7 @@ const EmptyGoal = styled.div`
   background-color: #ececec;
   border-radius: 8px;
   font-weight: bold;
-  color: #3b3b3b;
+  color: #7b7b7b;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -122,10 +122,14 @@ const EmptyGoal = styled.div`
 `
 
 const AddIcon = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   margin: 0px auto; 
-  opacity: 0.5;
+  filter: brightness(0.7);
+  ${EmptyGoal}:hover & {
+    filter: brightness(0.6);
+    transition: 0.1s;
+  }
 `
 
 const ActiveGoal = styled.div`

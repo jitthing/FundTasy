@@ -84,8 +84,9 @@ const Div = styled.div`
     margin-left: auto;
 `
 const SocialTitle = styled.div`
+    color: #000;
     font-size: 16px;
-    font-weightL bold;
+    font-weight: bold;
     tex-align: left;
     margin-top: 20px;
 `

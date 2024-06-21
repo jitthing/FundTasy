@@ -13,7 +13,7 @@ export default function ModelDisplay(props) {
     const newWidth = show ? "calc(60vw - 400px)":"100%";
     return (
         <div style={{ flex:"1", height: "50vh", width: newWidth, transition:"0.2s" }}>
-        <Canvas dpr={[1, 2]} shadows camera={{ fov: 45 }} resize={{ debounce: 0 }}>
+        <Canvas dpr={[1, 2]} shadows={false} camera={{ fov: 45 }} resize={{ debounce: 0 }}>
             <PresentationControls speed={1.5} global>
             <Stage>
                 <Suspense fallback={<Loading />}>
