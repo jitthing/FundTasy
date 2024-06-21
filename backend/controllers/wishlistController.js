@@ -1,6 +1,6 @@
 const Wishlist = require("../models/wishlistModel.js");
 
-const getAllItems = async (res) => {
+const getAllItems = async (req, res) => {
   const cursor = await Wishlist.find({});
   //   const dbModels = await cursor.toArray();
   if (cursor === null) {

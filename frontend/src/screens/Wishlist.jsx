@@ -17,7 +17,7 @@ export default function Wishlist() {
     async function fetchData() {
       try {
         const response = await axios.post(
-          "http://localhost:8000/adll_wishlist_items"
+          "http://localhost:8000/all_wishlist_items"
         );
         const data = await response.data;
         // console.log(data);
