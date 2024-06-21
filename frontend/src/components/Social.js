@@ -4,6 +4,7 @@ import styled from "styled-components";
 export default function Social() {
     return (
         <Div>
+            <SocialTitle>Friends</SocialTitle>
             <SearchBar placeholder="Find a friend" />
             <FriendList />
         </Div>
@@ -81,6 +82,12 @@ const Div = styled.div`
     padding: 0px 30px;
     border-left:1px solid #d9d9d9;
     margin-left: auto;
+`
+const SocialTitle = styled.div`
+    font-size: 16px;
+    font-weightL bold;
+    tex-align: left;
+    margin-top: 20px;
 `
 
 const SearchBar = styled.input`

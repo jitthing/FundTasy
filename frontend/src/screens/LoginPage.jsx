@@ -29,8 +29,6 @@ function formSubmission(e) {
 }
 
 const Modal = ({
-  handleEmailChange,
-  handlePasswordChange,
   closeModal,
   handleSubmit,
   isSignUpEmailInvalid,
@@ -53,12 +51,15 @@ const Modal = ({
       <p className="text-xs leading-7 mb-4 tracking-widest">
         {description}
       </p>
-      <EmailInput handleEmailChange={handleEmailChange} isSignUpEmailInvalid={isSignUpEmailInvalid} />
-      {title === "Register" && (<PasswordInput handlePasswordChange={handlePasswordChange} isSignUpPasswordInvalid={isSignUpPasswordInvalid} />)}
-      
+      <form onSubmit={handleSubmit}>
+      {title === "Register" && (<NameInput />)}
+      <EmailInput isSignUpEmailInvalid={isSignUpEmailInvalid} />
+      {title === "Register" && (<PasswordInput isSignUpPasswordInvalid={isSignUpPasswordInvalid} />)}
+
       <br />
-      <p className={`${statusCode !== 200?  "text-red-500" : "text-teal-700"} text-lg font-semibold mb-5`} > {loading ? 'Loading...' : error} </p>
-      <SubmitButton text={textButton} handleClick={handleSubmit} />
+      <p className={`${statusCode !== 200 ? "text-red-500" : "text-teal-700"} text-lg font-semibold mb-5`} > {loading ? 'Loading...' : error} </p>
+      <SubmitButton text={textButton}/>
+      </form>
     </div>
   </div>
 );
@@ -77,8 +78,39 @@ const Logo = () => (
   </div>
 );
 
+const NameInput = () => {
+  return (
+    <>
+      <div className="flex justify-between gap-5 mb-3" >
+        <div>
+          <label htmlFor="firstName" className="flex text-sm font-medium leading-6 text-gray-900" > First Name </label>
+          <input className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`" 
+          id="firstName"
+          name="firstName"
+          type="text"
+          autoComplete="given-name"
+          required
+          ></input>
+        </div>
+
+        <div>
+          <label htmlFor="lastName" className="flex text-sm font-medium leading-6 text-gray-900" > Last Name </label>
+          <input className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`" 
+          id="lastName"
+          name="lastName"
+          type="text"
+          autoComplete="family-name"
+          ></input>
+        </div>
+      </div>
+    </>
+  )
+}
+
+
+
 // Email Input component
-const EmailInput = ({ handleEmailChange, isInvalid, isSignUpEmailInvalid }) => (
+const EmailInput = ({ isInvalid, isSignUpEmailInvalid }) => (
   <div>
     <label
       htmlFor="email"
@@ -88,20 +120,19 @@ const EmailInput = ({ handleEmailChange, isInvalid, isSignUpEmailInvalid }) => (
     </label>
     <div className="mt-2">
       <input
-        onChange={handleEmailChange}
         id="email"
         name="email"
-        type="text" 
+        type="text"
         autoComplete="email"
         required
-        className={`${isInvalid||isSignUpEmailInvalid ? 'bg-red-200': ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+        className={`${isInvalid || isSignUpEmailInvalid ? 'bg-red-200' : ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
       />
     </div>
   </div>
 );
 
 // Password Input component
-const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPasswordInvalid, toggleForget }) => (
+const PasswordInput = ({ text, isInvalid, isSignUpPasswordInvalid, toggleForget }) => (
   <div>
     <div className="flex items-center justify-between">
       <label
@@ -121,13 +152,12 @@ const PasswordInput = ({ handlePasswordChange, text, isInvalid, isSignUpPassword
     </div>
     <div className="mt-2">
       <input
-        onChange={handlePasswordChange}
         id="password"
         name="password"
         type="password"
         autoComplete="current-password"
         required
-        className={`${isInvalid||isSignUpPasswordInvalid ? 'bg-red-200': ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+        className={`${isInvalid || isSignUpPasswordInvalid ? 'bg-red-200' : ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
       />
     </div>
   </div>
@@ -160,7 +190,7 @@ const SignUp = ({ showSignUp }) => (
 
 
 // ContinueWithGoogle component
-const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
+const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
   const handleCallbackResponse = async (response) => {
     // console.log("JWT ID token: " + response.credential);
     const userObject = jwtDecode(response.credential);
@@ -177,7 +207,7 @@ const ContinueWithGoogle = ({setValidCredentials, navigate}) => {
         navigate("/");
         console.log(backendResponse.data);
         // Verify if stored. Developer console -> Application -> Local Storage
-        localStorage.setItem("authToken", backendResponse.data.authToken); 
+        localStorage.setItem("authToken", backendResponse.data.authToken);
       } else {
         console.error("Failed to create an account. Try signing up with email.");
       }
@@ -236,14 +266,12 @@ const ContinueWithApple = () => (
 // LoginPage component
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showSignUp, setShowSignUp] = useState(false);
   const [showForget, setForget] = useState(false);
   const [validCredentials, setValidCredentials] = useState(false);
   const [error, setError] = useState("");
   const [signUpError, setSignUpError] = useState("");
-  const [statusCode, setStatusCode] = useState(0); 
+  const [statusCode, setStatusCode] = useState(0);
   const [forgetError, setForgetError] = useState("");
   const [isLoginInputInvalid, setInputInvalid] = useState(false);
   const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
@@ -256,18 +284,13 @@ export default function LoginPage() {
   function toggleForget() {
     setForget((prevModal) => !prevModal);
   }
-  function updateEmailState(event) {
-    setEmail(event.target.value);
-    console.log(event.target.value);
-  }
-  function updatePasswordState(event) {
-    setPassword(event.target.value);
-    console.log(event.target.value);
-  }
 
-  const handleLogin = async () => {
-    const userEmail = email;
-    const userPassword = password;
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const { email, password } = e.target.elements;
+    const userEmail = email.value;
+    const userPassword = password.value;
     setLoading(true);
     try {
       // console.log("success");
@@ -278,13 +301,13 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         setValidCredentials(true);
-        localStorage.setItem("authToken", response.data.authToken); 
+        localStorage.setItem("authToken", response.data.authToken);
         navigate("/");
         console.log(response.data);
-        setLoading(false); 
+        setLoading(false);
       }
     } catch (error) {
-      setError("Incorrect username or password");
+      setError(error.response.data.message);
       setStatusCode(error.response.status);
       setInputInvalid(true);
       navigate("/login");
@@ -292,9 +315,11 @@ export default function LoginPage() {
     }
   };
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    const email = e.target.elements.email.value.trim().toLowerCase();
     setLoading(true);
-    try{
+    try {
       const response = await axios.post("http://localhost:8000/forgot_password", {
         username: email,
       });
@@ -313,44 +338,52 @@ export default function LoginPage() {
     }
   };
 
-  const handleSignUp = async () => {
-    const inputEmail = email;
-    const inputPassword = password;
+  const handleSignUp = async (e) => {
+    // Modify this such that it pulls data from the form instead of the state variables
+    e.preventDefault();
+    const { email, password, firstName, lastName } = e.target.elements;
+    const inputEmail = email.value.trim().toLowerCase();
+    const inputPassword = password.value;
+    const inputFirstName = firstName.value;
+    const inputLastName = lastName.value;
+    console.log( "testing: ",inputEmail, inputPassword, inputFirstName, inputLastName);
     try {
       const response = await axios.post(
         "http://localhost:8000/create_account",
         {
           username: inputEmail,
           password: inputPassword,
+          firstName: inputFirstName,
+          lastName: inputLastName,
         }
       );
 
       if (response.status === 200) {
-        localStorage.setItem("authToken", response.data.authToken); 
+        localStorage.setItem("authToken", response.data.authToken);
         navigate("/");
         console.log(response.data);
       }
     } catch (error) {
       navigate("/login");
-      const errorResponse = error.response.data.message;  
+      const errorResponse = error.response.data.message;
       console.log(errorResponse);
-      if (errorResponse === "Username already exists") {
+      if (errorResponse === "Username already exists" || errorResponse === "Invalid email address") {
         setSignUpPasswordInvalid(false); // reset the state to original
         setSignUpInputInvalid(true);
         setSignUpError(errorResponse);
         setStatusCode(error.response.status);
-        
+
       } else if (errorResponse === "Password is too short") {
         setSignUpInputInvalid(false); // reset the state to original
         setSignUpPasswordInvalid(true);
         setSignUpError(errorResponse);
         setStatusCode(error.response.status);
       }
-      else{
+      else {
         setSignUpError(errorResponse);
         console.log("tetetet");
         setLoading(false);
-      } 
+      }
     }
   };
 
@@ -358,11 +391,13 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <Logo />
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <EmailInput handleEmailChange={updateEmailState} isInvalid={isLoginInputInvalid} />
-        <PasswordInput handlePasswordChange={updatePasswordState} isInvalid={isLoginInputInvalid} text="Forgot password?" toggleForget={ toggleForget}/>
-        <br />
-        <p className="text-red-500 mb-5">{error}</p>
-        <SubmitButton text="Sign in" handleClick={handleLogin} />
+        <form onSubmit={handleLogin}>
+          <EmailInput isInvalid={isLoginInputInvalid} />
+          <PasswordInput isInvalid={isLoginInputInvalid} text="Forgot password?" toggleForget={toggleForget} />
+          <br />
+          <p className="text-red-500 mb-5">{error}</p>
+          <SubmitButton text="Sign in"/>
+        </form>
         <SignUp showSignUp={toggleSignUp} />
         <p className="mt-3">OR</p>
         <div class="mt-10 grid space-y-4">
@@ -373,8 +408,6 @@ export default function LoginPage() {
       {showSignUp && (
         <Modal
           closeModal={toggleSignUp}
-          handleEmailChange={updateEmailState}
-          handlePasswordChange={updatePasswordState}
           handleSubmit={handleSignUp}
           isSignUpEmailInvalid={isSignUpEmailInvalid}
           isSignUpPasswordInvalid={isSignUpPasswordInvalid}
@@ -389,7 +422,6 @@ export default function LoginPage() {
       {showForget && (
         <Modal
           closeModal={toggleForget}
-          handleEmailChange={updateEmailState}
           handleSubmit={handleResetPassword}
           error={forgetError}
           title="Reset Password"
