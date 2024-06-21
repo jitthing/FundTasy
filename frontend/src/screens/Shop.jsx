@@ -83,7 +83,7 @@ const ShopContainer = styled.div`
 
 const ShopHead = styled.div`
   display: flex;
-  height: 80px;
+  height: 10vh;
   align-items: center;
 `;
 
@@ -99,7 +99,7 @@ const Moneybar = styled.div`
   height: 40px;
   border-radius: 20px;
   background-color: #ececec;
-  justidy-content: space-between;
+  justify-content: space-between;
 `;
 
 const BigCoin = styled.img`
