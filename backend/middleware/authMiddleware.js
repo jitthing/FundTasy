@@ -9,7 +9,7 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, JWT_SECRET);
     //   console.log("Decoded token: ", decoded);
       req.user = await Users.findById(decoded.id).select('-password');
-      console.log("user details: ", req.user);
+      // console.log("user details: ", req.user);
       next();
     } catch (error) {
         // handle TokenExpiredError

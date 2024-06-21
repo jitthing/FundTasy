@@ -17,15 +17,57 @@
 //   margin: 0px;
 //   padding: 0px;
 // `;
-import React, { useState } from "react";
+
+
+/*
+TODO 
+ - Retrive user data from the backend 
+ */
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
+import axios from "axios";
+
+
+function getToken() { 
+  return localStorage.getItem('authToken');
+}
 
 function Profile() {
-  const [username, setUsername] = useState("fundtastypig");
-  const [email, setEmail] = useState("fund@tasty.com");
-  const [password, setPassword] = useState({ value: "actualPassword", masked: true });
-  const [income, setIncome] = useState("10000");
+
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState({ value: undefined, masked: true });
+  const [income, setIncome] = useState("");
+
+  const fetchUserData = async () => {
+    try{
+      const response = await axios.get('http://localhost:8000/user_info', {
+        headers: {
+          'Authorization': `Bearer ${getToken()}`
+        }
+      });
+      if(response.status === 200){
+        setEmail(response.data.user.username);
+        setIncome(response.data.user.income);
+        setFirstName(response.data.user.firstName);
+        setLastName(response.data.user.lastName);
+        setPassword(response.data.user.income);
+        response.data.user.income ? setIncome(response.data.user.income) : setIncome("0");
+        console.log(response.data.user.username);
+      }
+    }
+    catch(error){
+      console.log("Error fetching user data: ", error);
+    }
+  };
+    useEffect(() => {
+    fetchUserData();
+  }, []);
+
+
 
   const handleEdit = (field, value) => {
     if (field === "username") setUsername(value);
@@ -49,6 +91,27 @@ function Profile() {
           <EditIcon src="icons/edit-black.png" alt="Edit" />
         </ProfilePicture>
         <ProfileInfo>
+        <InfoRow>
+            <Label>First name:</Label>
+            <Value>{firstName}</Value>
+            <EditIcon
+              src="icons/edit-black.png"
+              alt="Edit"
+              onClick={() => handleEdit("username", prompt("Edit First name", firstName))}
+            />
+          </InfoRow>
+          {
+            lastName && 
+            <InfoRow>
+              <Label>Last name:</Label>
+              <Value>{lastName}</Value>
+              <EditIcon
+                src="icons/edit-black.png"
+                alt="Edit"
+                onClick={() => handleEdit("username", prompt("Edit Last name", lastName))}
+              />
+            </InfoRow>
+          }
           <InfoRow>
             <Label>Username:</Label>
             <Value>{username}</Value>
@@ -67,6 +130,8 @@ function Profile() {
               onClick={() => handleEdit("email", prompt("Edit Email", email))}
             />
           </InfoRow>
+          {password && 
+          <>
           <InfoRow>
             <Label>Password:</Label>
             <Value>{password.masked ? "*********" : password.value}</Value>
@@ -79,6 +144,10 @@ function Profile() {
               onClick={() => handleEdit("password", prompt("Edit Password", password.value))}
             />
           </InfoRow>
+          </>
+          }
+
+
           <InfoRow>
             <Label>Monthly Income:</Label>
             <Value>{income}</Value>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -32,7 +31,8 @@ const ChangePasswordForm = () => {
 
       });
       if (response.status === 200) {
-        setError(<><Link to="/login">{response.data.message} Click here to login: Login</Link></>);
+        // setError(<><Link to="/login">{response.data.message} Click here to login: Login</Link></>)
+        setError(response.data.message);
         setStatusCode(response.status);
       } else {
         setError(response.data.message);
@@ -92,8 +92,11 @@ const ChangePasswordForm = () => {
                   <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
                   <input onChange={(e) => setConfirmPassword(e.target.value)} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="" />
                 </div>
-                <p className={`mb-5 font-semibold ${statusCode === 200 ? "text-green-700" : "text-red-500" }` }>{error}</p>
-                <button type="submit" class="w-full font-semibold text-base leading-6 text-indigo-600 hover:text-indigo-500">Reset password</button>
+                {statusCode === 200 
+                ? <div className='mb-5 font-semibold text-green-700'><p>{error}</p> <br/> <a href='/' class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</a> </div>
+                : <><p className='mb-5 font-semibold text-red-500'>{error}</p> <button type="submit" class="w-full font-semibold text-base leading-6 text-indigo-600 hover:text-indigo-500">Reset password</button>  </>
+                }
+                
               </form>
             </div>
           </div>
@@ -101,7 +104,7 @@ const ChangePasswordForm = () => {
       ) : (
         <div
           class="relative block w-full p-4 mb-4 text-base leading-5 text-white bg-blue-500 rounded-lg opacity-100 font-regular">
-          Invalid token or token has expired. Please try again.
+          <p>Invalid token or token has expired. Please try again.</p>
         </div>
       )}
     </div>
