@@ -1,0 +1,105 @@
+[{
+  "_id": {
+    "$oid": "66713988dd71a0eb152cbfd3"
+  },
+  "modelName": "Basic",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6671398ddd71a0eb152cbfd6"
+  },
+  "modelName": "Copper",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66713991dd71a0eb152cbfd9"
+  },
+  "modelName": "Steel",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66713997dd71a0eb152cbfdc"
+  },
+  "modelName": "24K",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6671399ddd71a0eb152cbfdf"
+  },
+  "modelName": "Conjoined",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139a2dd71a0eb152cbfe2"
+  },
+  "modelName": "Green",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139a5dd71a0eb152cbfe5"
+  },
+  "modelName": "Panda",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139a9dd71a0eb152cbfe8"
+  },
+  "modelName": "Coke",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139addd71a0eb152cbfeb"
+  },
+  "modelName": "Fanta",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139b4dd71a0eb152cbfee"
+  },
+  "modelName": "Ninja",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139b9dd71a0eb152cbff1"
+  },
+  "modelName": "Santa",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139bfdd71a0eb152cbff4"
+  },
+  "modelName": "Chef",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139c3dd71a0eb152cbff7"
+  },
+  "modelName": "Angel",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139c6dd71a0eb152cbffa"
+  },
+  "modelName": "Cowboy",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "667139d4dd71a0eb152cbffd"
+  },
+  "modelName": "Evil",
+  "__v": 0
+}]

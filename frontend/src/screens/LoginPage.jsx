@@ -38,7 +38,7 @@ const Modal = ({
   description,
   textButton,
   statusCode,
-  loading
+  loading,
 }) => (
   <div className="fixed w-full inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
     <div className="sm:mx-auto sm:w-3/4 sm:max-w-xs bg-indigo-200 flex flex-col rounded-xl p-5">
@@ -48,17 +48,24 @@ const Modal = ({
       <h1 className="text-2xl font-bold leading-9 tracking-tight text-gray-900">
         {title}
       </h1>
-      <p className="text-xs leading-7 mb-4 tracking-widest">
-        {description}
-      </p>
+      <p className="text-xs leading-7 mb-4 tracking-widest">{description}</p>
       <form onSubmit={handleSubmit}>
-      {title === "Register" && (<NameInput />)}
-      <EmailInput isSignUpEmailInvalid={isSignUpEmailInvalid} />
-      {title === "Register" && (<PasswordInput isSignUpPasswordInvalid={isSignUpPasswordInvalid} />)}
+        {title === "Register" && <NameInput />}
+        <EmailInput isSignUpEmailInvalid={isSignUpEmailInvalid} />
+        {title === "Register" && (
+          <PasswordInput isSignUpPasswordInvalid={isSignUpPasswordInvalid} />
+        )}
 
-      <br />
-      <p className={`${statusCode !== 200 ? "text-red-500" : "text-teal-700"} text-lg font-semibold mb-5`} > {loading ? 'Loading...' : error} </p>
-      <SubmitButton text={textButton}/>
+        <br />
+        <p
+          className={`${
+            statusCode !== 200 ? "text-red-500" : "text-teal-700"
+          } text-lg font-semibold mb-5`}
+        >
+          {" "}
+          {loading ? "Loading..." : error}{" "}
+        </p>
+        <SubmitButton text={textButton} />
       </form>
     </div>
   </div>
@@ -81,33 +88,45 @@ const Logo = () => (
 const NameInput = () => {
   return (
     <>
-      <div className="flex justify-between gap-5 mb-3" >
+      <div className="flex justify-between gap-5 mb-3">
         <div>
-          <label htmlFor="firstName" className="flex text-sm font-medium leading-6 text-gray-900" > First Name </label>
-          <input className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`" 
-          id="firstName"
-          name="firstName"
-          type="text"
-          autoComplete="given-name"
-          required
+          <label
+            htmlFor="firstName"
+            className="flex text-sm font-medium leading-6 text-gray-900"
+          >
+            {" "}
+            First Name{" "}
+          </label>
+          <input
+            className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`"
+            id="firstName"
+            name="firstName"
+            type="text"
+            autoComplete="given-name"
+            required
           ></input>
         </div>
 
         <div>
-          <label htmlFor="lastName" className="flex text-sm font-medium leading-6 text-gray-900" > Last Name </label>
-          <input className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`" 
-          id="lastName"
-          name="lastName"
-          type="text"
-          autoComplete="family-name"
+          <label
+            htmlFor="lastName"
+            className="flex text-sm font-medium leading-6 text-gray-900"
+          >
+            {" "}
+            Last Name{" "}
+          </label>
+          <input
+            className="block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`"
+            id="lastName"
+            name="lastName"
+            type="email"
+            autoComplete="family-name"
           ></input>
         </div>
       </div>
     </>
-  )
-}
-
-
+  );
+};
 
 // Email Input component
 const EmailInput = ({ isInvalid, isSignUpEmailInvalid }) => (
@@ -122,17 +141,24 @@ const EmailInput = ({ isInvalid, isSignUpEmailInvalid }) => (
       <input
         id="email"
         name="email"
-        type="text"
+        type="email"
         autoComplete="email"
         required
-        className={`${isInvalid || isSignUpEmailInvalid ? 'bg-red-200' : ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+        className={`${
+          isInvalid || isSignUpEmailInvalid ? "bg-red-200" : ""
+        } block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
       />
     </div>
   </div>
 );
 
 // Password Input component
-const PasswordInput = ({ text, isInvalid, isSignUpPasswordInvalid, toggleForget }) => (
+const PasswordInput = ({
+  text,
+  isInvalid,
+  isSignUpPasswordInvalid,
+  toggleForget,
+}) => (
   <div>
     <div className="flex items-center justify-between">
       <label
@@ -157,7 +183,9 @@ const PasswordInput = ({ text, isInvalid, isSignUpPasswordInvalid, toggleForget 
         type="password"
         autoComplete="current-password"
         required
-        className={`${isInvalid || isSignUpPasswordInvalid ? 'bg-red-200' : ''} block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+        className={`${
+          isInvalid || isSignUpPasswordInvalid ? "bg-red-200" : ""
+        } block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
       />
     </div>
   </div>
@@ -188,7 +216,6 @@ const SignUp = ({ showSignUp }) => (
   </p>
 );
 
-
 // ContinueWithGoogle component
 const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
   const handleCallbackResponse = async (response) => {
@@ -198,9 +225,12 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
 
     // Send the token to the backend
     try {
-      const backendResponse = await axios.post("http://localhost:8000/google_login", {
-        token: response.credential,
-      });
+      const backendResponse = await axios.post(
+        "http://localhost:8000/google_login",
+        {
+          token: response.credential,
+        }
+      );
 
       if (backendResponse.status === 200) {
         setValidCredentials(true);
@@ -209,10 +239,15 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
         // Verify if stored. Developer console -> Application -> Local Storage
         localStorage.setItem("authToken", backendResponse.data.authToken);
       } else {
-        console.error("Failed to create an account. Try signing up with email.");
+        console.error(
+          "Failed to create an account. Try signing up with email."
+        );
       }
     } catch (error) {
-      console.error("An error occurred while sending the token to the backend", error);
+      console.error(
+        "An error occurred while sending the token to the backend",
+        error
+      );
     }
   };
 
@@ -285,7 +320,6 @@ export default function LoginPage() {
     setForget((prevModal) => !prevModal);
   }
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = e.target.elements;
@@ -320,17 +354,19 @@ export default function LoginPage() {
     const email = e.target.elements.email.value.trim().toLowerCase();
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/forgot_password", {
-        username: email,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/forgot_password",
+        {
+          username: email,
+        }
+      );
       if (response.status === 200) {
         console.log(response.data);
         setStatusCode(response.status);
         setForgetError(response.data.message);
       }
       setLoading(false);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setStatusCode(error.response.status);
       setForgetError(error.response.data.message);
@@ -346,7 +382,13 @@ export default function LoginPage() {
     const inputPassword = password.value;
     const inputFirstName = firstName.value;
     const inputLastName = lastName.value;
-    console.log( "testing: ",inputEmail, inputPassword, inputFirstName, inputLastName);
+    console.log(
+      "testing: ",
+      inputEmail,
+      inputPassword,
+      inputFirstName,
+      inputLastName
+    );
     try {
       const response = await axios.post(
         "http://localhost:8000/create_account",
@@ -367,19 +409,20 @@ export default function LoginPage() {
       navigate("/login");
       const errorResponse = error.response.data.message;
       console.log(errorResponse);
-      if (errorResponse === "Username already exists" || errorResponse === "Invalid email address") {
+      if (
+        errorResponse === "Username already exists" ||
+        errorResponse === "Invalid email address"
+      ) {
         setSignUpPasswordInvalid(false); // reset the state to original
         setSignUpInputInvalid(true);
         setSignUpError(errorResponse);
         setStatusCode(error.response.status);
-
       } else if (errorResponse === "Password is too short") {
         setSignUpInputInvalid(false); // reset the state to original
         setSignUpPasswordInvalid(true);
         setSignUpError(errorResponse);
         setStatusCode(error.response.status);
-      }
-      else {
+      } else {
         setSignUpError(errorResponse);
         console.log("tetetet");
         setLoading(false);
@@ -393,15 +436,22 @@ export default function LoginPage() {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleLogin}>
           <EmailInput isInvalid={isLoginInputInvalid} />
-          <PasswordInput isInvalid={isLoginInputInvalid} text="Forgot password?" toggleForget={toggleForget} />
+          <PasswordInput
+            isInvalid={isLoginInputInvalid}
+            text="Forgot password?"
+            toggleForget={toggleForget}
+          />
           <br />
           <p className="text-red-500 mb-5">{error}</p>
-          <SubmitButton text="Sign in"/>
+          <SubmitButton text="Sign in" />
         </form>
         <SignUp showSignUp={toggleSignUp} />
         <p className="mt-3">OR</p>
         <div class="mt-10 grid space-y-4">
-          <ContinueWithGoogle setValidCredentials={setValidCredentials} navigate={navigate} />
+          <ContinueWithGoogle
+            setValidCredentials={setValidCredentials}
+            navigate={navigate}
+          />
           <ContinueWithApple />
         </div>
       </div>
