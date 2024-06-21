@@ -1,7 +1,8 @@
 const Wishlist = require("../models/wishlistModel.js");
 
 const getAllItems = async (req, res) => {
-  const cursor = await Wishlist.find({});
+  const toFindUsername = req.body.username;
+  const cursor = await Wishlist.find({ username: toFindUsername });
   //   const dbModels = await cursor.toArray();
   if (cursor === null) {
     return res.status(400).json({ message: "No items Found" });
@@ -21,6 +22,7 @@ const addItem = async (req, res) => {
     return res.status(400).json({ message: "Item already in wishlist!" });
   }
   const createdItem = await Wishlist.create({
+    username: req.body.username,
     name: itemName,
     price: req.body.price,
     image: req.body.image,

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { SearchResult } from "./SearchResult";
 
-export const SearchResults = ({ results, updateWishlist }) => {
+export const SearchResults = ({ results, updateWishlist, UserId }) => {
   return (
     <SearchResultsWrapper>
       {results.map((result, id) => {
@@ -10,6 +10,7 @@ export const SearchResults = ({ results, updateWishlist }) => {
             result={result}
             key={id}
             updateWishlist={updateWishlist}
+            UserId={UserId}
           />
         );
       })}

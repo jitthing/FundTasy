@@ -32,7 +32,7 @@ export const SearchBar = ({ setResults }) => {
     <SearchBarWrapper>
       <FaSearch />
       <SearchBarInput
-        placeholder="Type to search..."
+        placeholder="Search on amazon.sg"
         value={input}
         onKeyDown={handleEnter}
         onChange={(e) => handleChange(e.target.value)}
@@ -58,7 +58,7 @@ const SearchBarInput = styled.input`
     height: 10px:
     font-size: 1.25rem;
     width: 100%;
-    margin-left: 5px;
+    margin-left: 10px;
 
     &:focus{
         outline: none;
