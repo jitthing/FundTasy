@@ -3,23 +3,24 @@ import styled from "styled-components";
 export const AddedItem = ({ item }) => {
   return (
     <CardDiv>
-      <TempWrap>
         <WishlistImage src={item.image} />
-        <PriceWrap>{item.price}</PriceWrap>
-      </TempWrap>
-      <div>{item.name}</div>
+        <DesctiptionWrap>
+          <div className="font-extrabold text-xl">{item.price}</div>
+          <div>{item.name.length > 50 ? `${item.name.slice(0, 60)}...` : item.name}</div>
+        </DesctiptionWrap>
     </CardDiv>
   );
 };
 
-const TempWrap = styled.div`
+const DesctiptionWrap = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 `;
 
+
 const PriceWrap = styled.div`
-  padding-left: 50px;
-  padding-top: 50px;
+background-color: #f0f0f0;
+margin-top: 50px;
 `;
 
 const CardDiv = styled.div`
@@ -34,13 +35,12 @@ const CardDiv = styled.div`
   justify-content: space-between;
   border: 1px solid #ececec;
   border-radius: 16px;
-  background-color: #ececec;
 `;
 
 const WishlistImage = styled.img`
-  padding-left: 20px;
-  width: 129px;
-  height: 160px;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 75%;
+  margin: auto;
+  object-fit: contain;
   border-radius: 10px;
 `;
