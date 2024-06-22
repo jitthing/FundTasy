@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Social from "../components/Social";
@@ -7,11 +7,51 @@ import mypigs from "../modelinfo";
 import SkinSection from "../components/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
+import axios from "axios";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
   const [modelName, setModelName] = useState("Basic");
   const [show, setShow] = useState(false);
+  const [activeGoals, setActiveGoals] = useState([]);
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    async function getUserId() {
+      try {
+        const getToken = () => {
+          return localStorage.getItem("authToken");
+        };
+        const token = getToken();
+        const response = await axios.get("http://localhost:8000/user_info", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUserId(response.data.user.username);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    }
+    getUserId();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/all_active_items",
+          { username: userId }
+        );
+        const data = await response.data;
+        // console.log(data);
+        setActiveGoals(data);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    }
+    fetchData();
+  }, [activeGoals, userId]);
 
   const selectModel = (model) => {
     setModelUrl("models/" + model + ".glb");
@@ -20,24 +60,31 @@ export default function HomePage() {
 
   const getImagePath = (model) => {
     return "images/" + model + ".png";
-  }
+  };
 
   const getModelName = () => {
     return modelName;
-  }
+  };
 
   const toggleShow = () => {
     setShow(!show);
-  }
+  };
 
   return (
     <PageContainer>
       <Navbar page="home" />
       <Display>
-        <GoalCard />
+        <GoalCard goals={activeGoals} />
         <PigDisplay>
           <ModelDisplay modelUrl={modelUrl} show={show} />
-          <SkinSection getModelName={getModelName} getImagePath={getImagePath} mypigs={mypigs} selectModel={selectModel} show={show} toggle={toggleShow}/>
+          <SkinSection
+            getModelName={getModelName}
+            getImagePath={getImagePath}
+            mypigs={mypigs}
+            selectModel={selectModel}
+            show={show}
+            toggle={toggleShow}
+          />
         </PigDisplay>
         <TransactionCard />
       </Display>
@@ -70,4 +117,4 @@ const PigDisplay = styled.div`
   align-items: center;
   padding: 0px 20px;
   max-width: 60vw;
-`
+`;

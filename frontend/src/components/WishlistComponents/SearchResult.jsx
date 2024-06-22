@@ -13,9 +13,7 @@ export const SearchResult = ({ result, updateWishlist, UserId }) => {
       updateWishlist();
       alert(`${response.data.message}`);
     } catch (error) {
-      if (error.response) {
-        console.error(error.response.body);
-      }
+      alert("Item already in wishlist!");
     }
   };
   return (

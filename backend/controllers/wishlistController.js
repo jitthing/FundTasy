@@ -26,8 +26,6 @@ const addItem = async (req, res) => {
     name: itemName,
     price: req.body.price,
     image: req.body.image,
-    active: false,
-    completed: false,
   });
 
   if (createdItem) {

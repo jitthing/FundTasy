@@ -26,7 +26,7 @@ const scrapeAmazon = async (req, res) => {
       let price = null;
 
       if (priceElement && priceFraction) {
-        price = `$${priceElement.innerText}.${priceFraction.innerText}`;
+        price = `${priceElement.innerText}.${priceFraction.innerText}`;
         price = price.split("\n.").join("");
       }
 

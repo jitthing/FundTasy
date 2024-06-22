@@ -3,11 +3,13 @@ import styled from "styled-components";
 export const AddedItem = ({ item }) => {
   return (
     <CardDiv>
-        <WishlistImage src={item.image} />
-        <DesctiptionWrap>
-          <div className="font-extrabold text-xl">{item.price}</div>
-          <div>{item.name.length > 50 ? `${item.name.slice(0, 60)}...` : item.name}</div>
-        </DesctiptionWrap>
+      <WishlistImage src={item.image} />
+      <DesctiptionWrap>
+        <div className="font-extrabold text-xl">${item.price}</div>
+        <div>
+          {item.name.length > 50 ? `${item.name.slice(0, 60)}...` : item.name}
+        </div>
+      </DesctiptionWrap>
     </CardDiv>
   );
 };
@@ -15,12 +17,6 @@ export const AddedItem = ({ item }) => {
 const DesctiptionWrap = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-
-const PriceWrap = styled.div`
-background-color: #f0f0f0;
-margin-top: 50px;
 `;
 
 const CardDiv = styled.div`
