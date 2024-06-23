@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
+import NewRecordForm from "../components/NewRecordForm";
 
 export default function Transactions() {
     const [type, changeType] = useState("spending");
+    const [formActive, showForm] = useState(false);
     
     const toggleType = (type) => {
         if (type === "spending") {
@@ -13,21 +15,30 @@ export default function Transactions() {
         }
     }
 
+    function openForm() {
+        showForm(true);
+    }
+
+    function closeForm() {
+        showForm(false);
+    }
+
     return (
         <PageContainer>
             <Navbar page="transactions" />
+            {/* {formActive && (<NewRecordForm closeForm={closeForm}/>)} */}
             <TransactionContainer>
                 <TransactionHead>
                     <Title>My Transactions</Title>
-                    <NewRecordButton>
+                    <NewRecordButton onClick={openForm}>
                         <AddIcon srcSet="icons/add-white.png" />
                         <NewRecordText>New Record</NewRecordText>
                     </NewRecordButton>
                 </TransactionHead>
                 <TransactionNeck>
                     <ToggleBar>
-                        <ToggleButton onClick={() => toggleType("spending")} active={type === "coins"} >Spending</ToggleButton>
-                        <ToggleButton onClick={() => toggleType("coins")} active={type === "spending"} >Oink Coins</ToggleButton>
+                        <ToggleButton onClick={() => toggleType("coins")} active={type === "spending"} >Spending</ToggleButton>
+                        <ToggleButton onClick={() => toggleType("spending")} active={type === "coins"} >Oink Coins</ToggleButton>
                     </ToggleBar>
                     <FilterButton>
                         <FilterIcon srcSet="icons/filter.png" />
@@ -35,7 +46,38 @@ export default function Transactions() {
                     </FilterButton>
                 </TransactionNeck>
                 
-                <TransactionBody></TransactionBody>
+                <TransactionBody>
+                    <TableHead>
+                        <HeadTitle>Title</HeadTitle>
+                        <HeadCategory>Category</HeadCategory>
+                        <HeadDateTime>Date</HeadDateTime>
+                        <HeadAmount>Amount</HeadAmount>
+                    </TableHead>
+                    <TransactionDiv>
+                        <TransactionTitle>Dinner with friends</TransactionTitle>
+                        <TransactionCategory>
+                            <CategoryButton>Food</CategoryButton>
+                        </TransactionCategory>
+                        <TransactionDateTime>21:33</TransactionDateTime>
+                        <TransactionAmount>-$12.00</TransactionAmount>
+                    </TransactionDiv>
+                    <TransactionDiv>
+                        <TransactionTitle>HEAP deposit</TransactionTitle>
+                        <TransactionCategory>
+                            <CategoryButton>School</CategoryButton>
+                        </TransactionCategory>
+                        <TransactionDateTime>29 Apr 2024 17:05</TransactionDateTime>
+                        <TransactionAmount>-$30.00</TransactionAmount>
+                    </TransactionDiv>
+                    <TransactionDiv>
+                        <TransactionTitle>Onlyfans</TransactionTitle>
+                        <TransactionCategory>
+                            <CategoryButton>Others</CategoryButton>
+                        </TransactionCategory>
+                        <TransactionDateTime>31 Mar 2024 08:00</TransactionDateTime>
+                        <TransactionAmount>-$6.99</TransactionAmount>
+                    </TransactionDiv>
+                </TransactionBody>
             </TransactionContainer>
         </PageContainer>
     )
@@ -95,11 +137,11 @@ const AddIcon = styled.img`
 `
 const TransactionNeck = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     width: 90%;
-    height: 20%;
-    margin-top: 20px;
+    height: 10vh;
+    margin: 0px auto;
 `
 
 const ToggleBar = styled.div`
@@ -127,15 +169,35 @@ const ToggleButton = styled.div`
     transition: 0.1s;
 `
 
+const ToolBar = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 60vw;
+    height: 36px;
+    align-items: center;
+`
+
+const SearchBar = styled.input`
+    margin: 0px 0px 0px auto;
+    width: 20%;
+    height: 36px;
+    box-shadow: 0px 0px 3px #adadad;
+    border-radius: 8px;
+    font-size: 16px;
+    padding: 0px 15px;
+`
+
 const FilterButton = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     width: 80px;
     height: 36px;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0px 0px 3px #adadad;
     padding: 0px 5px;
+    margin: 0px 0px 0px auto;
     cursor: pointer;
     &:hover {
         background-color: #f2f2f2;
@@ -157,11 +219,95 @@ const FilterText = styled.div`
 const TransactionBody = styled.div`
     display: flex;
     flex-direction: column;
-    width: 80vw;
-    height: 90vh;
-    overflow: scroll;
-    overflow-x:hidden;
+    width: 90%;
+    height: 80vh;
 `
-const TransactionDiv = styled.div`
 
+const TableHead = styled.div`
+    width: 100%;
+    height: 40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: grey;
+    text-align: left;
+    &:hover {
+        background-color: #f8f8f8;
+        transition: 0.2s;
+    }
+`
+
+const HeadTitle = styled.div`
+    width: 40%;
+    padding-left: 20px;
+`
+
+const HeadCategory = styled.div`
+    width: 20%;
+`
+
+const HeadDateTime = styled.div`
+    width: 20%;
+`
+
+const HeadAmount = styled.div`
+    width: 20%;
+    text-align: right;
+    padding-right: 20px;
+`
+
+const TransactionDiv = styled.div`
+    width: 100%;
+    height: 50px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    text-align: left;
+    border-top: 1px solid #cecece;
+    &:hover {
+        background-color: #f1f1f1;
+        transition: 0.2s;
+    }
+`
+
+const TransactionTitle = styled.div`
+    width: 40%;
+    padding-left: 20px;
+    font-weight: bold;
+`
+
+const TransactionCategory = styled.div`
+    width: 20%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+`
+
+const CategoryButton = styled.div`
+    height: 20px;
+    background-color: #e8e8e8;
+    border-radius: 20px;
+    text-align: center;
+    padding: 2px 10px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+        filter: brightness(0.95);
+        transition: 0.1s;
+    }
+`
+
+const TransactionDateTime = styled.div`
+    width: 20%;
+    font-size: 14px;
+`
+
+const TransactionAmount = styled.div`
+    width: 20%;
+    text-align: right;
+    padding-right: 20px;
 `
