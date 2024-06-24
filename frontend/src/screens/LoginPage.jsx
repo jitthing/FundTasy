@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 /* global confetti */
 import { X } from "lucide-react";
@@ -298,9 +298,14 @@ const ContinueWithApple = () => (
   </button>
 );
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 // LoginPage component
 export default function LoginPage() {
   const navigate = useNavigate();
+  const query = useQuery();
   const [showSignUp, setShowSignUp] = useState(false);
   const [showForget, setForget] = useState(false);
   const [validCredentials, setValidCredentials] = useState(false);
@@ -312,6 +317,13 @@ export default function LoginPage() {
   const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
   const [isSignUpPasswordInvalid, setSignUpPasswordInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // if user clicked change password from settings page
+  useEffect(() => {
+    if (query.get('resetPassword') === 'true') {
+      setForget(true);
+    }
+  }, [query]);
 
   function toggleSignUp() {
     setShowSignUp((prevModal) => !prevModal);
