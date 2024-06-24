@@ -158,7 +158,8 @@ const Modal = ({ onClose, dropdownItems }) => {
 
   const handleSelectChange = (event) => {
     const item = dropdownItems.find(
-      (dropdownItem) => dropdownItem.name === event.target.value
+      //changed it to id instead cause of string slicing
+      (dropdownItem) => dropdownItem._id === event.target.value 
     );
     if (item) {
       setPrice(item.price);
@@ -176,7 +177,7 @@ const Modal = ({ onClose, dropdownItems }) => {
             ---
           </option>
           {dropdownItems.map((item) => {
-            return <option>{item.name}</option>;
+            return <option value={item._id} title={item.name}>{item.name.length > 50 ? `${item.name.slice(0, 70)}...` : item.name}</option>
           })}
         </select>
         <div>Price:</div>

@@ -7,6 +7,7 @@ const {
   forgotPassword,
   userInfo,
   validateResetToken,
+  updateUserInfo,
 } = require("../controllers/userController");
 
 const {
@@ -25,6 +26,7 @@ const router = express.Router();
 router.post("/login", authenticateUser);
 router.post("/google_login", google_login);
 router.post("/create_account", create_account);
+router.post("/update_user_info", updateUserInfo);
 
 router.post("/all_models", getAllModels);
 

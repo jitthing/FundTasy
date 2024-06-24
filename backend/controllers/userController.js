@@ -45,18 +45,66 @@ const authenticateUser = async (req, res) => {
   return res.status(200).json({ message: "Successful login", authToken, });
 };
 
-const userInfo = async (req, res) => {
+// Shared function to get user from token
+const getUserFromToken = async (req) => {
   try {
-    token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
-    return res.status(200).json({ user });
+    if (!user) {
+      return { error: "User not found" };
+    }
+    return { user }; // Return an object with the user
+  } catch (error) {
+    console.error("Error in getUserFromToken:", error);
+    return { error: "Error verifying token or fetching user" }; // Return an object with the error
+  }
+};
+
+const userInfo = async (req, res) => {
+  try {
+    const { user, error } = await getUserFromToken(req); // Destructure the response to get user or error
+    if (error) {
+      // Handle error if getUserFromToken returned an error
+      return res.status(500).json({ message: error });
+    }
+    return res.status(200).json({ user, message: "User info retrieved" });
   } catch (error) {
     console.error("Error getting user info:", error);
     return res.status(500).json({ message: "Internal Server Error" });
-
   }
-}
+};
+
+const updateUserInfo = async (req, res) => {
+  // console.log(req.body);
+  // try {
+  //   const { user, error } = await getUserFromToken(req); // Destructure to get user, error, and message
+  //   if (error) {
+  //     return res.status(500).json({ message: error });
+  //   }
+  //   if(user){ //a user object
+
+  //     const { firstName, lastName, email, password, income } = req.body;
+  //     console.log(firstName, lastName, email, password, income);
+  //     // check if user has a password if not, they are a google user
+  //     if (!user.password) {
+  //       // update everything but email
+  //       const { email, ...restUpdates } = updates;
+  //       return res.status(200).json({ message: "google Updated user info successfully"});
+        
+  //     }
+  //     // if have a password then update user info using user object;
+  //     return res.status(200).json({ user, message: "Updated user info successfully"});
+  //   }
+  // } catch (error) {
+  //   console.error("Error getting user info:", error);
+  //   return res.status(500).json({ message: "Internal Server Error" });
+  // }
+};
+
+
+
+
 
 const create_account = async (req, res) => {
   if(!validateEmail(req.body.username)){
@@ -150,7 +198,7 @@ const forgotPassword = async (req, res) => {
 const google_login = async (req, res) => {
   try {
     const { token } = req.body;
-    console.log("Received token");
+    // console.log("Received token");
     // console.log(req.body);
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -161,7 +209,7 @@ const google_login = async (req, res) => {
     const email = payload["email"];
     const firstName = payload["given_name"];
     const lastName = payload["family_name"];
-    console.log("Ticket:", ticket);
+    // console.log("Ticket:", ticket);
 
     let user = await Users.findOne({ username: email });
     if (!user) {
@@ -211,4 +259,5 @@ module.exports = {
   forgotPassword,
   userInfo,
   validateResetToken,
+  updateUserInfo,
 };

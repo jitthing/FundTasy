@@ -26,144 +26,165 @@ TODO
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
+import Banner from "../components/Banner";
 import axios from "axios";
 
 
-function getToken() { 
+function getToken() {
   return localStorage.getItem('authToken');
 }
 
 function Profile() {
-
-  const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState({ value: undefined, masked: true });
-  const [income, setIncome] = useState("");
+  const [income, setIncome] = useState("Not set");
+  const [showBanner, setShowBanner] = React.useState(false);
+  const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
+  const [statusMessage, setStatusMessage] = React.useState("");
+
+  function handleShowBanner() {
+    setShowBanner(true);
+    setTimeout(() => {
+      setShowBanner(false);
+    }, 2000); // Hide the banner after 2s
+  }
+  const UpdateUserInfo = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/update_user_info', {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        income: income
+      }, {
+        headers: {
+          'Authorization': `Bearer ${getToken()}`
+        }
+      });
+      if (response.status === 200) {
+        console.log("User info updated successfully");
+        setStatusMessage(response.data.message);
+        handleShowBanner();
+      }
+    }
+    catch (error) {
+      console.log("Error updating user data: ", error);
+    }
+  }
 
   const fetchUserData = async () => {
-    try{
+    try {
       const response = await axios.get('http://localhost:8000/user_info', {
         headers: {
           'Authorization': `Bearer ${getToken()}`
         }
       });
-      if(response.status === 200){
+      if (response.status === 200) {
         setEmail(response.data.user.username);
         setIncome(response.data.user.income);
         setFirstName(response.data.user.firstName);
         setLastName(response.data.user.lastName);
-        setPassword(response.data.user.income);
-        response.data.user.income ? setIncome(response.data.user.income) : setIncome("0");
-        console.log(response.data.user.username);
+        // response.data.user.setLastName ? setLastName(response.data.user.lastName) : setLastName("Not set");
+        // response.data.user.income ? setIncome(response.data.user.income) : setIncome("Not set");
+        // console.log(response);
+        console.log(response.data.message);
+        setStatusMessage(response.data.message);
+        console.log("workingregergreg");
+        handleShowBanner();
+      
       }
     }
-    catch(error){
+    catch (error) {
       console.log("Error fetching user data: ", error);
     }
   };
-    useEffect(() => {
+  useEffect(() => {
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    // some bug here it's calling for updateUserInfo twice
+    console.log(firstName, lastName, email, income);
+    UpdateUserInfo();
+  }, [firstName, lastName, email, income]);
 
 
 
   const handleEdit = (field, value) => {
-    if (field === "username") setUsername(value);
+    if (field === "fistname") setFirstName(value);
+    if (field === "lastname") setLastName(value);
     if (field === "email") setEmail(value);
-    if (field === "password") setPassword({ value, masked: true });
     if (field === "income") setIncome(value);
-  };
-
-  const togglePasswordVisibility = () => {
-    setPassword({ ...password, masked: !password.masked });
   };
 
   return (
     <PageContainer>
-      <NavbarContainer>
-        <Navbar page="profile" />
-      </NavbarContainer>
-      <ProfileContainer>
-        <ProfilePicture>
-          <img src="images/basic.png" alt="No Pig Selected" />
-          <EditIcon src="icons/edit-black.png" alt="Edit" />
-        </ProfilePicture>
-        <ProfileInfo>
-        <InfoRow>
-            <Label>First name:</Label>
-            <Value>{firstName}</Value>
-            <EditIcon
-              src="icons/edit-black.png"
-              alt="Edit"
-              onClick={() => handleEdit("username", prompt("Edit First name", firstName))}
-            />
-          </InfoRow>
-          {
-            lastName && 
+      {showBanner && <Banner type={bannerType}>{statusMessage}</Banner>}
+      <Content>
+        <NavbarContainer>
+          <Navbar page="profile" />
+        </NavbarContainer>
+        <ProfileContainer>
+          <ProfilePicture>
+            <img src="images/basic.png" alt="No Pig Selected" />
+            <EditIcon src="icons/edit-black.png" alt="Edit" />
+          </ProfilePicture>
+          <ProfileInfo>
             <InfoRow>
-              <Label>Last name:</Label>
-              <Value>{lastName}</Value>
+              <Label>First name:</Label>
+              <Value>{firstName}</Value>
               <EditIcon
                 src="icons/edit-black.png"
                 alt="Edit"
-                onClick={() => handleEdit("username", prompt("Edit Last name", lastName))}
+                onClick={() => handleEdit("fistname", prompt("Edit First name", firstName))}
               />
             </InfoRow>
-          }
-          <InfoRow>
-            <Label>Username:</Label>
-            <Value>{username}</Value>
-            <EditIcon
-              src="icons/edit-black.png"
-              alt="Edit"
-              onClick={() => handleEdit("username", prompt("Edit Username", username))}
-            />
-          </InfoRow>
-          <InfoRow>
-            <Label>Email:</Label>
-            <Value>{email}</Value>
-            <EditIcon
-              src="icons/edit-black.png"
-              alt="Edit"
-              onClick={() => handleEdit("email", prompt("Edit Email", email))}
-            />
-          </InfoRow>
-          {password && 
-          <>
-          <InfoRow>
-            <Label>Password:</Label>
-            <Value>{password.masked ? "*********" : password.value}</Value>
-            <VisibilityToggle onClick={togglePasswordVisibility}>
-              {password.masked ? "Show" : "Hide"}
-            </VisibilityToggle>
-            <EditIcon
-              src="icons/edit-black.png"
-              alt="Edit"
-              onClick={() => handleEdit("password", prompt("Edit Password", password.value))}
-            />
-          </InfoRow>
-          </>
-          }
+            {
+              lastName &&
+              <InfoRow>
+                <Label>Last name:</Label>
+                <Value>{lastName}</Value>
+                <EditIcon
+                  src="icons/edit-black.png"
+                  alt="Edit"
+                  onClick={() => handleEdit("lastname", prompt("Edit Last name", lastName))}
+                />
+              </InfoRow>
+            }
 
-
-          <InfoRow>
-            <Label>Monthly Income:</Label>
-            <Value>{income}</Value>
-            <EditIcon
-              src="icons/edit-black.png"
-              alt="Edit"
-              onClick={() => handleEdit("income", prompt("Edit Income", income))}
-            />
-          </InfoRow>
-        </ProfileInfo>
-      </ProfileContainer>
+            <InfoRow>
+              <Label>Email:</Label>
+              <Value>{email}</Value>
+              <EditIcon
+                src="icons/edit-black.png"
+                alt="Edit"
+                onClick={() => handleEdit("email", prompt("Edit Email", email))}
+              />
+            </InfoRow>
+          
+            <InfoRow>
+              <Label>Monthly Income:</Label>
+              <Value>{income}</Value>
+              <EditIcon
+                src="icons/edit-black.png"
+                alt="Edit"
+                onClick={() => handleEdit("income", prompt("Edit Income", income))}
+              />
+            </InfoRow>
+          </ProfileInfo>
+          <button onClick={handleShowBanner}>Show Banner</button>
+        </ProfileContainer>
+      </Content>
     </PageContainer>
   );
 }
 
 const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Content = styled.div`
   display: flex;
   align-items: flex-start;
   margin: 0;
