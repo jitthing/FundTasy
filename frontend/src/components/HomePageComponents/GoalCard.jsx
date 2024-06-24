@@ -181,7 +181,7 @@ const Modal = ({ onClose, dropdownItems }) => {
           })}
         </select>
         <div>Price:</div>
-        <div>{price ? "$" + price : ""}</div>
+        <div>{price ? "$" + String(price) : ""}</div>
         <button onClick={onClose}>Close</button>
       </ModalContent>
     </ModalBackdrop>

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const wishlistSchema = new mongoose.Schema({
   username: String,
   name: String,
-  price: Number,
+  price: String,
   image: String,
 });
 
