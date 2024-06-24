@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import NewRecordForm from "../NewRecordForm";
 
 export default function GoalCard({ goals }) {
   const numActiveGoals = goals.length;
@@ -147,6 +148,7 @@ function GoalBox(props) {
             onClose={handleModalClose}
             dropdownItems={wishlistItems}
           ></Modal>
+          //<NewRecordForm />
         )}
       </>
     );

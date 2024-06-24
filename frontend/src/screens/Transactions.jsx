@@ -26,7 +26,7 @@ export default function Transactions() {
     return (
         <PageContainer>
             <Navbar page="transactions" />
-            {/* {formActive && (<NewRecordForm closeForm={closeForm}/>)} */}
+            {formActive && (<NewRecordForm closeForm={closeForm}/>)}
             <TransactionContainer>
                 <TransactionHead>
                     <Title>My Transactions</Title>
@@ -50,6 +50,7 @@ export default function Transactions() {
                     <TableHead>
                         <HeadTitle>Title</HeadTitle>
                         <HeadCategory>Category</HeadCategory>
+                        <HeadGoal>Goal</HeadGoal>
                         <HeadDateTime>Date</HeadDateTime>
                         <HeadAmount>Amount</HeadAmount>
                     </TableHead>
@@ -58,6 +59,10 @@ export default function Transactions() {
                         <TransactionCategory>
                             <CategoryButton>Food</CategoryButton>
                         </TransactionCategory>
+                        <TransactionGoal>
+                            <GoalName>Save $150 in 7 days</GoalName>
+                            <GoalStatus>In Progress</GoalStatus>
+                        </TransactionGoal>
                         <TransactionDateTime>21:33</TransactionDateTime>
                         <TransactionAmount>-$12.00</TransactionAmount>
                     </TransactionDiv>
@@ -66,16 +71,36 @@ export default function Transactions() {
                         <TransactionCategory>
                             <CategoryButton>School</CategoryButton>
                         </TransactionCategory>
+                        <TransactionGoal>
+                            <GoalName>Save $280 in 12 days</GoalName>
+                            <GoalStatus>In Progress</GoalStatus>
+                        </TransactionGoal>
                         <TransactionDateTime>29 Apr 2024 17:05</TransactionDateTime>
                         <TransactionAmount>-$30.00</TransactionAmount>
                     </TransactionDiv>
                     <TransactionDiv>
-                        <TransactionTitle>Onlyfans</TransactionTitle>
+                        <TransactionTitle>Parking fine + wheel clamp removal</TransactionTitle>
                         <TransactionCategory>
                             <CategoryButton>Others</CategoryButton>
                         </TransactionCategory>
-                        <TransactionDateTime>31 Mar 2024 08:00</TransactionDateTime>
-                        <TransactionAmount>-$6.99</TransactionAmount>
+                        <TransactionGoal>
+                            <GoalName>Save $90 in 30 days</GoalName>
+                            <GoalStatus>Failed</GoalStatus>
+                        </TransactionGoal>
+                        <TransactionDateTime>31 Mar 2024 03:46</TransactionDateTime>
+                        <TransactionAmount>-$65.00</TransactionAmount>
+                    </TransactionDiv>
+                    <TransactionDiv>
+                        <TransactionTitle>Apple Music</TransactionTitle>
+                        <TransactionCategory>
+                            <CategoryButton>Subscriptions</CategoryButton>
+                        </TransactionCategory>
+                        <TransactionGoal>
+                            <GoalName>Save $90 in 14 days</GoalName>
+                            <GoalStatus>Completed</GoalStatus>
+                        </TransactionGoal>
+                        <TransactionDateTime>17 Jan 2024 08:00</TransactionDateTime>
+                        <TransactionAmount>-$13.90</TransactionAmount>
                     </TransactionDiv>
                 </TransactionBody>
             </TransactionContainer>
@@ -240,27 +265,31 @@ const TableHead = styled.div`
 `
 
 const HeadTitle = styled.div`
-    width: 40%;
+    width: 35%;
     padding-left: 20px;
 `
 
 const HeadCategory = styled.div`
+    width: 15%;
+`
+
+const HeadGoal = styled.div`
     width: 20%;
 `
 
 const HeadDateTime = styled.div`
-    width: 20%;
+    width: 15%;
 `
 
 const HeadAmount = styled.div`
-    width: 20%;
+    width: 15%;
     text-align: right;
     padding-right: 20px;
 `
 
 const TransactionDiv = styled.div`
     width: 100%;
-    height: 50px;
+    height: 70px;
     display:flex;
     justify-content: space-between;
     align-items: center;
@@ -274,26 +303,26 @@ const TransactionDiv = styled.div`
 `
 
 const TransactionTitle = styled.div`
-    width: 40%;
+    width: 35%;
     padding-left: 20px;
     font-weight: bold;
 `
 
 const TransactionCategory = styled.div`
-    width: 20%;
+    width: 15%;
     display: flex;
     justify-content: start;
     align-items: center;
 `
 
 const CategoryButton = styled.div`
-    height: 20px;
+    height: 24px;
     background-color: #e8e8e8;
     border-radius: 20px;
     text-align: center;
     padding: 2px 10px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     &:hover {
         filter: brightness(0.95);
@@ -301,13 +330,29 @@ const CategoryButton = styled.div`
     }
 `
 
-const TransactionDateTime = styled.div`
+const TransactionGoal = styled.div`
     width: 20%;
+    display: flex;
+    flex-direction: column;
+`
+
+const GoalName = styled.div`
+    font-size: 14px;
+`
+
+const GoalStatus = styled.div`
+    font-size: 12px;
+    font-weight: bold;
+    color: grey;
+`
+
+const TransactionDateTime = styled.div`
+    width: 15%;
     font-size: 14px;
 `
 
 const TransactionAmount = styled.div`
-    width: 20%;
+    width: 15%;
     text-align: right;
     padding-right: 20px;
 `
