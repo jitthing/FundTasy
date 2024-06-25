@@ -1,32 +1,12 @@
-// import * as React from "react";
-// import styled from "styled-components";
-// import Navbar from "../components/Navbar";
-
-// export default function Profile() {
-//     return (
-//         <PageContainer>
-//             <Navbar page="profile" />
-//             <div>My Profile</div>
-//         </PageContainer>
-//     )
-// }
-
-// const PageContainer = styled.div`
-//   display: flex;
-//   align-items: start;
-//   margin: 0px;
-//   padding: 0px;
-// `;
-
-
 /*
 TODO 
- - Retrive user data from the backend 
+ - Fix text aligntment (not centered)
  */
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
+import formatCurrency from "../utils/formatCurrency";
 import axios from "axios";
 
 
@@ -35,13 +15,15 @@ function getToken() {
 }
 
 function Profile() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [income, setIncome] = useState("Not set");
+  const [firstName, setFirstName] = useState(undefined);
+  const [lastName, setLastName] = useState(undefined);
+  const [email, setEmail] = useState(undefined);
+  const [income, setIncome] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
   const [showBanner, setShowBanner] = React.useState(false);
   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
-  const [statusMessage, setStatusMessage] = React.useState("");
+  const [statusMessage, setStatusMessage] = React.useState(null);
+  const [hasEdited, setHasEdited] = React.useState(false);
 
   function handleShowBanner() {
     setShowBanner(true);
@@ -50,6 +32,7 @@ function Profile() {
     }, 2000); // Hide the banner after 2s
   }
   const UpdateUserInfo = async () => {
+    console.log("updating user data");
     try {
       const response = await axios.post('http://localhost:8000/update_user_info', {
         firstName: firstName,
@@ -62,13 +45,17 @@ function Profile() {
         }
       });
       if (response.status === 200) {
-        console.log("User info updated successfully");
         setStatusMessage(response.data.message);
+        setBannerType("success");
         handleShowBanner();
       }
     }
     catch (error) {
       console.log("Error updating user data: ", error);
+      setStatusMessage(error.response.data.message);
+      if (error.response.status === 400) setBannerType("warning");
+      else setBannerType("danger");
+      handleShowBanner();
     }
   }
 
@@ -81,36 +68,36 @@ function Profile() {
       });
       if (response.status === 200) {
         setEmail(response.data.user.username);
-        setIncome(response.data.user.income);
         setFirstName(response.data.user.firstName);
         setLastName(response.data.user.lastName);
-        // response.data.user.setLastName ? setLastName(response.data.user.lastName) : setLastName("Not set");
-        // response.data.user.income ? setIncome(response.data.user.income) : setIncome("Not set");
-        // console.log(response);
-        console.log(response.data.message);
+        response.data.user.lastName ? setLastName(response.data.user.lastName) : setLastName(undefined);
+        response.data.user.income ? setIncome(response.data.user.income) : setIncome(undefined);
+        setPassword(response.data.user.password); // use to check if user is a google user
         setStatusMessage(response.data.message);
-        console.log("workingregergreg");
         handleShowBanner();
-      
+
       }
     }
     catch (error) {
-      console.log("Error fetching user data: ", error);
+      setStatusMessage(error.response.data.message);
+      setBannerType("danger");
+      handleShowBanner();
     }
   };
+  useEffect(() => {
+    if (hasEdited) {
+      UpdateUserInfo();
+    }
+  }, [firstName, lastName, email, income]);
+
   useEffect(() => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    // some bug here it's calling for updateUserInfo twice
-    console.log(firstName, lastName, email, income);
-    UpdateUserInfo();
-  }, [firstName, lastName, email, income]);
-
-
 
   const handleEdit = (field, value) => {
+    if (!value) return; // if user cancels prompt
+    setHasEdited(true);
     if (field === "fistname") setFirstName(value);
     if (field === "lastname") setLastName(value);
     if (field === "email") setEmail(value);
@@ -130,6 +117,18 @@ function Profile() {
             <EditIcon src="icons/edit-black.png" alt="Edit" />
           </ProfilePicture>
           <ProfileInfo>
+
+          <InfoRow>
+              <Label>Email:</Label>
+              <Value>{email}</Value>
+              {password &&
+                <EditIcon
+                  src="icons/edit-black.png"
+                  alt="Edit"
+                  onClick={() => handleEdit("email", prompt("Edit Email", email))}
+                />
+              }
+            </InfoRow>
             <InfoRow>
               <Label>First name:</Label>
               <Value>{firstName}</Value>
@@ -139,36 +138,24 @@ function Profile() {
                 onClick={() => handleEdit("fistname", prompt("Edit First name", firstName))}
               />
             </InfoRow>
-            {
-              lastName &&
-              <InfoRow>
-                <Label>Last name:</Label>
-                <Value>{lastName}</Value>
-                <EditIcon
-                  src="icons/edit-black.png"
-                  alt="Edit"
-                  onClick={() => handleEdit("lastname", prompt("Edit Last name", lastName))}
-                />
-              </InfoRow>
-            }
 
             <InfoRow>
-              <Label>Email:</Label>
-              <Value>{email}</Value>
+              <Label>Last name:</Label>
+              <Value>{lastName}</Value>
               <EditIcon
                 src="icons/edit-black.png"
                 alt="Edit"
-                onClick={() => handleEdit("email", prompt("Edit Email", email))}
+                onClick={() => handleEdit("lastname", prompt("Edit Last name", lastName))}
               />
             </InfoRow>
-          
+
             <InfoRow>
               <Label>Monthly Income:</Label>
-              <Value>{income}</Value>
+              <Value>{formatCurrency(income)}</Value>
               <EditIcon
                 src="icons/edit-black.png"
                 alt="Edit"
-                onClick={() => handleEdit("income", prompt("Edit Income", income))}
+                onClick={() => handleEdit("income", prompt("Edit Income: Please enter number", income))}
               />
             </InfoRow>
           </ProfileInfo>

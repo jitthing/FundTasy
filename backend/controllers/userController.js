@@ -76,30 +76,29 @@ const userInfo = async (req, res) => {
 };
 
 const updateUserInfo = async (req, res) => {
-  // console.log(req.body);
-  // try {
-  //   const { user, error } = await getUserFromToken(req); // Destructure to get user, error, and message
-  //   if (error) {
-  //     return res.status(500).json({ message: error });
-  //   }
-  //   if(user){ //a user object
-
-  //     const { firstName, lastName, email, password, income } = req.body;
-  //     console.log(firstName, lastName, email, password, income);
-  //     // check if user has a password if not, they are a google user
-  //     if (!user.password) {
-  //       // update everything but email
-  //       const { email, ...restUpdates } = updates;
-  //       return res.status(200).json({ message: "google Updated user info successfully"});
-        
-  //     }
-  //     // if have a password then update user info using user object;
-  //     return res.status(200).json({ user, message: "Updated user info successfully"});
-  //   }
-  // } catch (error) {
-  //   console.error("Error getting user info:", error);
-  //   return res.status(500).json({ message: "Internal Server Error" });
-  // }
+  try {
+    const { user, error } = await getUserFromToken(req); 
+    if (error) {
+      return res.status(500).json({ message: error });
+    }
+    if(user){ 
+      const { firstName, lastName, email, income } = req.body;
+      let fieldsToUpdate = {firstName, lastName, income};
+      // check if normal user
+      if (user.password) {
+        if(validateEmail(email)){
+          fieldsToUpdate.username = email; //append email to fieldsToUpdate
+        }
+        else{
+          return res.status(400).json({ message: "Invalid email address" });
+        }
+      }
+      const updateUser = await Users.updateOne({ _id: user._id }, { $set: fieldsToUpdate })
+      return res.status(200).json({ message: "Updated user info successfully" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.name + error.message });
+  }
 };
 
 
