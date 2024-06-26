@@ -46,7 +46,17 @@ export default function Transactions() {
                     </FilterButton>
                 </TransactionNeck>
                 
-                <TransactionBody>
+                {type === "spending" && (<SpendingTable />)}
+                {type === "coins" && (<CoinsTable />)}
+            </TransactionContainer>
+        </PageContainer>
+    )
+}
+
+const SpendingTable = () => {
+    return (
+        <>
+            <TransactionBody>
                     <TableHead>
                         <HeadTitle>Title</HeadTitle>
                         <HeadCategory>Category</HeadCategory>
@@ -103,8 +113,69 @@ export default function Transactions() {
                         <TransactionAmount>-$13.90</TransactionAmount>
                     </TransactionDiv>
                 </TransactionBody>
-            </TransactionContainer>
-        </PageContainer>
+        </>
+    )
+}
+
+const CoinsTable = () => {
+    return (
+        <>
+            <TransactionBody>
+                    <TableHead>
+                        <CoinTitleHead>Description</CoinTitleHead>
+                        <CoinTypeHead>Type</CoinTypeHead>
+                        <CoinGoalHead>Goal</CoinGoalHead>
+                        <CoinDateTimeHead>Date</CoinDateTimeHead>
+                        <CoinAmountHead>Amount</CoinAmountHead>
+                    </TableHead>
+                    <TransactionDiv>
+                        <CoinTitle>Unlock Ninja Skin</CoinTitle>
+                        <CoinType>
+                            <CoinTypeButton>Purchase</CoinTypeButton>
+                        </CoinType>
+                        <CoinGoal>
+                            <CoinGoalName>-</CoinGoalName>
+                            <CoinGoalStatus>-</CoinGoalStatus>
+                        </CoinGoal>
+                        <CoinDateTime>28 Jun 2024 14:44</CoinDateTime>
+                        <CoinAmount isSpending >
+                            -25000
+                            <OinkCoin srcSet="icons/coin.png" />
+                        </CoinAmount>
+                    </TransactionDiv>
+                    <TransactionDiv>
+                        <CoinTitle>Completed "Save $90 in 14 days"</CoinTitle>
+                        <CoinType>
+                            <CoinTypeButton>Reward Bonus</CoinTypeButton>
+                        </CoinType>
+                        <CoinGoal>
+                            <CoinGoalName>Save $90 in 14 days</CoinGoalName>
+                            <CoinGoalStatus>Completed</CoinGoalStatus>
+                        </CoinGoal>
+                        <CoinDateTime>23 Jan 2024 09:57</CoinDateTime>
+                        <CoinAmount >
+                            +5000
+                            <OinkCoin srcSet="icons/coin.png" />
+                        </CoinAmount>
+                    </TransactionDiv>
+                    <TransactionDiv>
+                        <CoinTitle>Completed "Save $90 in 14 days"</CoinTitle>
+                        <CoinType>
+                            <CoinTypeButton>Reward</CoinTypeButton>
+                        </CoinType>
+                        <CoinGoal>
+                            <CoinGoalName>Save $90 in 14 days</CoinGoalName>
+                            <CoinGoalStatus>Completed</CoinGoalStatus>
+                        </CoinGoal>
+                        <CoinDateTime>23 Jan 2024 09:57</CoinDateTime>
+                        <CoinAmount >
+                            +9000
+                            <OinkCoin srcSet="icons/coin.png" />
+                        </CoinAmount>
+                    </TransactionDiv>
+                    
+                </TransactionBody>
+        </>
     )
 }
 
@@ -355,4 +426,92 @@ const TransactionAmount = styled.div`
     width: 15%;
     text-align: right;
     padding-right: 20px;
+`
+
+const CoinTitleHead = styled.div`
+    width: 35%;
+    padding-left: 20px;
+`
+
+const CoinTypeHead = styled.div`
+    width: 15%;
+`
+
+const CoinGoalHead = styled.div`
+    width: 20%;
+`
+
+const CoinDateTimeHead = styled.div`
+    width: 15%;
+`
+
+const CoinAmountHead = styled.div`
+    width: 15%;
+    text-align: right;
+    padding-right: 20px;
+`
+
+const CoinTitle = styled.div`
+    width: 35%;
+    padding-left: 20px;
+    font-weight: bold;
+`
+
+const CoinType = styled.div`
+    width: 15%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+`
+
+const CoinTypeButton = styled.div`
+    height: 24px;
+    background-color: #e8e8e8;
+    border-radius: 20px;
+    text-align: center;
+    padding: 2px 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        filter: brightness(0.95);
+        transition: 0.1s;
+    }
+`
+
+const CoinGoal = styled.div`
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+`
+
+const CoinGoalName = styled.div`
+    font-size: 14px;
+`
+
+const CoinGoalStatus = styled.div`
+    font-size: 12px;
+    font-weight: bold;
+    color: grey;
+`
+
+const CoinDateTime = styled.div`
+    width: 15%;
+    font-size: 14px;
+`
+
+const CoinAmount = styled.div`
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 5px;
+    width: 15%;
+    text-align: right;
+    padding-right: 20px;
+    color: ${(props) => props.isSpending ? "red":"green"};
+`
+
+const OinkCoin = styled.img`
+    width: 16px; 
+    height: 16px;
 `

@@ -42,7 +42,10 @@ export default function NewRecordForm({ closeForm }) {
                     </FormBlock>
                     <FormBlock width="100%">
                         <FormLabel>Amount</FormLabel>
-                        <FormTextInput type="number" required name="price" min="0" value="0" step="0.01" placeholder="Amount" />
+                        <div style={{ display:"flex", justifyContent:"start", alignItems:"center", gap:"10px" }}>
+                            <div style={{ display:"inline-block", fontWeight:"bold" }}>$</div>
+                            <FormTextInput type="number" required name="price" min="0" step="0.01" placeholder="0.00" />
+                        </div>
                     </FormBlock>
                 </NewRecordBody>
                 <FormBottom>

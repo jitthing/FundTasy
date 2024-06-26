@@ -8,6 +8,7 @@ import SkinSection from "../components/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
 import axios from "axios";
+import BarChartCard from "../components/HomePageComponents/BarChartCard";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -86,7 +87,10 @@ export default function HomePage() {
             toggle={toggleShow}
           />
         </PigDisplay>
-        <TransactionCard />
+        <BottomDisplay>
+          <TransactionCard />
+          <BarChartCard />
+        </BottomDisplay>
       </Display>
       <Social />
     </PageContainer>
@@ -98,7 +102,6 @@ const PageContainer = styled.div`
   align-items: start;
   margin: 0px;
   padding: 0px;
-  overflow: hidden;
 `;
 
 const Display = styled.div`
@@ -118,3 +121,11 @@ const PigDisplay = styled.div`
   padding: 0px 20px;
   max-width: 60vw;
 `;
+
+const BottomDisplay = styled.div`
+  height: 22vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: middle;
+`

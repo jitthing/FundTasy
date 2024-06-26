@@ -35,6 +35,7 @@ export default function Shop() {
         </ShopHead>
         <ShopBody>
           <PigCard pigname="basic" pigTitle="Basic" owned />
+          <PigCard pigname="ninja" pigTitle="Ninja" owned />
           {/* {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
           ))} */}

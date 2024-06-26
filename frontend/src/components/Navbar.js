@@ -27,10 +27,6 @@ export default function Navbar(props) {
           <MenuImg srcSet="icons/shop.png" active={page === "shop"} />
           <MenuText active={page === "shop"} >Shop</MenuText>
         </MenuItem>
-        <MenuItem onClick={() => navigate("/new-record")} >
-          <MenuImg srcSet="icons/add.png" active={page === "newrecord"} />
-          <MenuText active={page === "newrecord"} >New Record</MenuText>
-        </MenuItem>
         <MenuItem onClick={() => navigate("/transactions")} >
           <MenuImg srcSet="icons/transaction.png" active={page === "transactions"} />
           <MenuText active={page === "transactions"} >Transactions</MenuText>

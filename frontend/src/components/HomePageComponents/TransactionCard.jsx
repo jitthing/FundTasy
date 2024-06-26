@@ -30,7 +30,7 @@ export default function TransactionCard() {
 
 const TransactionContainer = styled.div`
   height: 22vh;
-  width: 25vw;
+  width: 48%;
   border-radius: 8px;
   box-shadow: 0px 0px 2px #bcbcbc;
   padding: 10px 20px;
