@@ -26,13 +26,13 @@ const PrivateRoute = ({ children }) => {
           setIsAuthenticated(true);
         } else {
           localStorage.removeItem('authToken');
-          alert(response.data.message);
           navigate('/login');
+          alert(response.data.message);
         }
       } catch (error) {
         localStorage.removeItem('authToken');
-        alert(error.response.data.message);
         navigate('/login');
+        alert(error.response.data.message);
       }
     };
 

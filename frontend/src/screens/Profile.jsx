@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import formatCurrency from "../utils/formatCurrency";
+import getUser from "../utils/getUser";
 import axios from "axios";
 
 
@@ -61,25 +62,19 @@ function Profile() {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/user_info', {
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
-        }
-      });
-      if (response.status === 200) {
-        setEmail(response.data.user.username);
-        setFirstName(response.data.user.firstName);
-        setLastName(response.data.user.lastName);
-        response.data.user.lastName ? setLastName(response.data.user.lastName) : setLastName(undefined);
-        response.data.user.income ? setIncome(response.data.user.income) : setIncome(undefined);
-        setPassword(response.data.user.password); // use to check if user is a google user
-        setStatusMessage(response.data.message);
-        handleShowBanner();
-
-      }
+      const response = await getUser();
+      console.log(response.user);
+      setEmail(response.user.username);
+      setFirstName(response.user.firstName);
+      setLastName(response.user.lastName);
+      response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
+      response.user.income ? setIncome(response.user.income) : setIncome(undefined);
+      setPassword(response.user.password); // use to check if user is a google user
+      setStatusMessage(response.message);
+      handleShowBanner();
     }
     catch (error) {
-      setStatusMessage(error.response.data.message);
+      setStatusMessage(error.message);
       setBannerType("danger");
       handleShowBanner();
     }

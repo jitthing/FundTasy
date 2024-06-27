@@ -15,14 +15,14 @@ const getAllItems = async (req, res) => {
 };
 const addItem = async (req, res) => {
   const itemName = req.body.title;
-
-  const response = await Wishlist.findOne({ name: itemName });
-
+  const username = req.body.username;
+  const response = await Wishlist.findOne({ name: itemName, username: username });
+  
   if (response !== null) {
     return res.status(400).json({ message: "Item already in wishlist!" });
   }
   const createdItem = await Wishlist.create({
-    username: req.body.username,
+    username: username,
     name: itemName,
     price: req.body.price,
     image: req.body.image,

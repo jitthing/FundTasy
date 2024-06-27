@@ -2,7 +2,9 @@ import * as React from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import getUser from "../utils/getUser";
+import getWishlist from "../utils/getWishlist";
+
 
 import { SearchBar } from "../components/WishlistComponents/SearchBar";
 import { SearchResults } from "../components/WishlistComponents/SearchResults";
@@ -16,42 +18,31 @@ export default function Wishlist() {
   const [wishlistUpdate, setUpdate] = useState(false);
 
   const [userId, setUserId] = useState("");
+  
+  
 
   useEffect(() => {
-    async function getUserId() {
+    async function getUser() {
       try {
-        const getToken = () => {
-          return localStorage.getItem("authToken");
-        };
-        const token = getToken();
-        const response = await axios.get("http://localhost:8000/user_info", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserId(response.data.user.username);
+        const response = await getUser();
+        setUserId(response.user._id); //Changed it ._id cause user can change their username "email"
       } catch (error) {
-        console.error("Failed to fetch data", error);
+        console.log(error.message);
       }
     }
-    getUserId();
+    getUser();
   }, []);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchWishlist() {
       try {
-        const response = await axios.post(
-          "http://localhost:8000/all_wishlist_items",
-          { username: userId }
-        );
-        const data = await response.data;
-        // console.log(data);
-        setItems(data);
+        const response = await getWishlist(userId);
+        setItems(response);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     }
-    fetchData();
+    fetchWishlist();
   }, [wishlistUpdate, userId]);
 
   const handleWishlistUpdate = () => {
