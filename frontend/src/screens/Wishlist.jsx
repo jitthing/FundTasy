@@ -22,7 +22,7 @@ export default function Wishlist() {
   
 
   useEffect(() => {
-    async function getUser() {
+    async function getUserObj() {
       try {
         const response = await getUser();
         setUserId(response.user._id); //Changed it ._id cause user can change their username "email"
@@ -30,7 +30,7 @@ export default function Wishlist() {
         console.log(error.message);
       }
     }
-    getUser();
+    getUserObj();
   }, []);
 
   useEffect(() => {
