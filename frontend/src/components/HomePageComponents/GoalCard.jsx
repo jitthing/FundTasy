@@ -2,6 +2,8 @@ import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import NewRecordForm from "../NewRecordForm";
+import getUser from "../../utils/getUser";
+import getWishlist from "../../utils/getWishlist";
 
 export default function GoalCard({ goals }) {
   const numActiveGoals = goals.length;
@@ -60,29 +62,16 @@ function GoalBox(props) {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const getToken = () => {
-          return localStorage.getItem("authToken");
-        };
-        const token = getToken();
-        const response = await axios.get("http://localhost:8000/user_info", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const userId = response.data.user.username;
-        const wishlistData = await axios.post(
-          "http://localhost:8000/all_wishlist_items",
-          { username: userId }
-        );
-        const data = await wishlistData.data;
-        // console.log(data);
-        setItems(data);
+        const userObj = await getUser();
+        const userId = userObj.user._id
+        const wishlistData = await getWishlist(userId);
+        setItems(wishlistData);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     }
     fetchData();
-  }, [wishlistItems]);
+  }, []);
 
   function handleModalOpen() {
     setModalOpen(true);

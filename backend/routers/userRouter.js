@@ -17,7 +17,7 @@ const {
 const { protect } = require("../middleware/authMiddleware");
 const { scrapeAmazon } = require("../webScraper");
 const { getAllItems, addItem } = require("../controllers/wishlistController");
-
+const { newTransaction } = require("../controllers/transactionController");
 const { getActiveItems } = require("../controllers/activeGoalsController");
 
 const router = express.Router();
@@ -27,10 +27,9 @@ router.post("/login", authenticateUser);
 router.post("/google_login", google_login);
 router.post("/create_account", create_account);
 router.post("/update_user_info", updateUserInfo);
+router.get("/user_info", userInfo);
 
 router.post("/all_models", getAllModels);
-
-router.get("/user_info", userInfo);
 router.post("/newModel", create_model);
 
 // Amazon Scraper Router
@@ -42,6 +41,8 @@ router.post("/add_wishlist_item", addItem);
 
 // Active Goals Router
 router.post("/all_active_items", getActiveItems);
+
+router.post("/new_transaction", newTransaction);
 
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });

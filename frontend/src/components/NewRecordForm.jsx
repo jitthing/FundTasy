@@ -1,14 +1,53 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import getUser from "../utils/getUser";
+import axios from "axios";
+/*
+ TODO
+ - Add a calendar pciker for the date
+ - Create a banner instead of using alert
+*/
 
 export default function NewRecordForm({ closeForm }) {
     const [title, setTitle] = useState("");
     const [category, setCategory] = useState("others");
     const [amount, setAmount] = useState("0.00");
+
+    const createTransaction = async (formData) => {
+        try {
+            const userObj = await getUser();
+            const userID = userObj.user._id;
+            console.log(formData);
+            const response = await axios.post('http://localhost:8000/new_transaction', {formData, userID});
+            // console.log(response.data);
+            alert("Transaction created!");
+        } catch (error) {
+            console.log("Error creating transaction: ", error);
+            alert("Error creating transaction!");
+        }
+    }
     
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const { amount, category, goal, title } = e.target.elements;
+        const formData = {
+            title: title.value,
+            category: category.value,
+            goal: goal.value,
+            amount: amount.value,
+        };
+        try {
+            createTransaction(formData);
+            closeForm();
+        } catch (error) {
+            console.log("Error creating transaction: ", error);
+            alert("Error creating transaction!");
+        }
+    };
     return (
         <NewRecordBackdrop onClick={closeForm}>
             <NewRecordModal onClick={(e) => e.stopPropagation()}>
+            <form onSubmit={handleSubmit}>
                 <NewRecordHead>
                     <CloseIcon srcSet="icons/close.png" onClick={closeForm}/>
                     <NewRecordTitle>New Record</NewRecordTitle>
@@ -16,11 +55,11 @@ export default function NewRecordForm({ closeForm }) {
                 <NewRecordBody>
                     <FormBlock width="100%">
                         <FormLabel>Title</FormLabel>
-                        <FormTextInput required placeholder="Title" />
+                        <FormTextInput name="title" required placeholder="Title" />
                     </FormBlock>
                     <FormBlock width="50%">
                         <FormLabel>Category</FormLabel>
-                        <FormDropdown>
+                        <FormDropdown name="category">
                             <FormOption disabled selected>Select Category</FormOption>
                             <FormOption>Food</FormOption>
                             <FormOption>Lifestyle</FormOption>
@@ -31,7 +70,7 @@ export default function NewRecordForm({ closeForm }) {
                     </FormBlock>
                     <FormBlock width="50%">
                         <FormLabel>Goal to Deduct</FormLabel>
-                        <FormDropdown>
+                        <FormDropdown name="goal">
                         <FormOption disabled selected>Select Goal</FormOption>
                             <FormOption>Food</FormOption>
                             <FormOption>Lifestyle</FormOption>
@@ -44,13 +83,14 @@ export default function NewRecordForm({ closeForm }) {
                         <FormLabel>Amount</FormLabel>
                         <div style={{ display:"flex", justifyContent:"start", alignItems:"center", gap:"10px" }}>
                             <div style={{ display:"inline-block", fontWeight:"bold" }}>$</div>
-                            <FormTextInput type="number" required name="price" min="0" step="0.01" placeholder="0.00" />
+                            <FormTextInput type="number" required name="amount" min="0" step="0.01" placeholder="0.00" />
                         </div>
                     </FormBlock>
                 </NewRecordBody>
                 <FormBottom>
-                    <FormSubmit>Submit</FormSubmit>
+                    <FormSubmit type="submit">Submit</FormSubmit>
                 </FormBottom>
+            </form>
             </NewRecordModal>
         </NewRecordBackdrop>
     )
@@ -166,7 +206,7 @@ const FormBottom = styled.div`
     height: 50px;
 `
 
-const FormSubmit = styled.div`
+const FormSubmit = styled.button`
     width: 80px;
     height: 40px;
     background-color: #645df2;
