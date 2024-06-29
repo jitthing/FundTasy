@@ -22,13 +22,13 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />   {/* Don't comment this line out */}
           <Route path="/resetpassword/:userId/:token" element={<ChangePassword/>} />
 
-          <Route path="/my-pigs" element={<MyPigs />} />
+          {/* <Route path="/my-pigs" element={<MyPigs />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} /> */}
 
           {
           /* For ease of testing, block of code below is commented out.

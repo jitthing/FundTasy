@@ -17,7 +17,7 @@ export default function Wishlist() {
 
   const [wishlistUpdate, setUpdate] = useState(false);
 
-  const [userId, setUserId] = useState("");
+  const [username, setUsername] = useState("");
   
   
 
@@ -25,7 +25,7 @@ export default function Wishlist() {
     async function getUserObj() {
       try {
         const response = await getUser();
-        setUserId(response.user._id); //Changed it ._id cause user can change their username "email"
+        setUsername(response.user.username); //Changed it ._id cause user can change their username "email"
       } catch (error) {
         console.log(error.message);
       }
@@ -36,14 +36,14 @@ export default function Wishlist() {
   useEffect(() => {
     async function fetchWishlist() {
       try {
-        const response = await getWishlist(userId);
+        const response = await getWishlist(username);
         setItems(response);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     }
     fetchWishlist();
-  }, [wishlistUpdate, userId]);
+  }, [wishlistUpdate, username]);
 
   const handleWishlistUpdate = () => {
     setUpdate(!wishlistUpdate);
@@ -59,7 +59,7 @@ export default function Wishlist() {
             <SearchResults
               results={results}
               updateWishlist={handleWishlistUpdate}
-              UserId={userId}
+              username={username}
             />
           )}
         </SearchWrapper>

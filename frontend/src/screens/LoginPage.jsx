@@ -33,6 +33,7 @@ const Modal = ({
   handleSubmit,
   isSignUpEmailInvalid,
   isSignUpPasswordInvalid,
+  isSignUpUsernameInvalid,
   error,
   title,
   description,
@@ -50,7 +51,12 @@ const Modal = ({
       </h1>
       <p className="text-xs leading-7 mb-4 tracking-widest">{description}</p>
       <form onSubmit={handleSubmit}>
-        {title === "Register" && <NameInput />}
+        {title === "Register" && (
+          <>
+            <NameInput />
+            <UsernameInput isSignUpUsernameInvalid={isSignUpUsernameInvalid} />
+          </>
+        )}
         <EmailInput isSignUpEmailInvalid={isSignUpEmailInvalid} />
         {title === "Register" && (
           <PasswordInput isSignUpPasswordInvalid={isSignUpPasswordInvalid} />
@@ -146,6 +152,29 @@ const EmailInput = ({ isInvalid, isSignUpEmailInvalid }) => (
         required
         className={`${
           isInvalid || isSignUpEmailInvalid ? "bg-red-200" : ""
+        } block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+      />
+    </div>
+  </div>
+);
+// username input
+const UsernameInput = ({ isInvalid, isSignUpUsernameInvalid }) => (
+  <div>
+    <label
+      htmlFor="username"
+      className="flex text-sm font-medium leading-6 text-gray-900"
+    >
+      Username
+    </label>
+    <div className="mt-2">
+      <input
+        id="username"
+        name="username"
+        type="text"
+        autoComplete="username"
+        required
+        className={`${
+          isInvalid || isSignUpUsernameInvalid ? "bg-red-200" : ""
         } block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
       />
     </div>
@@ -316,6 +345,7 @@ export default function LoginPage() {
   const [isLoginInputInvalid, setInputInvalid] = useState(false);
   const [isSignUpEmailInvalid, setSignUpInputInvalid] = useState(false);
   const [isSignUpPasswordInvalid, setSignUpPasswordInvalid] = useState(false);
+  const [isSignUpUsernameInvalid, setSignUpUsernameInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // if user clicked change password from settings page
@@ -389,13 +419,15 @@ export default function LoginPage() {
   const handleSignUp = async (e) => {
     // Modify this such that it pulls data from the form instead of the state variables
     e.preventDefault();
-    const { email, password, firstName, lastName } = e.target.elements;
+    const { email, password, firstName, lastName, username } = e.target.elements;
+    const inputUsername = username.value.trim().toLowerCase();
     const inputEmail = email.value.trim().toLowerCase();
     const inputPassword = password.value;
     const inputFirstName = firstName.value;
     const inputLastName = lastName.value;
     console.log(
       "testing: ",
+      inputUsername,
       inputEmail,
       inputPassword,
       inputFirstName,
@@ -405,7 +437,8 @@ export default function LoginPage() {
       const response = await axios.post(
         "http://localhost:8000/create_account",
         {
-          username: inputEmail,
+          username: inputUsername,
+          email: inputEmail,
           password: inputPassword,
           firstName: inputFirstName,
           lastName: inputLastName,
@@ -420,24 +453,18 @@ export default function LoginPage() {
     } catch (error) {
       navigate("/login");
       const errorResponse = error.response.data.message;
+      setSignUpPasswordInvalid(false);
+      setSignUpInputInvalid(false);
+      setSignUpUsernameInvalid(false);
+      setSignUpError(errorResponse);
+      setStatusCode(error.response.status);
       console.log(errorResponse);
-      if (
-        errorResponse === "Username already exists" ||
-        errorResponse === "Invalid email address"
-      ) {
-        setSignUpPasswordInvalid(false); // reset the state to original
-        setSignUpInputInvalid(true);
-        setSignUpError(errorResponse);
-        setStatusCode(error.response.status);
-      } else if (errorResponse === "Password is too short") {
-        setSignUpInputInvalid(false); // reset the state to original
+      if (errorResponse === "Password is too short") {
         setSignUpPasswordInvalid(true);
-        setSignUpError(errorResponse);
-        setStatusCode(error.response.status);
-      } else {
-        setSignUpError(errorResponse);
-        console.log("tetetet");
-        setLoading(false);
+      } else if (errorResponse === "Email already exists") {
+        setSignUpInputInvalid(true)
+      } else if (errorResponse === "Username already exists" || errorResponse === "Username cannot be empty") {
+        setSignUpUsernameInvalid(true);
       }
     }
   };
@@ -473,6 +500,7 @@ export default function LoginPage() {
           handleSubmit={handleSignUp}
           isSignUpEmailInvalid={isSignUpEmailInvalid}
           isSignUpPasswordInvalid={isSignUpPasswordInvalid}
+          isSignUpUsernameInvalid={isSignUpUsernameInvalid}
           error={signUpError}
           title="Register"
           description="It's quick and easy."
