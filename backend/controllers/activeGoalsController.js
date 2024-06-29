@@ -16,4 +16,23 @@ const getActiveItems = async (req, res) => {
   return res.status(200).json(result);
 };
 
-module.exports = { getActiveItems };
+const addActiveItem = async (req, res) => {
+  const { name, price } = req.body;
+
+  const response = await ActiveGoals.find({ name: name });
+
+  if (response !== null) {
+    res.status(400).json({ message: "Goal already exists" });
+  }
+
+  const createdGoal = await ActiveGoals.create({
+    username: req.body.username,
+    title: req.body.title,
+    price: req.body.price,
+    saved: 0,
+  });
+
+  return res.status(200).json({ message: "Goal added succesfully!" });
+};
+
+module.exports = { getActiveItems, addActiveItem };

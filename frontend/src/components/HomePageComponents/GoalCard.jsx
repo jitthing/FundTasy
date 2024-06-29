@@ -5,7 +5,7 @@ import NewRecordForm from "../NewRecordForm";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 
-export default function GoalCard({ goals }) {
+export default function GoalCard({ goals, userId }) {
   const numActiveGoals = goals.length;
   return (
     <GoalContainer>
@@ -63,7 +63,7 @@ function GoalBox(props) {
     async function fetchData() {
       try {
         const userObj = await getUser();
-        const userId = userObj.user._id
+        const userId = userObj.user._id;
         const wishlistData = await getWishlist(userId);
         setItems(wishlistData);
       } catch (error) {
@@ -146,14 +146,30 @@ function GoalBox(props) {
 
 const Modal = ({ onClose, dropdownItems }) => {
   const [price, setPrice] = React.useState("");
+  const [item, setItem] = React.useState("");
 
   const handleSelectChange = (event) => {
     const item = dropdownItems.find(
       //changed it to id instead cause of string slicing
-      (dropdownItem) => dropdownItem._id === event.target.value 
+      (dropdownItem) => dropdownItem._id === event.target.value
     );
     if (item) {
       setPrice(item.price);
+      setItem(item.name);
+    }
+  };
+
+  const handleAddGoal = async () => {
+    const userObj = await getUser();
+    const userId = userObj.user._id;
+    try {
+      const body = { title: item, price: price, username: userId };
+      const response = await axios.post("http://localhost:8000/", body);
+      if (response.body.status === 200) {
+        onClose();
+      }
+    } catch (error) {
+      alert(`${error.data.message}`);
     }
   };
   return (
@@ -168,12 +184,18 @@ const Modal = ({ onClose, dropdownItems }) => {
             ---
           </option>
           {dropdownItems.map((item) => {
-            return <option value={item._id} title={item.name}>{item.name.length > 50 ? `${item.name.slice(0, 70)}...` : item.name}</option>
+            return (
+              <option value={item._id} title={item.name}>
+                {item.name.length > 50
+                  ? `${item.name.slice(0, 70)}...`
+                  : item.name}
+              </option>
+            );
           })}
         </select>
         <div>Price:</div>
         <div>{price ? "$" + String(price) : ""}</div>
-        <button onClick={onClose}>Close</button>
+        <button onClick={handleAddGoal}>Submit</button>
       </ModalContent>
     </ModalBackdrop>
   );

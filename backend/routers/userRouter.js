@@ -18,7 +18,10 @@ const { protect } = require("../middleware/authMiddleware");
 const { scrapeAmazon } = require("../webScraper");
 const { getAllItems, addItem } = require("../controllers/wishlistController");
 const { newTransaction } = require("../controllers/transactionController");
-const { getActiveItems } = require("../controllers/activeGoalsController");
+const {
+  getActiveItems,
+  addActiveItem,
+} = require("../controllers/activeGoalsController");
 
 const router = express.Router();
 
@@ -41,6 +44,7 @@ router.post("/add_wishlist_item", addItem);
 
 // Active Goals Router
 router.post("/all_active_items", getActiveItems);
+router.post("/add_active_goal", addActiveItem);
 
 router.post("/new_transaction", newTransaction);
 

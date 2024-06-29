@@ -4,7 +4,7 @@ const activeGoalsSchema = new mongoose.Schema({
   username: String,
   title: String,
   price: String,
-  saved: String,
+  saved: mongoose.Schema.Types.Decimal128,
 });
 
 // to write one to update amount saved per goal
