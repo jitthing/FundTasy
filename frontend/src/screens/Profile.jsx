@@ -21,6 +21,7 @@ function Profile() {
   const [email, setEmail] = useState(undefined);
   const [income, setIncome] = useState(undefined);
   const [password, setPassword] = useState(undefined);
+  const [username, setUsername] = useState(undefined);
   const [showBanner, setShowBanner] = React.useState(false);
   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
   const [statusMessage, setStatusMessage] = React.useState(null);
@@ -64,9 +65,10 @@ function Profile() {
     try {
       const response = await getUser();
       console.log(response.user);
-      setEmail(response.user.username);
+      setEmail(response.user.email);
       setFirstName(response.user.firstName);
       setLastName(response.user.lastName);
+      setUsername(response.user.username);
       response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
       response.user.income ? setIncome(response.user.income) : setIncome(undefined);
       setPassword(response.user.password); // use to check if user is a google user
@@ -112,6 +114,10 @@ function Profile() {
             <EditIcon src="icons/edit-black.png" alt="Edit" />
           </ProfilePicture>
           <ProfileInfo>
+          <InfoRow>
+              <Label>Username:</Label>
+              <Value>{username}</Value>
+            </InfoRow>
 
           <InfoRow>
               <Label>Email:</Label>

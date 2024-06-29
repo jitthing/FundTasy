@@ -87,7 +87,7 @@ const updateUserInfo = async (req, res) => {
       // check if normal user
       if (user.password) {
         if(validateEmail(email)){
-          fieldsToUpdate.username = email; //append email to fieldsToUpdate
+          fieldsToUpdate.email = email; //append email to fieldsToUpdate
         }
         else{
           return res.status(400).json({ message: "Invalid email address" });
@@ -106,13 +106,21 @@ const updateUserInfo = async (req, res) => {
 
 
 const create_account = async (req, res) => {
-  if(!validateEmail(req.body.username)){
+  if(!validateEmail(req.body.email)){
     return res.status(400).json({ message: "Invalid email address" });
   }
+  if (!req.body.username || req.body.username.trim().length === 0) {
+    return res.status(400).json({ message: "Username cannot be empty" });
+  }
   const newUser = req.body; // { username: ... , password: ... }
+  console.log("the new user", newUser);
 
   const foundUser = await Users.findOne({ username: newUser.username.trim().toLowerCase() });
+  const foundEmail = await Users.findOne({ email: newUser.email.trim().toLowerCase() });
 
+  if (foundEmail !== null) {
+    return res.status(400).json({ message: "Email already exists" });
+  }
   if (foundUser !== null) {
     return res.status(400).json({ message: "Username already exists" });
   }
@@ -126,6 +134,7 @@ const create_account = async (req, res) => {
 
   const createdUser = await Users.create({
     username: newUser.username,
+    email: newUser.email,
     password: hashedPassword,
     firstName: newUser.firstName,
     lastName: newUser.lastName,

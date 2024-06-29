@@ -16,9 +16,9 @@ export default function NewRecordForm({ closeForm }) {
     const createTransaction = async (formData) => {
         try {
             const userObj = await getUser();
-            const userID = userObj.user._id;
+            const username = userObj.user.username;
             console.log(formData);
-            const response = await axios.post('http://localhost:8000/new_transaction', {formData, userID});
+            const response = await axios.post('http://localhost:8000/new_transaction', {formData, username});
             // console.log(response.data);
             alert("Transaction created!");
         } catch (error) {

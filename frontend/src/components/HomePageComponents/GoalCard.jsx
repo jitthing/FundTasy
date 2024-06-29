@@ -63,8 +63,8 @@ function GoalBox(props) {
     async function fetchData() {
       try {
         const userObj = await getUser();
-        const userId = userObj.user._id
-        const wishlistData = await getWishlist(userId);
+        const username = userObj.user.username;
+        const wishlistData = await getWishlist(username);
         setItems(wishlistData);
       } catch (error) {
         console.error("Failed to fetch data", error);
