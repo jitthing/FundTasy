@@ -20,12 +20,28 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-const authenticateUser = async (req, res) => {
-  if(!validateEmail(req.body.username)){
+async function usernameExists(username) {
+  return user = await Users.findOne({ username: username });
+}
 
+async function generateUniqueUsername(baseUsername) {
+  let username = baseUsername;
+  let counter = 1;
+
+  while (await usernameExists(username)) {
+      username = `${baseUsername}${counter}`;
+      counter++;
+  }
+
+  return username;
+}
+
+const authenticateUser = async (req, res) => {
+  console.log(req.body);
+  if(!validateEmail(req.body.email)){
     return res.status(400).json({ message: "Invalid email address" });
   }
-  const user = await Users.findOne({ username: req.body.username });
+  const user = await Users.findOne({ email: req.body.email });
 
   if (user === null) {
     //User not found
@@ -41,7 +57,7 @@ const authenticateUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email address/password" });
     }
   }
-  const authToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' }); // bind token to user id
+  const authToken = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1hr' }); // Added username to the payload
   return res.status(200).json({ message: "Successful login", authToken, });
 };
 
@@ -57,7 +73,7 @@ const getUserFromToken = async (req) => {
     return { user }; // Return an object with the user
   } catch (error) {
     console.error("Error in getUserFromToken:", error);
-    return { error: "Error verifying token or fetching user" }; // Return an object with the error
+    return { error: "Error verifying token or fetching user or token" }; // Return an object with the error
   }
 };
 
@@ -113,7 +129,6 @@ const create_account = async (req, res) => {
     return res.status(400).json({ message: "Username cannot be empty" });
   }
   const newUser = req.body; // { username: ... , password: ... }
-  console.log("the new user", newUser);
 
   const foundUser = await Users.findOne({ username: newUser.username.trim().toLowerCase() });
   const foundEmail = await Users.findOne({ email: newUser.email.trim().toLowerCase() });
@@ -140,7 +155,7 @@ const create_account = async (req, res) => {
     lastName: newUser.lastName,
 
   });
-  const authToken = jwt.sign({ id: createdUser._id }, JWT_SECRET, { expiresIn: '1hr' });
+  const authToken = jwt.sign({ id: createdUser._id, usernamae: createdUser.username }, JWT_SECRET, { expiresIn: '1hr' });
   return res.status(200).json({ message: "Account created succesfully", authToken, });
 };
 
@@ -162,12 +177,13 @@ const updatePassword = async (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  const { username } = req.body;
-  if(!validateEmail(username)){
+  const { email } = req.body;
+  console.log(email);
+  if(!validateEmail(email)){
     return res.status(400).json({ message: "Invalid email address" });
   }
   try {
-    const user = await Users.findOne({ username: username.toLowerCase().trim() });
+    const user = await Users.findOne({ email: email.toLowerCase().trim() });
     if (user === null) {
       return res.status(404).json({ message: "User does not exist/not found" });
     } else {
@@ -184,17 +200,17 @@ const forgotPassword = async (req, res) => {
 
       var mailOptions = {
         from: 'smufundtasy@gmail.com',
-        to: username,
+        to: email,
         subject: 'FundTasy password reset',
         text: `Click on the link to reset your password: http://localhost:3000/resetpassword/${user._id}/${token} This link will expire in 1 hour.`
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          return res.status(500).json({ message: `Encountered error sending email to ${username}` });
+          return res.status(500).json({ message: `Encountered error sending email to ${email}` });
         } else {
           // console.log('Email sent: ' + info.response);
-          return res.status(200).json({ message: `Email has been sent to ${username}` });
+          return res.status(200).json({ message: `Email has been sent to ${email}` });
         }
       })
     }
@@ -219,12 +235,14 @@ const google_login = async (req, res) => {
     const lastName = payload["family_name"];
     // console.log("Ticket:", ticket);
 
-    let user = await Users.findOne({ username: email });
+    let user = await Users.findOne({ email: email});
     if (!user) {
-      user = new Users({ username: email, firstName: firstName, lastName: lastName});
+      let username = email.split('@')[0].toLowerCase();
+      username = await generateUniqueUsername(username);
+      user = new Users({ email: email, username: username, firstName: firstName, lastName: lastName});
       await user.save();
     }
-    const authToken = jwt.sign({ id: user._id }, JWT_SECRET, {
+    const authToken = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
       expiresIn: "1hr",
     });
     return res.status(200).json({ message: "Successful login", authToken });
@@ -268,4 +286,5 @@ module.exports = {
   userInfo,
   validateResetToken,
   updateUserInfo,
+  getUserFromToken,
 };

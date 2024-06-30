@@ -371,7 +371,7 @@ export default function LoginPage() {
     try {
       // console.log("success");
       const response = await axios.post("http://localhost:8000/login", {
-        username: userEmail,
+        email: userEmail,
         password: userPassword,
       });
 
@@ -399,7 +399,7 @@ export default function LoginPage() {
       const response = await axios.post(
         "http://localhost:8000/forgot_password",
         {
-          username: email,
+          email: email,
         }
       );
       if (response.status === 200) {

@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import NewRecordForm from "../components/NewRecordForm";
+import getTransactions from "../utils/getTransactions";
 
 export default function Transactions() {
     const [type, changeType] = useState("spending");
     const [formActive, showForm] = useState(false);
+    const [transactions, setTransactions] = useState([]);
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const response = await getTransactions();
+                setTransactions(response.transactions);
+                console.log(response.transactions);
+            } catch(error) {
+                console.error("Failed to fetch transactions", error);
+            }
+        };
+        fetchTransactions();
+    }, []);
     
     const toggleType = (type) => {
         if (type === "spending") {

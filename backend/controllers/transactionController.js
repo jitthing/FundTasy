@@ -1,5 +1,5 @@
 const transaction = require("../models/transactionModel");
-
+const { getUserFromToken } = require("./userController");
 const newTransaction = async (req, res) => {
     // console.log(req.body);
     const { formData, username } = req.body;
@@ -17,4 +17,23 @@ const newTransaction = async (req, res) => {
         return res.status(500).json({ message: "Failed to create transaction" });
     }
 };
-module.exports = { newTransaction };
+
+
+const allTransactions = async (req, res) => {
+    try{
+        const { user, error } = await getUserFromToken(req);
+        if (error) {
+            return res.status(500).json({ message: error });
+        }
+        const username = user.username;
+        const transactions = await transaction.find({ username: username });
+        return res.status(200).json({ message: "all transactions ", transactions });
+    } catch (error) {
+        console.error(" hahaha Error getting transactions:", error);
+        // console.log("Error getting transactions:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+
+}
+
+module.exports = { newTransaction, allTransactions };
