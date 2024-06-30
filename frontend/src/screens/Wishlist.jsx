@@ -25,7 +25,7 @@ export default function Wishlist() {
     async function getUserObj() {
       try {
         const response = await getUser();
-        setUsername(response.user.username); //Changed it ._id cause user can change their username "email"
+        setUsername(response.user.username);
       } catch (error) {
         console.log(error.message);
       }
