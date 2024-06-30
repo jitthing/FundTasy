@@ -4,14 +4,36 @@ import axios from "axios";
 import NewRecordForm from "../NewRecordForm";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
+import { IoClose } from "react-icons/io5";
 
-export default function GoalCard({ goals, userId }) {
+export default function GoalCard({ goals, updateGoals }) {
   const numActiveGoals = goals.length;
+  const numEmptyGoals = 3 - numActiveGoals;
   return (
     <GoalContainer>
       <GoalHead>Goals</GoalHead>
       <GoalBody>
-        <GoalBox
+        {goals.map((goal) => {
+          return (
+            <GoalBox
+              active
+              toSave={goal.price}
+              numDays="1"
+              startDate={goal.startDate}
+              endDate="1/7/24"
+              currentSaved={goal.saved.$numberDecimal}
+              rate="20"
+              lastTopUpAmt="9"
+              lastTopUpDate="19/6/24"
+              daysLeft="1"
+            />
+          );
+        })}
+        {[...Array(numEmptyGoals)].map((e, i) => {
+          return <GoalBox updateGoals={updateGoals} />;
+        })}
+
+        {/* <GoalBox
           active
           danger
           toSave="150"
@@ -24,19 +46,7 @@ export default function GoalCard({ goals, userId }) {
           lastTopUpDate="19/6/24"
           daysLeft="1"
         />
-        <GoalBox
-          active
-          toSave="280"
-          numDays="12"
-          startDate="20/6/24"
-          endDate="1/7/24"
-          currentSaved="23"
-          rate="40"
-          lastTopUpAmt="14"
-          lastTopUpDate="20/6/24"
-          daysLeft="10"
-        />
-        <GoalBox />
+        <GoalBox updateGoals={updateGoals} /> */}
       </GoalBody>
     </GoalContainer>
   );
@@ -136,7 +146,8 @@ function GoalBox(props) {
           <Modal
             onClose={handleModalClose}
             dropdownItems={wishlistItems}
-          ></Modal>
+            updateGoals={props.updateGoals}
+          />
           //<NewRecordForm />
         )}
       </>
@@ -144,7 +155,7 @@ function GoalBox(props) {
   }
 }
 
-const Modal = ({ onClose, dropdownItems }) => {
+const Modal = ({ onClose, dropdownItems, updateGoals }) => {
   const [price, setPrice] = React.useState("");
   const [item, setItem] = React.useState("");
 
@@ -161,24 +172,38 @@ const Modal = ({ onClose, dropdownItems }) => {
 
   const handleAddGoal = async () => {
     const userObj = await getUser();
-    const userId = userObj.user._id;
+    const userId = userObj.user.username;
     try {
       const body = { title: item, price: price, username: userId };
-      const response = await axios.post("http://localhost:8000/", body);
-      if (response.body.status === 200) {
+      // console.log(body);
+      const response = await axios.post(
+        "http://localhost:8000/add_active_goal",
+        body
+      );
+      if (response.status === 200) {
         onClose();
+        updateGoals((prev) => !prev);
       }
     } catch (error) {
-      alert(`${error.data.message}`);
+      alert(`${error.response.data.message}`);
     }
   };
   return (
     <ModalBackdrop onClick={onClose}>
-      <ModalContent onClick={(e) => e.stopPropagation()}>
-        <div>Choose an item from your wishlist:</div>
+      <ModalContent onClick={(e) => e.stopPropagation()} className="py-4">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+        >
+          <IoClose className="h-6 w-6" />
+        </button>
+        <h2 className="text-lg text-gray-700 font-semibold mb-4">
+          Choose an item from your wishlist:
+        </h2>
         <select
           onChange={handleSelectChange}
-          className="form-select block w-full text-base border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+          className="form-select block w-full text-base border-gray-300 focus:ring-blue-500 focus:border-blue-500
+          py-2 pl-3 pr-10 sm:text-sm rounded-md"
         >
           <option selected disabled hidden>
             ---
@@ -193,9 +218,16 @@ const Modal = ({ onClose, dropdownItems }) => {
             );
           })}
         </select>
-        <div>Price:</div>
-        <div>{price ? "$" + String(price) : ""}</div>
-        <button onClick={handleAddGoal}>Submit</button>
+        <h3 className="text-lg text-gray-700 font-semibold mb-4">Price:</h3>
+        <div className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          {price ? "$" + String(price) : ""}
+        </div>
+        <button
+          onClick={handleAddGoal}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Add Goal
+        </button>
       </ModalContent>
     </ModalBackdrop>
   );

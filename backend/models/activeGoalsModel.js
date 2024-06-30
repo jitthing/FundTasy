@@ -4,6 +4,7 @@ const activeGoalsSchema = new mongoose.Schema({
   username: String,
   title: String,
   price: String,
+  startDate: String,
   saved: mongoose.Schema.Types.Decimal128,
 });
 

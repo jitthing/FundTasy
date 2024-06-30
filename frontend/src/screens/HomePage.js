@@ -9,30 +9,20 @@ import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
 import axios from "axios";
 import BarChartCard from "../components/HomePageComponents/BarChartCard";
+import getUser from "../utils/getUser";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
   const [modelName, setModelName] = useState("Basic");
   const [show, setShow] = useState(false);
   const [activeGoals, setActiveGoals] = useState([]);
+  const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
     async function getUserId() {
-      try {
-        const getToken = () => {
-          return localStorage.getItem("authToken");
-        };
-        const token = getToken();
-        const response = await axios.get("http://localhost:8000/user_info", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserId(response.data.user.username);
-      } catch (error) {
-        console.error("Failed to fetch data", error);
-      }
+      const userObj = await getUser();
+      setUserId(userObj.user.username);
     }
     getUserId();
   }, []);
@@ -45,14 +35,13 @@ export default function HomePage() {
           { username: userId }
         );
         const data = await response.data;
-        // console.log(data);
         setActiveGoals(data);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     }
     fetchData();
-  }, [activeGoals, userId]);
+  }, [updateGoals, userId]);
 
   const selectModel = (model) => {
     setModelUrl("models/" + model + ".glb");
@@ -75,7 +64,7 @@ export default function HomePage() {
     <PageContainer>
       <Navbar page="home" />
       <Display>
-        <GoalCard goals={activeGoals} />
+        <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
         <PigDisplay>
           <ModelDisplay modelUrl={modelUrl} show={show} />
           <SkinSection
@@ -128,4 +117,4 @@ const BottomDisplay = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: middle;
-`
+`;

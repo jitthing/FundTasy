@@ -17,18 +17,26 @@ const getActiveItems = async (req, res) => {
 };
 
 const addActiveItem = async (req, res) => {
-  const { name, price } = req.body;
+  const countGoals = await ActiveGoals.countDocuments({
+    username: req.body.username,
+  });
+  if (countGoals >= 3) {
+    return res
+      .status(400)
+      .json({ message: "You can only have 3 goals at a time" });
+  }
 
-  const response = await ActiveGoals.find({ name: name });
+  const response = await ActiveGoals.findOne({ title: req.body.title });
 
   if (response !== null) {
-    res.status(400).json({ message: "Goal already exists" });
+    return res.status(400).json({ message: "Goal already exists" });
   }
 
   const createdGoal = await ActiveGoals.create({
     username: req.body.username,
     title: req.body.title,
     price: req.body.price,
+    startDate: new Date().toISOString().slice(0, 10),
     saved: 0,
   });
 
