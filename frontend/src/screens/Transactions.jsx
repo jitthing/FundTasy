@@ -61,76 +61,43 @@ export default function Transactions() {
                     </FilterButton>
                 </TransactionNeck>
                 
-                {type === "spending" && (<SpendingTable />)}
+                {type === "spending" && (<SpendingTable transactions={transactions} />)}
                 {type === "coins" && (<CoinsTable />)}
             </TransactionContainer>
         </PageContainer>
     )
 }
 
-const SpendingTable = () => {
+
+const SpendingTable = ({ transactions }) => {
     return (
-        <>
-            <TransactionBody>
-                    <TableHead>
-                        <HeadTitle>Title</HeadTitle>
-                        <HeadCategory>Category</HeadCategory>
-                        <HeadGoal>Goal</HeadGoal>
-                        <HeadDateTime>Date</HeadDateTime>
-                        <HeadAmount>Amount</HeadAmount>
-                    </TableHead>
-                    <TransactionDiv>
-                        <TransactionTitle>Dinner with friends</TransactionTitle>
-                        <TransactionCategory>
-                            <CategoryButton>Food</CategoryButton>
-                        </TransactionCategory>
-                        <TransactionGoal>
-                            <GoalName>Save $150 in 7 days</GoalName>
-                            <GoalStatus>In Progress</GoalStatus>
-                        </TransactionGoal>
-                        <TransactionDateTime>21:33</TransactionDateTime>
-                        <TransactionAmount>-$12.00</TransactionAmount>
-                    </TransactionDiv>
-                    <TransactionDiv>
-                        <TransactionTitle>HEAP deposit</TransactionTitle>
-                        <TransactionCategory>
-                            <CategoryButton>School</CategoryButton>
-                        </TransactionCategory>
-                        <TransactionGoal>
-                            <GoalName>Save $280 in 12 days</GoalName>
-                            <GoalStatus>In Progress</GoalStatus>
-                        </TransactionGoal>
-                        <TransactionDateTime>29 Apr 2024 17:05</TransactionDateTime>
-                        <TransactionAmount>-$30.00</TransactionAmount>
-                    </TransactionDiv>
-                    <TransactionDiv>
-                        <TransactionTitle>Parking fine + wheel clamp removal</TransactionTitle>
-                        <TransactionCategory>
-                            <CategoryButton>Others</CategoryButton>
-                        </TransactionCategory>
-                        <TransactionGoal>
-                            <GoalName>Save $90 in 30 days</GoalName>
-                            <GoalStatus>Failed</GoalStatus>
-                        </TransactionGoal>
-                        <TransactionDateTime>31 Mar 2024 03:46</TransactionDateTime>
-                        <TransactionAmount>-$65.00</TransactionAmount>
-                    </TransactionDiv>
-                    <TransactionDiv>
-                        <TransactionTitle>Apple Music</TransactionTitle>
-                        <TransactionCategory>
-                            <CategoryButton>Subscriptions</CategoryButton>
-                        </TransactionCategory>
-                        <TransactionGoal>
-                            <GoalName>Save $90 in 14 days</GoalName>
-                            <GoalStatus>Completed</GoalStatus>
-                        </TransactionGoal>
-                        <TransactionDateTime>17 Jan 2024 08:00</TransactionDateTime>
-                        <TransactionAmount>-$13.90</TransactionAmount>
-                    </TransactionDiv>
-                </TransactionBody>
-        </>
-    )
-}
+      <>
+        <TransactionBody>
+          <TableHead>
+            <HeadTitle>Title</HeadTitle>
+            <HeadCategory>Category</HeadCategory>
+            <HeadGoal>Goal</HeadGoal>
+            <HeadDateTime>Date</HeadDateTime>
+            <HeadAmount>Amount</HeadAmount>
+          </TableHead>
+          {transactions.map((transaction) => (
+            <TransactionDiv key={transaction.id}>
+              <TransactionTitle>{transaction.title}</TransactionTitle>
+              <TransactionCategory>
+                <CategoryButton>{transaction.category}</CategoryButton>
+              </TransactionCategory>
+              <TransactionGoal>
+                <GoalName>{transaction.goal.name}</GoalName>
+                <GoalStatus>{transaction.goal.status}</GoalStatus>
+              </TransactionGoal>
+              <TransactionDateTime>{transaction.date}</TransactionDateTime>
+              <TransactionAmount>${transaction.amount}</TransactionAmount>
+            </TransactionDiv>
+          ))}
+        </TransactionBody>
+      </>
+    );
+  };
 
 const CoinsTable = () => {
     return (
