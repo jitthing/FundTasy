@@ -1,17 +1,19 @@
 const Wishlist = require("../models/wishlistModel.js");
-
+const { getUserFromToken } = require("./userController");
 const getAllItems = async (req, res) => {
-  const toFindUsername = req.body.username;
-  const cursor = await Wishlist.find({ username: toFindUsername });
-  //   const dbModels = await cursor.toArray();
-  if (cursor === null) {
-    return res.status(400).json({ message: "No items Found" });
+  const { formData, username } = req.body;
+  try {
+    const { user, error } = await getUserFromToken(req);
+    if (error) {
+      return res.status(500).json({ message: error });
+    }
+    const username = user.username;
+    const items = await Wishlist.find({ username: username });
+    return res.status(200).json({ items });
+  } catch (error) {
+    console.error("Error getting wishlist items:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-  let result = [];
-  for (item of cursor) {
-    result.push(item);
-  }
-  return res.status(200).json(result);
 };
 const addItem = async (req, res) => {
   const itemName = req.body.title;

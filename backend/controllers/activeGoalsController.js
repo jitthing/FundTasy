@@ -1,19 +1,18 @@
 const ActiveGoals = require("../models/activeGoalsModel.js");
-
+const { getUserFromToken } = require("./userController.js")
 const getActiveItems = async (req, res) => {
-  const username = req.body.username;
-
-  const cursor = await ActiveGoals.find({ username: username });
-
-  if (cursor === null) {
-    res.status(404).json([]);
+  try {
+    const { user, error } = await getUserFromToken(req);
+    if(error) {
+      return res.status(400).json({message: error});
+    }
+    const username = user.username;
+    const userGoals = await ActiveGoals.find({ username });
+    return res.status(200).json({ message:"testing123" ,userGoals });
+  } catch (error) {
+    console.log("Error: " + error);
+    return res.status(400).json({ message: "Failed to fetch goals: " + error });
   }
-
-  let result = [];
-  for (item of cursor) {
-    result.push(item);
-  }
-  return res.status(200).json(result);
 };
 
 const addActiveItem = async (req, res) => {

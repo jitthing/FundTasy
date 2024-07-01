@@ -3,21 +3,27 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
+import formatCurrency from "../utils/formatCurrency";
+import getActiveGoals from "../utils/getActiveGoals";
+const moment = require("moment");
+;
 
 export default function Transactions() {
   const [type, changeType] = useState("spending");
   const [formActive, showForm] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [updateTransactions, setUpdateTransactions] = useState(false);
+  const [allGoals, setAllGoals] = useState([]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await getTransactions();
-        setTransactions(response.transactions);
-        console.log(response.transactions);
+        const transactionResponse = await getTransactions();
+        setTransactions(transactionResponse.transactions);
+        const activeGoalsRepsonse = await getActiveGoals();
+        setAllGoals(activeGoalsRepsonse.userGoals);
       } catch (error) {
-        console.error("Failed to fetch transactions", error);
+        alert("Failed to fetch transactions", error);
       }
     };
     fetchTransactions();
@@ -46,6 +52,7 @@ export default function Transactions() {
         <NewRecordForm
           closeForm={closeForm}
           updateTransactions={setUpdateTransactions}
+          allGoals={allGoals}
         />
       )}
       <TransactionContainer>
@@ -102,11 +109,13 @@ const SpendingTable = ({ transactions }) => {
               <CategoryButton>{transaction.category}</CategoryButton>
             </TransactionCategory>
             <TransactionGoal>
-              <GoalName>{transaction.goal.name}</GoalName>
-              <GoalStatus>{transaction.goal.status}</GoalStatus>
+              <GoalName>{transaction.goal}</GoalName>
+              {/* <GoalStatus>{transaction.status}</GoalStatus> */}
+              <GoalStatus>In progress</GoalStatus>
             </TransactionGoal>
-            <TransactionDateTime>{transaction.date}</TransactionDateTime>
-            <TransactionAmount>${transaction.amount}</TransactionAmount>
+            <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
+          
+            <TransactionAmount>-{formatCurrency(transaction.amount)}</TransactionAmount>
           </TransactionDiv>
         ))}
       </TransactionBody>

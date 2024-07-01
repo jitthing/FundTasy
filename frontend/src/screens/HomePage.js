@@ -7,9 +7,8 @@ import mypigs from "../modelinfo";
 import SkinSection from "../components/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
-import axios from "axios";
 import BarChartCard from "../components/HomePageComponents/BarChartCard";
-import getUser from "../utils/getUser";
+import getActiveGoals from "../utils/getActiveGoals";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -19,29 +18,20 @@ export default function HomePage() {
   const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
 
-  useEffect(() => {
-    async function getUserId() {
-      const userObj = await getUser();
-      setUserId(userObj.user.username);
-    }
-    getUserId();
-  }, []);
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/all_active_items",
-          { username: userId }
-        );
-        const data = await response.data;
-        setActiveGoals(data);
+      try{
+        const response = await getActiveGoals();
+        // console.log(response.userGoals);
+        setActiveGoals(response.userGoals);
       } catch (error) {
-        console.error("Failed to fetch data", error);
+        console.log("Failed to fetch goals: " + error);
+        alert("Failed to fetch goals: " + error);
       }
     }
     fetchData();
-  }, [updateGoals, userId]);
+  }, [updateGoals]);
 
   const selectModel = (model) => {
     setModelUrl("models/" + model + ".glb");

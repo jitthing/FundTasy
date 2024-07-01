@@ -2,13 +2,9 @@ import axios from 'axios';
 
 export default async function getUser() {
   try {
-    const getToken = () => {
-      return localStorage.getItem("authToken");
-    };
-    const token = getToken();
     const response = await axios.get("http://localhost:8000/user_info", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
     });
     // Return an object with both the user data and the success message

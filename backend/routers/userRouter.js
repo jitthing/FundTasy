@@ -39,11 +39,11 @@ router.post("/newModel", create_model);
 router.post("/scrape_amazon", scrapeAmazon);
 
 // Wishlist Router
-router.post("/all_wishlist_items", getAllItems);
+router.get("/all_wishlist_items", getAllItems);
 router.post("/add_wishlist_item", addItem);
 
 // Active Goals Router
-router.post("/all_active_items", getActiveItems);
+router.get("/all_active_items", getActiveItems);
 router.post("/add_active_goal", addActiveItem);
 
 // Transaction Router

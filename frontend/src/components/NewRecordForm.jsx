@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import getUser from "../utils/getUser";
 import axios from "axios";
+import truncateText from "../utils/truncateText";
 /*
  TODO
  - Add a calendar pciker for the date
  - Create a banner instead of using alert
 */
 
-export default function NewRecordForm({ closeForm, updateTransactions }) {
+export default function NewRecordForm({ closeForm, updateTransactions, allGoals }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("others");
   const [amount, setAmount] = useState("0.00");
@@ -63,28 +64,29 @@ export default function NewRecordForm({ closeForm, updateTransactions }) {
             </FormBlock>
             <FormBlock width="50%">
               <FormLabel>Category</FormLabel>
-              <FormDropdown name="category">
-                <FormOption disabled selected>
-                  Select Category
-                </FormOption>
-                <FormOption>Food</FormOption>
-                <FormOption>Lifestyle</FormOption>
-                <FormOption>School</FormOption>
-                <FormOption>Subscriptions</FormOption>
-                <FormOption>Others</FormOption>
+              <FormDropdown required name="category">
+                <FormOption value="" disabled selected>Select Category</FormOption>
+                <FormOption value='Food'>Food</FormOption>
+                <FormOption value='Lifestyle'>Lifestyle</FormOption>
+                <FormOption value='School'>School</FormOption>
+                <FormOption value='Subscriptions'>Subscriptions</FormOption>
+                <FormOption value='Others'>Others</FormOption>
               </FormDropdown>
             </FormBlock>
             <FormBlock width="50%">
               <FormLabel>Goal to Deduct</FormLabel>
-              <FormDropdown name="goal">
-                <FormOption disabled selected>
-                  Select Goal
-                </FormOption>
-                <FormOption>Food</FormOption>
-                <FormOption>Lifestyle</FormOption>
-                <FormOption>School</FormOption>
-                <FormOption>Subscriptions</FormOption>
-                <FormOption>Others</FormOption>
+              {/* TODO: get Active goals dyniamically  */}
+              <FormDropdown required name="goal">
+                {allGoals.length > 0 ? (
+                  <>
+                    <FormOption value="" disabled selected>Select Goal</FormOption>
+                    {allGoals.map(goal => (
+                      <FormOption value={goal.title}>{truncateText(goal.title,50)}</FormOption>
+                    ))}
+                  </>
+                ) : (
+                  <FormOption value="" disabled selected>Create a goal at Home page first</FormOption>
+                )}
               </FormDropdown>
             </FormBlock>
             <FormBlock width="100%">

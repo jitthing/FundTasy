@@ -20,30 +20,20 @@ export default function Wishlist() {
   const [username, setUsername] = useState("");
   
   
-
-  useEffect(() => {
-    async function getUserObj() {
-      try {
-        const response = await getUser();
-        setUsername(response.user.username);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    getUserObj();
-  }, []);
-
   useEffect(() => {
     async function fetchWishlist() {
       try {
-        const response = await getWishlist(username);
-        setItems(response);
+        const userResponse = await getUser();
+        setUsername(userResponse.user.username);
+        const wishlistResponse = await getWishlist();
+        // console.log(wishlistResponse);
+        setItems(wishlistResponse.items);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
     }
     fetchWishlist();
-  }, [wishlistUpdate, username]);
+  }, [wishlistUpdate]);
 
   const handleWishlistUpdate = () => {
     setUpdate(!wishlistUpdate);

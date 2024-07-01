@@ -4,6 +4,7 @@ import axios from "axios";
 import NewRecordForm from "../NewRecordForm";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
+import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
 
 export default function GoalCard({ goals, updateGoals }) {
@@ -72,10 +73,8 @@ function GoalBox(props) {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const userObj = await getUser();
-        const username = userObj.user.username;
-        const wishlistData = await getWishlist(username);
-        setItems(wishlistData);
+        const wishlistData = await getWishlist();
+        setItems(wishlistData.items);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
@@ -211,9 +210,7 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
           {dropdownItems.map((item) => {
             return (
               <option value={item._id} title={item.name}>
-                {item.name.length > 50
-                  ? `${item.name.slice(0, 70)}...`
-                  : item.name}
+                {truncateText(item.name, 50)}
               </option>
             );
           })}
