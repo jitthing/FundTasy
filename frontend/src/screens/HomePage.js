@@ -9,15 +9,28 @@ import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
 import BarChartCard from "../components/HomePageComponents/BarChartCard";
 import getActiveGoals from "../utils/getActiveGoals";
+import updatePig from "../utils/updatePig";
+import getUser from "../utils/getUser";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
+  const [currentModel, updateModel] = useState("models/basic.glb");
   const [modelName, setModelName] = useState("Basic");
   const [show, setShow] = useState(false);
   const [activeGoals, setActiveGoals] = useState([]);
   const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
+  const [saveTriggered, setSaveTriggered] = useState(false);
 
+  useEffect(() => {
+    async function getUserId() {
+      const userObj = await getUser();
+      setUserId(userObj.user.username);
+      setModelUrl(`models/${userObj.user.displayPig}.glb`);
+      updateModel(`models/${userObj.user.displayPig}.glb`);
+    }
+    getUserId();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -50,6 +63,36 @@ export default function HomePage() {
     setShow(!show);
   };
 
+  const handleCancel = () => {
+    setShow(!show);
+    setModelUrl(currentModel);
+  };
+
+  useEffect(() => {
+    async function handleSaveClick() {
+      async function updatepig() {
+        try{
+          const response = await updatePig(userId, modelUrl, currentModel);
+          console.log(response);
+          updateModel(`models/${response.displayPig}.glb`);
+        } catch (error) {
+          console.log("Failed to update pig: " + error);
+          alert("Failed to update pig: " + error);
+        }
+      }
+      updatepig();
+    }
+    if (saveTriggered) {
+      handleSaveClick();
+      setSaveTriggered(false);
+    }
+  }, [saveTriggered, modelUrl, currentModel, userId]);
+
+  const handleSave = () => {
+    setShow(!show);
+    setSaveTriggered(true);
+  }
+
   return (
     <PageContainer>
       <Navbar page="home" />
@@ -64,6 +107,8 @@ export default function HomePage() {
             selectModel={selectModel}
             show={show}
             toggle={toggleShow}
+            cancel={handleCancel}
+            save={handleSave}
           />
         </PigDisplay>
         <BottomDisplay>

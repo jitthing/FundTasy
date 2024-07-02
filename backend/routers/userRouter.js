@@ -8,6 +8,7 @@ const {
   userInfo,
   validateResetToken,
   updateUserInfo,
+  updateDisplayPig
 } = require("../controllers/userController");
 
 const {
@@ -34,6 +35,7 @@ router.get("/user_info", userInfo);
 
 router.post("/all_models", getAllModels);
 router.post("/newModel", create_model);
+router.post("/update_display_pig", updateDisplayPig);
 
 // Amazon Scraper Router
 router.post("/scrape_amazon", scrapeAmazon);

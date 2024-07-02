@@ -153,7 +153,7 @@ const create_account = async (req, res) => {
     password: hashedPassword,
     firstName: newUser.firstName,
     lastName: newUser.lastName,
-
+    displayPig: "basic"
   });
   const authToken = jwt.sign({ id: createdUser._id, usernamae: createdUser.username }, JWT_SECRET, { expiresIn: '1hr' });
   return res.status(200).json({ message: "Account created succesfully", authToken, });
@@ -239,7 +239,7 @@ const google_login = async (req, res) => {
     if (!user) {
       let username = email.split('@')[0].toLowerCase();
       username = await generateUniqueUsername(username);
-      user = new Users({ email: email, username: username, firstName: firstName, lastName: lastName});
+      user = new Users({ email: email, username: username, firstName: firstName, lastName: lastName, displayPig: "basic" });
       await user.save();
     }
     const authToken = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
@@ -276,6 +276,28 @@ const validateResetToken = async (req, res) => {
 
 }
 
+const updateDisplayPig = async (req, res) => {
+  const { userId, current, updated } = req.body;
+  try {
+    if (current != updated) {
+      const updatedDP = await Users.findOneAndUpdate(
+        { username: userId },
+        { $set: { displayPig: updated } },
+        { new: true }
+      )
+      //console.log("changed db");
+      //console.log(updatedDP);
+      if (updatedDP) {
+        return res.status(200).json({ message: "Display pig updated successfully", displayPig: updatedDP.displayPig })
+      }
+    } else {
+      console.log("current == updated!")
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Unable to update display pig" })
+  }
+}
+
 module.exports = {
   authenticateUser,
   create_account,
@@ -287,4 +309,5 @@ module.exports = {
   validateResetToken,
   updateUserInfo,
   getUserFromToken,
+  updateDisplayPig
 };

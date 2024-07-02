@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function SkinSection({ getModelName, getImagePath, mypigs, selectModel, show, toggle }) {
+export default function SkinSection({ getModelName, getImagePath, mypigs, selectModel, show, toggle, cancel, save }) {
   if (show) {
     return (
         <SkinContainer>
@@ -18,8 +18,8 @@ export default function SkinSection({ getModelName, getImagePath, mypigs, select
             ))}
           </SkinButtons>
           <SkinEnd>
-            <CancelSkin onClick={toggle}>Cancel</CancelSkin>
-            <SaveSkin>Save</SaveSkin>
+            <CancelSkin onClick={cancel}>Cancel</CancelSkin>
+            <SaveSkin onClick={save}>Save</SaveSkin>
           </SkinEnd>
         </SkinContainer>
     )
