@@ -34,11 +34,11 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { amount, category, goal, title } = e.target.elements;
+    const { amount, category, title } = e.target.elements;
     const formData = {
       title: title.value,
       category: category.value,
-      goal: goal.value,
+      // goal: goal.value,
       amount: amount.value,
     };
     try {
@@ -62,7 +62,7 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
               <FormLabel>Title</FormLabel>
               <FormTextInput name="title" required placeholder="Title" />
             </FormBlock>
-            <FormBlock width="50%">
+            <FormBlock width="100%">
               <FormLabel>Category</FormLabel>
               <FormDropdown required name="category">
                 <FormOption value="" disabled selected>Select Category</FormOption>
@@ -73,22 +73,7 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
                 <FormOption value='Others'>Others</FormOption>
               </FormDropdown>
             </FormBlock>
-            <FormBlock width="50%">
-              <FormLabel>Goal to Deduct</FormLabel>
-              {/* TODO: get Active goals dyniamically  */}
-              <FormDropdown required name="goal">
-                {allGoals.length > 0 ? (
-                  <>
-                    <FormOption value="" disabled selected>Select Goal</FormOption>
-                    {allGoals.map(goal => (
-                      <FormOption value={goal.title}>{truncateText(goal.title,50)}</FormOption>
-                    ))}
-                  </>
-                ) : (
-                  <FormOption value="" disabled selected>Create a goal at Home page first</FormOption>
-                )}
-              </FormDropdown>
-            </FormBlock>
+
             <FormBlock width="100%">
               <FormLabel>Amount</FormLabel>
               <div

@@ -98,7 +98,6 @@ const SpendingTable = ({ transactions }) => {
         <TableHead>
           <HeadTitle>Title</HeadTitle>
           <HeadCategory>Category</HeadCategory>
-          <HeadGoal>Goal</HeadGoal>
           <HeadDateTime>Date</HeadDateTime>
           <HeadAmount>Amount</HeadAmount>
         </TableHead>
@@ -108,13 +107,7 @@ const SpendingTable = ({ transactions }) => {
             <TransactionCategory>
               <CategoryButton>{transaction.category}</CategoryButton>
             </TransactionCategory>
-            <TransactionGoal>
-              <GoalName>{transaction.goal}</GoalName>
-              {/* <GoalStatus>{transaction.status}</GoalStatus> */}
-              <GoalStatus>In progress</GoalStatus>
-            </TransactionGoal>
             <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
-          
             <TransactionAmount>-{formatCurrency(transaction.amount)}</TransactionAmount>
           </TransactionDiv>
         ))}
