@@ -156,24 +156,36 @@ function GoalBox(props) {
 
 const Modal = ({ onClose, dropdownItems, updateGoals }) => {
   const [price, setPrice] = React.useState("");
-  const [item, setItem] = React.useState("");
+  const [selectItem, setItem] = React.useState("");
+  const [customItem, setCustomItem] = React.useState("");
 
   const handleSelectChange = (event) => {
-    const item = dropdownItems.find(
+    const foundItem = dropdownItems.find(
       //changed it to id instead cause of string slicing
       (dropdownItem) => dropdownItem._id === event.target.value
     );
-    if (item) {
-      setPrice(item.price);
-      setItem(item.name);
+    if (foundItem) {
+      setPrice(foundItem.price);
+      setItem(foundItem.name);
+    } else {
+      setItem(event.target.value);
     }
+  };
+
+  const handleCustomGoal = (event) => {
+    setCustomItem(event);
+  };
+
+  const handleCustomPrice = (event) => {
+    setPrice(event);
   };
 
   const handleAddGoal = async () => {
     const userObj = await getUser();
     const userId = userObj.user.username;
+    const title = selectItem == "others" ? customItem : selectItem;
     try {
-      const body = { title: item, price: price, username: userId };
+      const body = { title: title, price: price, username: userId };
       // console.log(body);
       const response = await axios.post(
         "http://localhost:8000/add_active_goal",
@@ -214,11 +226,35 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
               </option>
             );
           })}
+          <option value="others">Others</option>
         </select>
+        {selectItem == "others" ? (
+          <>
+            <h3 className="">Name of Goal:</h3>
+            <input
+              className="py-2 pl-2 w-full"
+              type="text"
+              placeholder="Please input your custom goal"
+              onChange={(e) => handleCustomGoal(e.target.value)}
+            />
+          </>
+        ) : null}
         <h3 className="text-lg text-gray-700 font-semibold mb-4">Price:</h3>
-        <div className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-          {price ? "$" + String(price) : ""}
-        </div>
+        {selectItem == "others" ? (
+          <>
+            <input
+              className="py-1 px-1 pl-2 w-full"
+              type="text"
+              placeholder="Please input the custom price"
+              onChange={(e) => handleCustomPrice(e.target.value)}
+            />
+          </>
+        ) : (
+          <div className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            {price ? "$" + String(price) : ""}
+          </div>
+        )}
+
         <button
           onClick={handleAddGoal}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
