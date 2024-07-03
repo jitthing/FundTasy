@@ -21,11 +21,14 @@ export default function HomePage() {
   const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
   const [saveTriggered, setSaveTriggered] = useState(false);
+  const [bankBalance, setBankBalance] = useState(0);
+  const currentTime = new Date().toLocaleString();
 
   useEffect(() => {
     async function getUserId() {
       const userObj = await getUser();
       setUserId(userObj.user.username);
+      setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
       updateModel(`models/${userObj.user.displayPig}.glb`);
     }
@@ -116,7 +119,7 @@ export default function HomePage() {
           <BarChartCard />
         </BottomDisplay>
       </Display>
-      <Social />
+      <Social bankBalance={bankBalance} currentTime={currentTime}/>
     </PageContainer>
   );
 }

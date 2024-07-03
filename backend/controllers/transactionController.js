@@ -7,7 +7,7 @@ const newTransaction = async (req, res) => {
         const createTransaction = await transaction.create({
             title: formData.title,
             category: formData.category,
-            goal: formData.goal,
+            // goal: formData.goal,
             amount: formData.amount,
             username: username,
         });

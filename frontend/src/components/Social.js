@@ -1,12 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
+import PiggyBankCard from "./HomePageComponents/PiggyBankCard";
 
-export default function Social() {
+export default function Social({bankBalance, currentTime}) {
     return (
         <Div>
-            <SocialTitle>Friends</SocialTitle>
-            <SearchBar placeholder="Find a friend" />
-            <FriendList />
+            
+            <PiggyBankCard bankBalance={bankBalance} currentTime={currentTime} />
+            <SocialContainer>
+                <SocialTitle>Friends</SocialTitle>
+                <SearchBar placeholder="Find a friend" />
+                <FriendList />
+            </SocialContainer>
         </Div>
     )
 }
@@ -71,6 +76,7 @@ function FriendList() {
 const Div = styled.div`
     display: flex;
     align-content: flex-end;
+    gap: 10px;
     max-width: 360px;
     width: 30vw;
     height: 100vh;
@@ -79,16 +85,37 @@ const Div = styled.div`
     color: #7b7b7b;
     font-family: Inter, sans-serif;
     margin: 0px;
-    padding: 0px 30px;
-    border-left:1px solid #d9d9d9;
+    padding: 10px 5px 10px 0px;
     margin-left: auto;
+    margin-right: 5px;
 `
+const SocialContainer = styled.div`
+    display: flex;
+    align-content: flex-end;
+    max-width: 360px;
+    width: 100%;
+    height: 72%;
+    flex-direction: column;
+    font-size: 24px;
+    color: #7b7b7b;
+    font-family: Inter, sans-serif;
+    margin: 0px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 2px #bcbcbc;
+    padding: 10px 20px;
+`
+
 const SocialTitle = styled.div`
     color: #000;
     font-size: 16px;
     font-weight: bold;
-    tex-align: left;
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0px 0px;
+    max-height: 35px;
+    text-align: left;
+    width: 100%;
 `
 
 const SearchBar = styled.input`
@@ -98,15 +125,15 @@ const SearchBar = styled.input`
     border-radius: 15px;
     font-size: 16px;
     padding: 0px 15px;
-    margin-top: 20px;
+    margin-top: 10px;
 `
 
 const Leaderboard = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 80vh;
-    margin: 30px auto;
+    max-height: 80%;
+    margin: 20px auto 0px;
 `
 
 const LeaderboardHead = styled.div`
@@ -133,7 +160,7 @@ const LeaderboardStat = styled.div`
     font-weight:bold;
     color: #6d6d6d;
     padding: 4px 0px;
-    border-bottom: 1px solid #7b7b7b
+    border-bottom: 1px solid #7b7b7b;
 `
 
 const LeaderboardCell = styled.div`

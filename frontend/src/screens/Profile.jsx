@@ -70,7 +70,7 @@ function Profile() {
       setLastName(response.user.lastName);
       setUsername(response.user.username);
       response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
-      response.user.income ? setIncome(response.user.income) : setIncome(undefined);
+      setIncome(response.user.income);
       setPassword(response.user.password); // use to check if user is a google user
       setStatusMessage(response.message);
       handleShowBanner();
