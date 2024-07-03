@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-export default function PiggyBankCard() {
+export default function PiggyBankCard({ showContributeForm }) {
     return (
         <>
             <PiggyContainer>
@@ -14,7 +14,7 @@ export default function PiggyBankCard() {
                 </PiggyBody>
                 <PiggyBottom>
                     <LastUpdated>Last updated today, 00:00</LastUpdated>
-                    <ContributeButton>Contribute</ContributeButton>
+                    <ContributeButton onClick={showContributeForm}>Contribute</ContributeButton>
                 </PiggyBottom>
             </PiggyContainer>
         </>
