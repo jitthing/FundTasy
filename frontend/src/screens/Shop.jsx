@@ -3,9 +3,27 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar.js";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { calcPosFromAngles } from "@react-three/drei";
+import { flushGlobalEffects } from "@react-three/fiber";
+
+// TODO:
+// 1. Fetch the list of owned pigs from the backend
+// 2. Filter menu
+// 3. Filter form
+// 4. Buy menu
 
 export default function Shop() {
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState([]);         // Array to store models
+  const [ownedPigs, setOwnedPigs] = useState([]);   // Array to store owned Pigs
+  const [filterActive, showFilter] = useState(false); // For filter menu
+    
+  function openFilter() {
+    showFilter(true);
+  }
+
+  function closeFilter() {
+    showFilter(false);
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -20,12 +38,25 @@ export default function Shop() {
     }
     fetchData();
   }, []);
+
+
+
+
   return (
     <PageContainer>
       <Navbar page="shop" />
+      {/* {
+        filterActive && (
+
+        )
+      } */}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
+          <FilterButton onClick={openFilter}>
+            <FilterIcon srcSet="icons/filter.png" />
+            <FilterText>Filter</FilterText>
+          </FilterButton>
           <div style={{ width: "200px" }}>
             <Moneybar>
               <BigCoin srcSet="icons/coin.png" />
@@ -34,13 +65,13 @@ export default function Shop() {
           </div>
         </ShopHead>
         <ShopBody>
-          <PigCard pigname="basic" pigTitle="Basic" owned />
-          <PigCard pigname="ninja" pigTitle="Ninja" owned />
+          {/* <PigCard pigname="basic" pigTitle="Basic" owned />
+          <PigCard pigname="ninja" pigTitle="Ninja" owned /> */}
           {/* {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
           ))} */}
           {models.map((model) => (
-            <PigCard pigname={model.toLowerCase()} pigTitle={model} />
+            <PigCard pigname={model.toLowerCase()} pigTitle={model} owned={true} />
           ))}
         </ShopBody>
       </ShopContainer>
@@ -203,4 +234,34 @@ const BuyText = styled.div`
   margin-right: auto;
   font-size: 16px;
   vertical-align: middle;
+`;
+
+
+const FilterButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 36px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 0px 3px #adadad;
+  padding: 0px 5px;
+  margin: 0px 50px 0px auto;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+    transition: 0.1s;
+  }
+`;
+
+const FilterIcon = styled.img`
+  height: 14px;
+  width: 14px;
+`;
+
+const FilterText = styled.div`
+  font-size: 14px;
+  width: 60%;
+  text-align: right;
 `;
