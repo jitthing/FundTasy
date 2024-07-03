@@ -14,6 +14,7 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [updateTransactions, setUpdateTransactions] = useState(false);
   const [allGoals, setAllGoals] = useState([]);
+  
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -44,6 +45,14 @@ export default function Transactions() {
   function closeForm() {
     showForm(false);
   }
+  
+  const removeTransaction = async () => {
+    try {
+      //implement logic
+    } catch (error) {
+      alert("Failed to remove transaction", error);
+    }
+  };
 
   return (
     <PageContainer>
@@ -103,12 +112,17 @@ const SpendingTable = ({ transactions }) => {
         </TableHead>
         {transactions.map((transaction) => (
           <TransactionDiv key={transaction.id}>
-            <TransactionTitle>{transaction.title}</TransactionTitle>
+            <RemoveButton>-</RemoveButton>
+            <TransactionTitle >{transaction.title}</TransactionTitle>
             <TransactionCategory>
               <CategoryButton>{transaction.category}</CategoryButton>
             </TransactionCategory>
             <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
             <TransactionAmount>-{formatCurrency(transaction.amount)}</TransactionAmount>
+            <EditIcon
+                src="icons/edit-black.png"
+                alt="Edit"
+            />
           </TransactionDiv>
         ))}
       </TransactionBody>
@@ -176,6 +190,32 @@ const CoinsTable = () => {
     </>
   );
 };
+
+const RemoveButton = styled.button`
+  background-color: gray;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: red;
+  }
+`;
+
+const EditIcon = styled.img`
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  object-fit: contain;
+  cursor: pointer;
+  margin-left: 10px; /* Add space between value and icon */
+`;
 
 const PageContainer = styled.div`
   display: flex;
@@ -318,7 +358,7 @@ const TransactionBody = styled.div`
 `;
 
 const TableHead = styled.div`
-  width: 100%;
+  width: 95%;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -326,7 +366,7 @@ const TableHead = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: grey;
-  text-align: left;
+  text-align: center;
   &:hover {
     background-color: #f8f8f8;
     transition: 0.2s;
@@ -399,11 +439,11 @@ const CategoryButton = styled.div`
   }
 `;
 
-const TransactionGoal = styled.div`
-  width: 20%;
-  display: flex;
-  flex-direction: column;
-`;
+// const TransactionGoal = styled.div`
+//   width: 20%;
+//   display: flex;
+//   flex-direction: column;
+// `;
 
 const GoalName = styled.div`
   font-size: 14px;
