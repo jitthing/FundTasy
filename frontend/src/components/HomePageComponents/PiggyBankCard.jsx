@@ -1,7 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
+import formatCurrency from "../../utils/formatCurrency";
 
-export default function PiggyBankCard({ showContributeForm }) {
+export default function PiggyBankCard() {
     return (
         <>
             <PiggyContainer>
@@ -9,12 +10,12 @@ export default function PiggyBankCard({ showContributeForm }) {
                 <PiggyBody>
                     <BankContainer>
                         <Balance>Fund Balance:</Balance>
-                        <Amount>$ 1296.70</Amount>
+                        <Amount>{formatCurrency(bankBalance)}</Amount>
                     </BankContainer>
                 </PiggyBody>
                 <PiggyBottom>
                     <LastUpdated>Last updated today, 00:00</LastUpdated>
-                    <ContributeButton onClick={showContributeForm}>Contribute</ContributeButton>
+                    <ContributeButton>Contribute</ContributeButton>
                 </PiggyBottom>
             </PiggyContainer>
         </>

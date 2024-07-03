@@ -2,11 +2,13 @@ import styled from "styled-components";
 
 import { AddedItem } from "./AddedItem";
 
-export const AddedItems = ({ items }) => {
+export const AddedItems = ({ items, updateWishlist }) => {
   return (
     <ItemsWrapper>
       {items.map((item, id) => {
-        return <AddedItem key={id} item={item} />;
+        return (
+          <AddedItem key={id} item={item} updateWishlist={updateWishlist} />
+        );
       })}
     </ItemsWrapper>
   );

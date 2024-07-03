@@ -1,9 +1,31 @@
+import axios from "axios";
 import styled from "styled-components";
+import { IoClose } from "react-icons/io5";
 
-export const AddedItem = ({ item }) => {
+export const AddedItem = ({ item, updateWishlist }) => {
+  const handleDeleteItem = async (id) => {
+    // console.log(id);
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/delete_wishlist_item/${id}`
+      );
+      if (response) {
+        updateWishlist();
+        alert("Item deleted!");
+      }
+    } catch (error) {
+      alert(`${error.response.data.id}`);
+    }
+  };
   return (
     <CardDiv>
       <WishlistImage src={item.image} />
+      <button
+        onClick={() => handleDeleteItem(item._id)}
+        className="z-10 absolute text-gray-600 hover:text-gray-800"
+      >
+        <IoClose className="h-6 w-6" />
+      </button>
       <DesctiptionWrap>
         <div className="font-extrabold text-xl">${item.price}</div>
         <div>

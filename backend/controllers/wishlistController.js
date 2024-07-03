@@ -18,8 +18,11 @@ const getAllItems = async (req, res) => {
 const addItem = async (req, res) => {
   const itemName = req.body.title;
   const username = req.body.username;
-  const response = await Wishlist.findOne({ name: itemName, username: username });
-  
+  const response = await Wishlist.findOne({
+    name: itemName,
+    username: username,
+  });
+
   if (response !== null) {
     return res.status(400).json({ message: "Item already in wishlist!" });
   }
@@ -37,4 +40,16 @@ const addItem = async (req, res) => {
   }
 };
 
-module.exports = { getAllItems, addItem };
+const deleteItem = async (req, res) => {
+  const response = await Wishlist.findByIdAndDelete(req.params.id);
+
+  if (response) {
+    return res.status(200).json({ message: "Item successfully deleted" });
+  } else {
+    return res
+      .status(400)
+      .json({ message: "Failed to delete item", id: req.body.id });
+  }
+};
+
+module.exports = { getAllItems, addItem, deleteItem };

@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   coinBalance: { type: Number, default: 0 },
   income: { type: Number, default: 0 },
   displayPig: String,
+  bankBalance : {type: Number, default: 0},
 });
 
 module.exports = mongoose.model("Users", userSchema);

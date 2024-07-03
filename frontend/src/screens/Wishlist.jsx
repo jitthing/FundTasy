@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import getUser from "../utils/getUser";
 import getWishlist from "../utils/getWishlist";
 
-
 import { SearchBar } from "../components/WishlistComponents/SearchBar";
 import { SearchResults } from "../components/WishlistComponents/SearchResults";
 import { AddedItems } from "../components/WishlistComponents/AddedItems";
@@ -18,8 +17,7 @@ export default function Wishlist() {
   const [wishlistUpdate, setUpdate] = useState(false);
 
   const [username, setUsername] = useState("");
-  
-  
+
   useEffect(() => {
     async function fetchWishlist() {
       try {
@@ -54,7 +52,7 @@ export default function Wishlist() {
           )}
         </SearchWrapper>
         <WishlistItemHeader>Wishlist Items</WishlistItemHeader>
-        <AddedItems items={items} />
+        <AddedItems items={items} updateWishlist={handleWishlistUpdate} />
       </SearchAndItemsWrapper>
     </PageContainer>
   );
