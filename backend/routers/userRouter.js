@@ -8,7 +8,7 @@ const {
   userInfo,
   validateResetToken,
   updateUserInfo,
-  updateDisplayPig
+  updateDisplayPig,
 } = require("../controllers/userController");
 
 const {
@@ -17,8 +17,15 @@ const {
 } = require("../controllers/modelController");
 const { protect } = require("../middleware/authMiddleware");
 const { scrapeAmazon } = require("../webScraper");
-const { getAllItems, addItem } = require("../controllers/wishlistController");
-const { newTransaction, allTransactions } = require("../controllers/transactionController");
+const {
+  getAllItems,
+  addItem,
+  deleteItem,
+} = require("../controllers/wishlistController");
+const {
+  newTransaction,
+  allTransactions,
+} = require("../controllers/transactionController");
 const {
   getActiveItems,
   addActiveItem,
@@ -43,6 +50,7 @@ router.post("/scrape_amazon", scrapeAmazon);
 // Wishlist Router
 router.get("/all_wishlist_items", getAllItems);
 router.post("/add_wishlist_item", addItem);
+router.delete("/delete_wishlist_item/:id", deleteItem);
 
 // Active Goals Router
 router.get("/all_active_items", getActiveItems);
