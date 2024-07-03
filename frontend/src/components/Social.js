@@ -2,11 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import PiggyBankCard from "./HomePageComponents/PiggyBankCard";
 
-export default function Social({bankBalance, currentTime}) {
+export default function Social({ openContributeForm, closeContributeForm, bankBalance, currentTime}) {
     return (
         <Div>
             
-            <PiggyBankCard bankBalance={bankBalance} currentTime={currentTime} />
+            <PiggyBankCard bankBalance={bankBalance} />
             <SocialContainer>
                 <SocialTitle>Friends</SocialTitle>
                 <SearchBar placeholder="Find a friend" />

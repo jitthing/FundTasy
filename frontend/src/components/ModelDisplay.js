@@ -2,6 +2,7 @@ import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
 import mypigs from "../modelinfo";
+import zIndex from "@mui/material/styles/zIndex";
 
 function Model(props) {
     const { scene } = useGLTF(props.modelPath);
@@ -16,7 +17,7 @@ export default function ModelDisplay(props) {
         <Canvas dpr={[1, 2]} shadows={false} camera={{ fov: 45 }} resize={{ debounce: 0 }}>
             <PresentationControls speed={1.5} global>
             <Stage>
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<Loading />} style={{ zIndex:"1" }} >
                 <Model modelPath={props.modelUrl} scale={0.1} />
                 </Suspense>
             </Stage>
@@ -31,7 +32,7 @@ Object.keys(mypigs).map((modelname) => (useGLTF.preload(`models/${modelname}.glb
 function Loading() {
     return (
         <Html>
-            <div style={{ position:"absolute", font: "700 20px Inter, sans-serif" }}>Loading...</div>
+            <div style={{ position:"absolute", font: "700 20px Inter, sans-serif", zIndex:"0" }}>Loading...</div>
         </Html>
     );
 }

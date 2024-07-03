@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import formatCurrency from "../../utils/formatCurrency";
 
-export default function PiggyBankCard({bankBalance, currentTime}) {
+export default function PiggyBankCard({ bankBalance }) {
     return (
         <>
             <PiggyContainer>
@@ -14,9 +14,7 @@ export default function PiggyBankCard({bankBalance, currentTime}) {
                     </BankContainer>
                 </PiggyBody>
                 <PiggyBottom>
-                    {/* <LastUpdated>Last updated today, 00:00</LastUpdated> */}
-                    {/* Change it to Today ... if it's today not 03/07/24 */}
-                    <LastUpdated>Last updated: {currentTime }</LastUpdated>
+                    <LastUpdated>Last updated today, 00:00</LastUpdated>
                     <ContributeButton>Contribute</ContributeButton>
                 </PiggyBottom>
             </PiggyContainer>

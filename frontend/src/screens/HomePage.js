@@ -11,6 +11,7 @@ import BarChartCard from "../components/HomePageComponents/BarChartCard";
 import getActiveGoals from "../utils/getActiveGoals";
 import updatePig from "../utils/updatePig";
 import getUser from "../utils/getUser";
+import ContributeForm from "../components/ContributeForm";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -21,6 +22,7 @@ export default function HomePage() {
   const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
   const [saveTriggered, setSaveTriggered] = useState(false);
+  const [contributeFormActive, showContributeForm] = useState(false);
   const [bankBalance, setBankBalance] = useState(0);
   const currentTime = new Date().toLocaleString();
 
@@ -96,8 +98,17 @@ export default function HomePage() {
     setSaveTriggered(true);
   }
 
+  const openContributeForm = () => {
+    showContributeForm(true);
+  }
+
+  const closeContributeForm = () => {
+    showContributeForm(false);
+  }
+
   return (
     <PageContainer>
+      {contributeFormActive && (<ContributeForm closeContributeForm={closeContributeForm} />)}
       <Navbar page="home" />
       <Display>
         <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
@@ -119,7 +130,7 @@ export default function HomePage() {
           <BarChartCard />
         </BottomDisplay>
       </Display>
-      <Social bankBalance={bankBalance} currentTime={currentTime}/>
+      <Social bankBalance={bankBalance}/>
     </PageContainer>
   );
 }
