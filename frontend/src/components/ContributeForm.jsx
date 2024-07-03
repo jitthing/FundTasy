@@ -6,7 +6,7 @@ import axios from "axios";
 export default function ContributeForm({ closeContributeForm }) {
     return (
         <ContributeBackdrop onClick={closeContributeForm}>
-            <ContributeModal></ContributeModal>
+            <ContributeModal onClick={(e) => e.stopPropagation()}></ContributeModal>
         </ContributeBackdrop>
     )
 }

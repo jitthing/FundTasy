@@ -1,8 +1,8 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import formatCurrency from "../../utils/formatCurrency";
 
-export default function PiggyBankCard({ bankBalance }) {
+export default function PiggyBankCard({ bankBalance, currentTime, openContributeForm, closeContributeForm }) {
     return (
         <>
             <PiggyContainer>
@@ -14,8 +14,9 @@ export default function PiggyBankCard({ bankBalance }) {
                     </BankContainer>
                 </PiggyBody>
                 <PiggyBottom>
-                    <LastUpdated>Last updated today, 00:00</LastUpdated>
-                    <ContributeButton>Contribute</ContributeButton>
+                    <LastUpdated>Last updated {currentTime}</LastUpdated>
+                    {bankBalance > 0 && (<ContributeButton onClick={openContributeForm}>Allocate</ContributeButton>)}
+                    {bankBalance <= 0 && (<DisabledButton>Allocate</DisabledButton>)}
                 </PiggyBottom>
             </PiggyContainer>
         </>
@@ -86,7 +87,7 @@ const PiggyBottom = styled.div`
 `
 
 const ContributeButton= styled.div`
-    width: 100px;
+    width: 85px;
     height: 30px;
     border-radius: 6px;
     display: flex;
@@ -100,4 +101,18 @@ const ContributeButton= styled.div`
     &:hover {
         filter: brightness(0.95);
     }
+`
+
+const DisabledButton= styled.div`
+    width: 85px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #cecece;
+    color: #f1f1f1;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: default;
 `

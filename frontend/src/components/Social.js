@@ -1,18 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
-import PiggyBankCard from "./HomePageComponents/PiggyBankCard";
 
-export default function Social({ openContributeForm, closeContributeForm, bankBalance, currentTime}) {
-    return (
-        <Div>
-            
-            <PiggyBankCard bankBalance={bankBalance} />
-            <SocialContainer>
-                <SocialTitle>Friends</SocialTitle>
-                <SearchBar placeholder="Find a friend" />
-                <FriendList />
-            </SocialContainer>
-        </Div>
+export default function Social() {
+    return (        
+        <SocialContainer>
+            <SocialTitle>Friends</SocialTitle>
+            <SearchBar placeholder="Find a friend" />
+            <FriendList />
+        </SocialContainer>
     )
 }
 
@@ -73,22 +68,6 @@ function FriendList() {
     )
 }
 
-const Div = styled.div`
-    display: flex;
-    align-content: flex-end;
-    gap: 10px;
-    max-width: 360px;
-    width: 30vw;
-    height: 100vh;
-    flex-direction: column;
-    font-size: 24px;
-    color: #7b7b7b;
-    font-family: Inter, sans-serif;
-    margin: 0px;
-    padding: 10px 5px 10px 0px;
-    margin-left: auto;
-    margin-right: 5px;
-`
 const SocialContainer = styled.div`
     display: flex;
     align-content: flex-end;

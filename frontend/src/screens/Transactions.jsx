@@ -358,7 +358,7 @@ const TransactionBody = styled.div`
 `;
 
 const TableHead = styled.div`
-  width: 95%;
+  width: 100%;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -366,7 +366,7 @@ const TableHead = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: grey;
-  text-align: center;
+  text-align: left;
   &:hover {
     background-color: #f8f8f8;
     transition: 0.2s;
@@ -376,22 +376,19 @@ const TableHead = styled.div`
 const HeadTitle = styled.div`
   width: 35%;
   padding-left: 20px;
+  text-align: left;
 `;
 
 const HeadCategory = styled.div`
-  width: 15%;
-`;
-
-const HeadGoal = styled.div`
   width: 20%;
 `;
 
 const HeadDateTime = styled.div`
-  width: 15%;
+  width: 20%;
 `;
 
 const HeadAmount = styled.div`
-  width: 15%;
+  width: 25%;
   text-align: right;
   padding-right: 20px;
 `;
@@ -418,7 +415,7 @@ const TransactionTitle = styled.div`
 `;
 
 const TransactionCategory = styled.div`
-  width: 15%;
+  width: 20%;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -456,12 +453,12 @@ const GoalStatus = styled.div`
 `;
 
 const TransactionDateTime = styled.div`
-  width: 15%;
+  width: 20%;
   font-size: 14px;
 `;
 
 const TransactionAmount = styled.div`
-  width: 15%;
+  width: 25%;
   text-align: right;
   padding-right: 20px;
 `;

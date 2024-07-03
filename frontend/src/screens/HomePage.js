@@ -12,6 +12,7 @@ import getActiveGoals from "../utils/getActiveGoals";
 import updatePig from "../utils/updatePig";
 import getUser from "../utils/getUser";
 import ContributeForm from "../components/ContributeForm";
+import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -130,7 +131,15 @@ export default function HomePage() {
           <BarChartCard />
         </BottomDisplay>
       </Display>
-      <Social bankBalance={bankBalance}/>
+      <Div>
+        <PiggyBankCard 
+          bankBalance={bankBalance} 
+          openContributeForm={openContributeForm} 
+          closeContributeForm={closeContributeForm}
+          currentTime={currentTime}
+        />
+        <Social />
+      </Div>
     </PageContainer>
   );
 }
@@ -167,3 +176,20 @@ const BottomDisplay = styled.div`
   justify-content: space-between;
   align-items: middle;
 `;
+
+const Div = styled.div`
+    display: flex;
+    align-content: flex-end;
+    gap: 10px;
+    max-width: 360px;
+    width: 30vw;
+    height: 100vh;
+    flex-direction: column;
+    font-size: 24px;
+    color: #7b7b7b;
+    font-family: Inter, sans-serif;
+    margin: 0px;
+    padding: 10px 5px 10px 0px;
+    margin-left: auto;
+    margin-right: 5px;
+`
