@@ -6,7 +6,7 @@ export default function Social({ openContributeForm, closeContributeForm, bankBa
     return (
         <Div>
             
-            <PiggyBankCard />
+            <PiggyBankCard bankBalance={bankBalance} />
             <SocialContainer>
                 <SocialTitle>Friends</SocialTitle>
                 <SearchBar placeholder="Find a friend" />

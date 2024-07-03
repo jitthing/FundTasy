@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import formatCurrency from "../../utils/formatCurrency";
 
-export default function PiggyBankCard() {
+export default function PiggyBankCard({ bankBalance }) {
     return (
         <>
             <PiggyContainer>

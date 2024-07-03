@@ -130,7 +130,7 @@ export default function HomePage() {
           <BarChartCard />
         </BottomDisplay>
       </Display>
-      <Social />
+      <Social bankBalance={bankBalance}/>
     </PageContainer>
   );
 }
