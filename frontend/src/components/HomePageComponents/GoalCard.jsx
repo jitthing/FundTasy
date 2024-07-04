@@ -6,6 +6,7 @@ import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
+import formatCurrency from "../../utils/formatCurrency";
 
 export default function GoalCard({ goals, updateGoals }) {
   const numActiveGoals = goals.length;
@@ -22,7 +23,7 @@ export default function GoalCard({ goals, updateGoals }) {
               numDays="1"
               startDate={goal.startDate}
               endDate="1/7/24"
-              currentSaved={goal.saved.$numberDecimal}
+              currentSaved={goal.saved}
               rate="20"
               lastTopUpAmt="9"
               lastTopUpDate="19/6/24"
@@ -96,7 +97,7 @@ function GoalBox(props) {
         <GoalInfo>
           <Goal>
             <div style={{ display: "inline-block", fontWeight: "bold" }}>
-              Save ${toSave} in {numDays} days{" "}
+              Save ${toSave} 
             </div>
             <div
               style={{
@@ -110,7 +111,7 @@ function GoalBox(props) {
             </div>
           </Goal>
           <Saved>
-            ${currentSaved}{" "}
+            {formatCurrency(currentSaved)}{" "}
             <div
               style={{
                 display: "inline-block",

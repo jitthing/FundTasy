@@ -2,21 +2,23 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import formatCurrency from "../../utils/formatCurrency";
 
-export default function PiggyBankCard({ bankBalance, currentTime, openContributeForm, closeContributeForm }) {
+export default function PiggyBankCard({ bankBalance, currentTime, openContributeForm, closeContributeForm, activeGoals }) {
+    var valid = bankBalance > 0 && activeGoals.length > 0;
+    var statement = valid ? "":"(Insufficient funds or no active goals)";
     return (
         <>
             <PiggyContainer>
                 <PiggyHead>Piggybank</PiggyHead>
                 <PiggyBody>
                     <BankContainer>
-                        <Balance>Fund Balance:</Balance>
+                        <Balance>Fund Balance: <Statement>{statement}</Statement></Balance>
                         <Amount>{formatCurrency(bankBalance)}</Amount>
                     </BankContainer>
                 </PiggyBody>
                 <PiggyBottom>
                     <LastUpdated>Last updated {currentTime}</LastUpdated>
-                    {bankBalance > 0 && (<ContributeButton onClick={openContributeForm}>Allocate</ContributeButton>)}
-                    {bankBalance <= 0 && (<DisabledButton>Allocate</DisabledButton>)}
+                    {valid && (<ContributeButton onClick={openContributeForm} activeGoals={activeGoals} bankBalance={bankBalance}>Allocate</ContributeButton>)}
+                    {!valid && (<DisabledButton>Allocate</DisabledButton>)}
                 </PiggyBottom>
             </PiggyContainer>
         </>
@@ -115,4 +117,10 @@ const DisabledButton= styled.div`
     font-size: 16px;
     font-weight: bold;
     cursor: default;
+`
+
+const Statement = styled.div`
+    display: inline-block;
+    font-size: 12px;
+    color: grey;
 `
