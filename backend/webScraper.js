@@ -28,6 +28,7 @@ const scrapeAmazon = async (req, res) => {
       if (priceElement && priceFraction) {
         price = `${priceElement.innerText}.${priceFraction.innerText}`;
         price = price.split("\n.").join("");
+        price = parseFloat(price);
       }
 
       if (title && image && price) {

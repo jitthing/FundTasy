@@ -8,6 +8,7 @@ import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
 
 export default function GoalCard({ goals, updateGoals }) {
+  // console.log(goals);
   const numActiveGoals = goals.length;
   const numEmptyGoals = 3 - numActiveGoals;
   return (
@@ -17,16 +18,18 @@ export default function GoalCard({ goals, updateGoals }) {
         {goals.map((goal) => {
           return (
             <GoalBox
+              id={goal._id}
               active
               toSave={goal.price}
               numDays="1"
               startDate={goal.startDate}
               endDate="1/7/24"
-              currentSaved={goal.saved.$numberDecimal}
+              currentSaved={goal.saved}
               rate="20"
               lastTopUpAmt="9"
               lastTopUpDate="19/6/24"
               daysLeft="1"
+              updateGoals={updateGoals}
             />
           );
         })}
@@ -89,26 +92,53 @@ function GoalBox(props) {
   function handleModalClose() {
     setModalOpen(false);
   }
+  const handleDeleteItem = async (id, amount) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(
+        `http://localhost:8000/delete_active_goal/${id}/${amount}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+      if (response) {
+        props.updateGoals((prev) => !prev);
+        alert("Item deleted!");
+      }
+    } catch (error) {
+      alert(`${error.response}`);
+    }
+  };
 
   if (isActive) {
     return (
       <ActiveGoal>
         <GoalInfo>
-          <Goal>
-            <div style={{ display: "inline-block", fontWeight: "bold" }}>
-              Save ${toSave} in {numDays} days{" "}
-            </div>
-            <div
-              style={{
-                display: "inline-block",
-                fontSize: "12px",
-                color: "grey",
-              }}
+          <div className="flex justify between-line">
+            <Goal>
+              <div style={{ display: "inline-block", fontWeight: "bold" }}>
+                Save ${toSave} in {numDays} days{" "}
+              </div>
+              <div
+                style={{
+                  display: "inline-block",
+                  fontSize: "12px",
+                  color: "grey",
+                }}
+              >
+                {" "}
+                ({startDate} - {endDate})
+              </div>
+            </Goal>
+            <button
+              onClick={() => handleDeleteItem(props.id, currentSaved)}
+              className="absolute text-gray-600 hover:text-gray-800"
             >
-              {" "}
-              ({startDate} - {endDate})
-            </div>
-          </Goal>
+              <IoClose className="h-6 w-6" />
+            </button>
+          </div>
           <Saved>
             ${currentSaved}{" "}
             <div
@@ -155,7 +185,7 @@ function GoalBox(props) {
 }
 
 const Modal = ({ onClose, dropdownItems, updateGoals }) => {
-  const [price, setPrice] = React.useState("");
+  const [price, setPrice] = React.useState(null);
   const [selectItem, setItem] = React.useState("");
   const [customItem, setCustomItem] = React.useState("");
 
@@ -214,7 +244,7 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
         <select
           onChange={handleSelectChange}
           className="form-select block w-full text-base border-gray-300 focus:ring-blue-500 focus:border-blue-500
-          py-2 pl-3 pr-10 sm:text-sm rounded-md"
+          py-1 pb-2 pl-3 pr-10 sm:text-sm rounded-md"
         >
           <option selected disabled hidden>
             ---
@@ -226,13 +256,13 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
               </option>
             );
           })}
-          <option value="others">Others</option>
+          <option value="others">Custom Goal</option>
         </select>
         {selectItem == "others" ? (
           <>
-            <h3 className="">Name of Goal:</h3>
+            <h3 className="pb-2 pt-2">Name of Goal:</h3>
             <input
-              className="py-2 pl-2 w-full"
+              className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               type="text"
               placeholder="Please input your custom goal"
               onChange={(e) => handleCustomGoal(e.target.value)}
@@ -243,14 +273,14 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
         {selectItem == "others" ? (
           <>
             <input
-              className="py-1 px-1 pl-2 w-full"
+              className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               type="text"
               placeholder="Please input the custom price"
               onChange={(e) => handleCustomPrice(e.target.value)}
             />
           </>
         ) : (
-          <div className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <div className="block w-full px-3 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
             {price ? "$" + String(price) : ""}
           </div>
         )}

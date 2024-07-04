@@ -7,21 +7,22 @@ const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
 const EMAIL = process.env.REACT_APP_EMAIL;
 const PASSWORD = process.env.REACT_APP_PASSWORD;
-const jwt = require('jsonwebtoken');
-const SecretKey = messages = [
-  { "role": "system", "content": "You are a helpful assistant." },
-  { "role": "user", "content": "Hello!" }
-]
+const jwt = require("jsonwebtoken");
+const SecretKey = (messages = [
+  { role: "system", content: "You are a helpful assistant." },
+  { role: "user", content: "Hello!" },
+]);
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(CLIENT_ID);
 
 function validateEmail(email) {
-  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
 
 async function usernameExists(username) {
-  return user = await Users.findOne({ username: username });
+  return (user = await Users.findOne({ username: username }));
 }
 
 async function generateUniqueUsername(baseUsername) {
@@ -29,8 +30,8 @@ async function generateUniqueUsername(baseUsername) {
   let counter = 1;
 
   while (await usernameExists(username)) {
-      username = `${baseUsername}${counter}`;
-      counter++;
+    username = `${baseUsername}${counter}`;
+    counter++;
   }
 
   return username;
@@ -38,7 +39,7 @@ async function generateUniqueUsername(baseUsername) {
 
 const authenticateUser = async (req, res) => {
   console.log(req.body);
-  if(!validateEmail(req.body.email)){
+  if (!validateEmail(req.body.email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
   const user = await Users.findOne({ email: req.body.email });
@@ -48,23 +49,30 @@ const authenticateUser = async (req, res) => {
     return res.status(404).json({ message: "Invalid email address/password" });
   }
   if (!user.password) {
-    return res.status(400).json({ message: "Please log in with the service you used to create your account" });
-  }
-  else{
+    return res.status(400).json({
+      message: "Please log in with the service you used to create your account",
+    });
+  } else {
     const isMatch = await bcrypt.compare(req.body.password, user.password);
     if (!isMatch) {
       // Invalid password
-      return res.status(400).json({ message: "Invalid email address/password" });
+      return res
+        .status(400)
+        .json({ message: "Invalid email address/password" });
     }
   }
-  const authToken = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1hr' }); // Added username to the payload
-  return res.status(200).json({ message: "Successful login", authToken, });
+  const authToken = jwt.sign(
+    { id: user._id, username: user.username },
+    JWT_SECRET,
+    { expiresIn: "1hr" }
+  ); // Added username to the payload
+  return res.status(200).json({ message: "Successful login", authToken });
 };
 
 // Shared function to get user from token
 const getUserFromToken = async (req) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
     if (!user) {
@@ -93,36 +101,36 @@ const userInfo = async (req, res) => {
 
 const updateUserInfo = async (req, res) => {
   try {
-    const { user, error } = await getUserFromToken(req); 
+    const { user, error } = await getUserFromToken(req);
     if (error) {
       return res.status(500).json({ message: error });
     }
-    if(user){ 
+    if (user) {
       const { firstName, lastName, email, income } = req.body;
-      let fieldsToUpdate = {firstName, lastName, income};
+      let fieldsToUpdate = { firstName, lastName, income };
       // check if normal user
       if (user.password) {
-        if(validateEmail(email)){
+        if (validateEmail(email)) {
           fieldsToUpdate.email = email; //append email to fieldsToUpdate
-        }
-        else{
+        } else {
           return res.status(400).json({ message: "Invalid email address" });
         }
       }
-      const updateUser = await Users.updateOne({ _id: user._id }, { $set: fieldsToUpdate })
-      return res.status(200).json({ message: "Updated user info successfully" });
+      const updateUser = await Users.updateOne(
+        { _id: user._id },
+        { $set: fieldsToUpdate }
+      );
+      return res
+        .status(200)
+        .json({ message: "Updated user info successfully" });
     }
   } catch (error) {
     return res.status(500).json({ message: error.name + error.message });
   }
 };
 
-
-
-
-
 const create_account = async (req, res) => {
-  if(!validateEmail(req.body.email)){
+  if (!validateEmail(req.body.email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
   if (!req.body.username || req.body.username.trim().length === 0) {
@@ -130,8 +138,12 @@ const create_account = async (req, res) => {
   }
   const newUser = req.body; // { username: ... , password: ... }
 
-  const foundUser = await Users.findOne({ username: newUser.username.trim().toLowerCase() });
-  const foundEmail = await Users.findOne({ email: newUser.email.trim().toLowerCase() });
+  const foundUser = await Users.findOne({
+    username: newUser.username.trim().toLowerCase(),
+  });
+  const foundEmail = await Users.findOne({
+    email: newUser.email.trim().toLowerCase(),
+  });
 
   if (foundEmail !== null) {
     return res.status(400).json({ message: "Email already exists" });
@@ -153,14 +165,19 @@ const create_account = async (req, res) => {
     password: hashedPassword,
     firstName: newUser.firstName,
     lastName: newUser.lastName,
-    displayPig: "basic"
+    displayPig: "basic",
   });
-  const authToken = jwt.sign({ id: createdUser._id, usernamae: createdUser.username }, JWT_SECRET, { expiresIn: '1hr' });
-  return res.status(200).json({ message: "Account created succesfully", authToken, });
+  const authToken = jwt.sign(
+    { id: createdUser._id, usernamae: createdUser.username },
+    JWT_SECRET,
+    { expiresIn: "1hr" }
+  );
+  return res
+    .status(200)
+    .json({ message: "Account created succesfully", authToken });
 };
 
 const updatePassword = async (req, res) => {
-
   const { userId, password } = req.body;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -172,14 +189,16 @@ const updatePassword = async (req, res) => {
   if (updatedUser) {
     return res.status(200).json({ message: "Password updated" });
   } else {
-    return res.status(500).json({ message: "Unable to update password something went wrong" });
+    return res
+      .status(500)
+      .json({ message: "Unable to update password something went wrong" });
   }
 };
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   console.log(email);
-  if(!validateEmail(email)){
+  if (!validateEmail(email)) {
     return res.status(400).json({ message: "Invalid email address" });
   }
   try {
@@ -187,37 +206,43 @@ const forgotPassword = async (req, res) => {
     if (user === null) {
       return res.status(404).json({ message: "User does not exist/not found" });
     } else {
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1hr' });
-      var nodemailer = require('nodemailer');
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, {
+        expiresIn: "1hr",
+      });
+      var nodemailer = require("nodemailer");
 
       var transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
           user: EMAIL,
-          pass: PASSWORD
-        }
+          pass: PASSWORD,
+        },
       });
 
       var mailOptions = {
-        from: 'smufundtasy@gmail.com',
+        from: "smufundtasy@gmail.com",
         to: email,
-        subject: 'FundTasy password reset',
-        text: `Click on the link to reset your password: http://localhost:3000/resetpassword/${user._id}/${token} This link will expire in 1 hour.`
+        subject: "FundTasy password reset",
+        text: `Click on the link to reset your password: http://localhost:3000/resetpassword/${user._id}/${token} This link will expire in 1 hour.`,
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-          return res.status(500).json({ message: `Encountered error sending email to ${email}` });
+          return res
+            .status(500)
+            .json({ message: `Encountered error sending email to ${email}` });
         } else {
           // console.log('Email sent: ' + info.response);
-          return res.status(200).json({ message: `Email has been sent to ${email}` });
+          return res
+            .status(200)
+            .json({ message: `Email has been sent to ${email}` });
         }
-      })
+      });
     }
   } catch (error) {
     return res.status(500).json({ message: "An error occurred" });
   }
-}
+};
 
 const google_login = async (req, res) => {
   try {
@@ -235,16 +260,26 @@ const google_login = async (req, res) => {
     const lastName = payload["family_name"];
     // console.log("Ticket:", ticket);
 
-    let user = await Users.findOne({ email: email});
+    let user = await Users.findOne({ email: email });
     if (!user) {
-      let username = email.split('@')[0].toLowerCase();
+      let username = email.split("@")[0].toLowerCase();
       username = await generateUniqueUsername(username);
-      user = new Users({ email: email, username: username, firstName: firstName, lastName: lastName, displayPig: "basic" });
+      user = new Users({
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        displayPig: "basic",
+      });
       await user.save();
     }
-    const authToken = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
-      expiresIn: "1hr",
-    });
+    const authToken = jwt.sign(
+      { id: user._id, username: user.username },
+      JWT_SECRET,
+      {
+        expiresIn: "1hr",
+      }
+    );
     return res.status(200).json({ message: "Successful login", authToken });
   } catch (error) {
     console.error("Error receiving token:", error);
@@ -267,14 +302,16 @@ const validateResetToken = async (req, res) => {
     // console.log("Decoded token:", decoded);
     if (decoded.id === userId) {
       user = await Users.findById(userId).select("-password");
-      return res.status(200).json({ message: "Token is valid", decoded_jwt: decoded, user });
+      return res
+        .status(200)
+        .json({ message: "Token is valid", decoded_jwt: decoded, user });
     }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Token has expired / Invalid token" });
   }
-  catch (error) {
-    return res.status(500).json({ message: "Token has expired / Invalid token" });
-  }
-
-}
+};
 
 const updateDisplayPig = async (req, res) => {
   const { userId, current, updated } = req.body;
@@ -284,19 +321,66 @@ const updateDisplayPig = async (req, res) => {
         { username: userId },
         { $set: { displayPig: updated } },
         { new: true }
-      )
+      );
       //console.log("changed db");
       //console.log(updatedDP);
       if (updatedDP) {
-        return res.status(200).json({ message: "Display pig updated successfully", displayPig: updatedDP.displayPig })
+        return res.status(200).json({
+          message: "Display pig updated successfully",
+          displayPig: updatedDP.displayPig,
+        });
       }
     } else {
-      console.log("current == updated!")
+      console.log("current == updated!");
     }
   } catch (error) {
-    return res.status(500).json({ message: "Unable to update display pig" })
+    return res.status(500).json({ message: "Unable to update display pig" });
   }
-}
+};
+
+const getMonthlyIncome = async (req, res) => {
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  if (userObj && userObj.income != 0) {
+    return res.status(200).json({ income: userObj.income });
+  } else {
+    return res.status(400).json({ message: "Unable to get monthly income" });
+  }
+};
+
+const updateBankBalance = async (req, res) => {
+  const amount = req.body.amount;
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newBalance = userObj.bankBalance + amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { bankBalance: newBalance },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Bank balance updated" });
+  } else {
+    return res.status(500).json({ message: "Unable to update bank balance" });
+  }
+};
+
+const updateCoinBalance = async (req, res) => {
+  const amount = req.body.amount;
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newBalance = userObj.coinBalance + amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { coinBalance: newBalance },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Coin balance updated" });
+  } else {
+    return res.status(400).json({ message: "Unable to update coin balance" });
+  }
+};
 
 module.exports = {
   authenticateUser,
@@ -309,5 +393,8 @@ module.exports = {
   validateResetToken,
   updateUserInfo,
   getUserFromToken,
-  updateDisplayPig
+  updateDisplayPig,
+  updateBankBalance,
+  updateCoinBalance,
+  getMonthlyIncome,
 };

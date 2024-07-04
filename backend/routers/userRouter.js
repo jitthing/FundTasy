@@ -9,6 +9,9 @@ const {
   validateResetToken,
   updateUserInfo,
   updateDisplayPig,
+  updateBankBalance,
+  updateCoinBalance,
+  getMonthlyIncome,
 } = require("../controllers/userController");
 
 const {
@@ -29,6 +32,8 @@ const {
 const {
   getActiveItems,
   addActiveItem,
+  deleteActiveItem,
+  updateSavedValue,
 } = require("../controllers/activeGoalsController");
 
 const router = express.Router();
@@ -40,9 +45,14 @@ router.post("/create_account", create_account);
 router.post("/update_user_info", updateUserInfo);
 router.get("/user_info", userInfo);
 
+router.get("/monthly_income", getMonthlyIncome);
+router.post("/update_display_pig", updateDisplayPig);
+router.post("/update_bankbalance", updateBankBalance);
+router.post("/update_coinbalance", updateCoinBalance);
+
+// Model Router
 router.post("/all_models", getAllModels);
 router.post("/newModel", create_model);
-router.post("/update_display_pig", updateDisplayPig);
 
 // Amazon Scraper Router
 router.post("/scrape_amazon", scrapeAmazon);
@@ -55,6 +65,8 @@ router.delete("/delete_wishlist_item/:id", deleteItem);
 // Active Goals Router
 router.get("/all_active_items", getActiveItems);
 router.post("/add_active_goal", addActiveItem);
+router.delete("/delete_active_goal/:id/:amount", deleteActiveItem);
+router.post("/update_saved_amount", updateSavedValue);
 
 // Transaction Router
 router.post("/new_transaction", newTransaction);

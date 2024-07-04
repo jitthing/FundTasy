@@ -1,4 +1,5 @@
 const ActiveGoals = require("../models/activeGoalsModel.js");
+const Users = require("../models/userModel.js");
 const { getUserFromToken } = require("./userController.js");
 const getActiveItems = async (req, res) => {
   try {
@@ -43,7 +44,49 @@ const addActiveItem = async (req, res) => {
 };
 
 const deleteActiveItem = async (req, res) => {
-  const response = await ActiveGoals.deleteOne({ _id: req });
+  // when delete activeGoal, need to update bank balance
+  // get the activeGoal saved value and update bank balance then delete
+  const amount = parseFloat(req.params.amount);
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newBalance = userObj.bankBalance + amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { bankBalance: newBalance },
+    { new: true }
+  );
+  if (updated) {
+    const response = await ActiveGoals.findByIdAndDelete(req.params.id);
+
+    if (response) {
+      return res.status(200).json({ message: "Item successfully deleted" });
+    } else {
+      return res.status(400).json({ message: "Failed to delete item" });
+    }
+  } else {
+    return res.status(400).json({ message: "Failed to update bank balance" });
+  }
 };
 
-module.exports = { getActiveItems, addActiveItem };
+const updateSavedValue = async (req, res) => {
+  const amount = req.body.amount;
+  const goalObj = await ActiveGoals.findById(req.body.id);
+  const newSaved = goalObj.saved + amount;
+  const updated = await ActiveGoals.findOneAndUpdate(
+    { _id: req.body.id },
+    { $set: { saved: newSaved } },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Bank balance updated" });
+  } else {
+    return res.status(500).json({ message: "Unable to update bank balance" });
+  }
+};
+
+module.exports = {
+  getActiveItems,
+  addActiveItem,
+  deleteActiveItem,
+  updateSavedValue,
+};
