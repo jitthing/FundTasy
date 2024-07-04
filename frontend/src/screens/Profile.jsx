@@ -26,6 +26,7 @@ function Profile() {
   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
   const [statusMessage, setStatusMessage] = React.useState(null);
   const [hasEdited, setHasEdited] = React.useState(false);
+  const [displayPig, setdisplayPig] = useState(undefined)
 
   function handleShowBanner() {
     setShowBanner(true);
@@ -40,7 +41,8 @@ function Profile() {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        income: income
+        income: income,
+        displayPig: displayPig
       }, {
         headers: {
           'Authorization': `Bearer ${getToken()}`
@@ -72,6 +74,7 @@ function Profile() {
       response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
       setIncome(response.user.income);
       setPassword(response.user.password); // use to check if user is a google user
+      setdisplayPig(response.user.displayPig);
       setStatusMessage(response.message);
       handleShowBanner();
     }
@@ -110,7 +113,7 @@ function Profile() {
         </NavbarContainer>
         <ProfileContainer>
           <ProfilePicture>
-            <img src="images/basic.png" alt="No Pig Selected" />
+            <img src={`images/${displayPig || 'basic'}.png`} alt="No Pig Selected" />
             <EditIcon src="icons/edit-black.png" alt="Edit" />
           </ProfilePicture>
           <ProfileInfo>
@@ -193,7 +196,7 @@ const ProfileContainer = styled.div`
 
 const ProfilePicture = styled.div`
   position: relative;
-  width: 150px;
+  width: 190px;
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
