@@ -10,6 +10,7 @@ const {
   updateUserInfo,
   updateDisplayPig,
   updateCoinBalance,
+  updateBankBalance,
 } = require("../controllers/userController");
 
 const {
@@ -46,6 +47,7 @@ router.get("/user_info", userInfo);
 
 router.post("/update_display_pig", updateDisplayPig);
 router.post("/update_coinbalance", updateCoinBalance);
+router.post("/update_bankbalance", updateBankBalance);
 
 // Model Router
 router.post("/all_models", getAllModels);

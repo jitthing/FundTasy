@@ -343,6 +343,23 @@ const updateDisplayPig = async (req, res) => {
   }
 };
 
+const updateBankBalance = async (req, res) => {
+  const amount = req.body.amount;
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newBalance = userObj.bankBalance + amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { bankBalance: newBalance },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Bank balance updated" });
+  } else {
+    return res.status(500).json({ message: "Unable to update bank balance" });
+  }
+};
+
 
 const updateCoinBalance = async (req, res) => {
   const amount = req.body.amount;
@@ -362,6 +379,7 @@ const updateCoinBalance = async (req, res) => {
 };
 
 
+
 module.exports = {
   authenticateUser,
   create_account,
@@ -375,4 +393,5 @@ module.exports = {
   getUserFromToken,
   updateDisplayPig,
   updateCoinBalance,
+  updateBankBalance,
 };
