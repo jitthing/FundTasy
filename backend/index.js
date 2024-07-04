@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const Users = require("./models/userModel");
 
 // Server settings
 const PORT = 8000;
@@ -32,4 +33,22 @@ app.use("/", require("./routers/userRouter"));
 
 app.listen(PORT, () => {
   console.log(`[SYSTEM] Server started on port ${PORT}...`);
+});
+
+// Task scheduler
+var cron = require('node-cron');
+cron.schedule('0 0 * * *', async function() {
+  try{
+    await Users.updateMany( 
+      { income: {$gt: 0} }, // get users with income > 0
+      [
+        { $set: { bankBalance: {$add: ["$bankBalance", { $divide: ["$income", 30] }] } } }, // add income/30 to bank balance 
+      ]
+     )
+  } catch (err) {
+    console.log(err)
+  }
+}, {
+  scheduled: true,
+  timezone: "Asia/Singapore"
 });

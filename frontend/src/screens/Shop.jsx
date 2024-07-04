@@ -5,7 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 // import { calcPosFromAngles } from "@react-three/drei";
 // import { flushGlobalEffects } from "@react-three/fiber";
-import FilterPigs from "../components/FilterPigs.js";
+import FilterPigs from "../components/filterPigs.js";
 
 // TODO:
 // 1. Fetch the list of owned pigs from the backend

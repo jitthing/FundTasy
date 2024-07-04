@@ -298,7 +298,7 @@ const GoalContainer = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 25vh;
+  height: 27vh;
   width: 100%;
   border-radius: 8px;
   box-shadow: 0px 0px 2px #acacac;

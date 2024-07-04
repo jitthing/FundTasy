@@ -9,9 +9,7 @@ const {
   validateResetToken,
   updateUserInfo,
   updateDisplayPig,
-  updateBankBalance,
   updateCoinBalance,
-  getMonthlyIncome,
 } = require("../controllers/userController");
 
 const {
@@ -46,9 +44,7 @@ router.post("/create_account", create_account);
 router.post("/update_user_info", updateUserInfo);
 router.get("/user_info", userInfo);
 
-router.get("/monthly_income", getMonthlyIncome);
 router.post("/update_display_pig", updateDisplayPig);
-router.post("/update_bankbalance", updateBankBalance);
 router.post("/update_coinbalance", updateCoinBalance);
 
 // Model Router

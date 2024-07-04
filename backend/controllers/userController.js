@@ -205,7 +205,12 @@ const forgotPassword = async (req, res) => {
     const user = await Users.findOne({ email: email.toLowerCase().trim() });
     if (user === null) {
       return res.status(404).json({ message: "User does not exist/not found" });
-    } else {
+    } else if (!user.password) {
+      return res.status(400).json({
+        message: "Please log in with the service you used to create your account",
+      });
+    }
+     else {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: "1hr",
       });
@@ -338,32 +343,6 @@ const updateDisplayPig = async (req, res) => {
   }
 };
 
-const getMonthlyIncome = async (req, res) => {
-  const { user } = await getUserFromToken(req);
-  const userObj = await Users.findOne({ username: user.username });
-  if (userObj && userObj.income != 0) {
-    return res.status(200).json({ income: userObj.income });
-  } else {
-    return res.status(400).json({ message: "Unable to get monthly income" });
-  }
-};
-
-const updateBankBalance = async (req, res) => {
-  const amount = req.body.amount;
-  const { user } = await getUserFromToken(req);
-  const userObj = await Users.findOne({ username: user.username });
-  const newBalance = userObj.bankBalance + amount;
-  const updated = await Users.findOneAndUpdate(
-    { username: userObj.username },
-    { bankBalance: newBalance },
-    { new: true }
-  );
-  if (updated) {
-    return res.status(200).json({ message: "Bank balance updated" });
-  } else {
-    return res.status(500).json({ message: "Unable to update bank balance" });
-  }
-};
 
 const updateCoinBalance = async (req, res) => {
   const amount = req.body.amount;
@@ -382,6 +361,7 @@ const updateCoinBalance = async (req, res) => {
   }
 };
 
+
 module.exports = {
   authenticateUser,
   create_account,
@@ -394,7 +374,5 @@ module.exports = {
   updateUserInfo,
   getUserFromToken,
   updateDisplayPig,
-  updateBankBalance,
   updateCoinBalance,
-  getMonthlyIncome,
 };
