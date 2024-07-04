@@ -3,8 +3,9 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar.js";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { calcPosFromAngles } from "@react-three/drei";
-import { flushGlobalEffects } from "@react-three/fiber";
+// import { calcPosFromAngles } from "@react-three/drei";
+// import { flushGlobalEffects } from "@react-three/fiber";
+import FilterPigs from "../components/FilterPigs.js";
 
 // TODO:
 // 1. Fetch the list of owned pigs from the backend
@@ -13,16 +14,27 @@ import { flushGlobalEffects } from "@react-three/fiber";
 // 4. Buy menu
 
 export default function Shop() {
+
+  const [unownedFilter, setUnownedFilter] = useState(true); // Filter for unowned pigs
+  const [ownedFilter, setOwnedFilter] = useState(true);     // Filter for owned pigs
   const [models, setModels] = useState([]);         // Array to store models
   const [ownedPigs, setOwnedPigs] = useState([]);   // Array to store owned Pigs
-  const [filterActive, showFilter] = useState(false); // For filter menu
+  const [formActive, showForm] = useState(false); // For filter menu
     
-  function openFilter() {
-    showFilter(true);
+  function toggleUnownedFilter() {
+    setUnownedFilter(!unownedFilter);
   }
 
-  function closeFilter() {
-    showFilter(false);
+  function toggleOwnedFilter() {
+    setOwnedFilter(!ownedFilter);
+  } 
+
+  function openForm() {
+    showForm(true);
+  }
+
+  function closeForm() {
+    showForm(false);
   }
 
   useEffect(() => {
@@ -45,15 +57,19 @@ export default function Shop() {
   return (
     <PageContainer>
       <Navbar page="shop" />
-      {/* {
-        filterActive && (
-
-        )
-      } */}
+      {formActive && (
+        <FilterPigs
+          closeForm={closeForm}
+          toggleUnownedFilter={toggleUnownedFilter}
+          toggleOwnedFilter={toggleOwnedFilter}
+          ownedFilter={ownedFilter}
+          unownedFilter={unownedFilter}
+        />
+      )}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
-          <FilterButton onClick={openFilter}>
+          <FilterButton onClick={openForm}>
             <FilterIcon srcSet="icons/filter.png" />
             <FilterText>Filter</FilterText>
           </FilterButton>
@@ -109,6 +125,9 @@ const PageContainer = styled.div`
 `;
 
 const ShopContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80vw;
   font-family: Inter, sans-serif;
 `;
