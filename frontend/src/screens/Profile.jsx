@@ -195,16 +195,21 @@ const ProfileContainer = styled.div`
 
 const ProfilePicture = styled.div`
   position: relative;
-  width: 190px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   overflow: hidden;
   background-color: #ececec;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
   &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     cursor: pointer;
   }
 `;
