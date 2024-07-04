@@ -26,7 +26,6 @@ export default function GoalCard({ goals, updateGoals }) {
               startDate={goal.startDate}
               endDate="1/7/24"
               currentSaved={goal.saved}
-              currentSaved={goal.saved}
               rate="20"
               lastTopUpAmt="9"
               lastTopUpDate="19/6/24"
