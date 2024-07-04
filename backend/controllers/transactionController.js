@@ -36,4 +36,16 @@ const allTransactions = async (req, res) => {
 
 }
 
-module.exports = { newTransaction, allTransactions };
+const deleteTransaction = async (req, res) => {
+    const response = await transaction.findByIdAndDelete(req.params.id);
+  
+    if (response) {
+      return res.status(200).json({ message: "Transaction successfully deleted" });
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Failed to delete transaction", id: req.body.id });
+    }
+  };
+
+module.exports = { newTransaction, allTransactions, deleteTransaction };

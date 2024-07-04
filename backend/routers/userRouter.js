@@ -25,6 +25,7 @@ const {
 const {
   newTransaction,
   allTransactions,
+  deleteTransaction,
 } = require("../controllers/transactionController");
 const {
   getActiveItems,
@@ -59,6 +60,7 @@ router.post("/add_active_goal", addActiveItem);
 // Transaction Router
 router.post("/new_transaction", newTransaction);
 router.get("/all_transactions", allTransactions);
+router.delete("/delete_transaction/:id", deleteTransaction);
 
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });

@@ -5,6 +5,7 @@ import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
 import getActiveGoals from "../utils/getActiveGoals";
+import axios from "axios";
 const moment = require("moment");
 ;
 
@@ -30,6 +31,21 @@ export default function Transactions() {
     fetchTransactions();
   }, [updateTransactions]);
 
+  const deleteTransaction = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:8000/delete_transaction/${id}`);
+      if (response.status === 200) {
+        alert("Transaction successfully deleted");
+        setUpdateTransactions((prev) => !prev);
+      } else {
+        alert("Failed to delete transaction: Server responded with status " + response.status);
+      }
+    } catch (error) {
+      alert("Failed to delete transaction: " + error.message);
+      console.error("Error deleting transaction:", error);
+    }
+  };
+  
   const toggleType = (type) => {
     if (type === "spending") {
       changeType("coins");
@@ -46,13 +62,6 @@ export default function Transactions() {
     showForm(false);
   }
   
-  const removeTransaction = async () => {
-    try {
-      //implement logic
-    } catch (error) {
-      alert("Failed to remove transaction", error);
-    }
-  };
 
   return (
     <PageContainer>
@@ -93,14 +102,14 @@ export default function Transactions() {
           </FilterButton>
         </TransactionNeck>
 
-        {type === "spending" && <SpendingTable transactions={transactions} />}
+        {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} />}
         {type === "coins" && <CoinsTable />}
       </TransactionContainer>
     </PageContainer>
   );
 }
 
-const SpendingTable = ({ transactions }) => {
+const SpendingTable = ({ transactions, deleteTransaction}) => {
   return (
     <>
       <TransactionBody>
@@ -112,7 +121,7 @@ const SpendingTable = ({ transactions }) => {
         </TableHead>
         {transactions.map((transaction) => (
           <TransactionDiv key={transaction.id}>
-            <RemoveButton>-</RemoveButton>
+            <RemoveButton onClick={() => deleteTransaction(transaction._id)}>x</RemoveButton>
             <TransactionTitle >{transaction.title}</TransactionTitle>
             <TransactionCategory>
               <CategoryButton>{transaction.category}</CategoryButton>
@@ -358,7 +367,7 @@ const TransactionBody = styled.div`
 `;
 
 const TableHead = styled.div`
-  width: 100%;
+  width: 95%;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -366,7 +375,7 @@ const TableHead = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: grey;
-  text-align: left;
+  text-align: center;
   &:hover {
     background-color: #f8f8f8;
     transition: 0.2s;
