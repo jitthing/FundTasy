@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import NewRecordForm from "../NewRecordForm";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
@@ -38,20 +37,6 @@ export default function GoalCard({ goals, updateGoals }) {
           return <GoalBox updateGoals={updateGoals} />;
         })}
 
-        {/* <GoalBox
-          active
-          danger
-          toSave="150"
-          numDays="7"
-          startDate="17/6/24"
-          endDate="23/6/24"
-          currentSaved="78"
-          rate="40"
-          lastTopUpAmt="9"
-          lastTopUpDate="19/6/24"
-          daysLeft="1"
-        />
-        <GoalBox updateGoals={updateGoals} /> */}
       </GoalBody>
     </GoalContainer>
   );
@@ -117,6 +102,12 @@ function GoalBox(props) {
     return (
       <ActiveGoal>
         <GoalInfo>
+          <button 
+            onClick={() => handleDeleteItem(props.id, currentSaved)}
+            className="text-gray-600 hover:text-gray-800 ml-auto"
+          >
+            <IoClose className="h-6 w-6" />
+          </button>
           <div className="flex justify between-line">
             <Goal>
               <div style={{ display: "inline-block", fontWeight: "bold" }}>
@@ -133,12 +124,6 @@ function GoalBox(props) {
                 ({startDate} - {endDate})
               </div>
             </Goal>
-            <button
-              onClick={() => handleDeleteItem(props.id, currentSaved)}
-              className="absolute text-gray-600 hover:text-gray-800"
-            >
-              <IoClose className="h-6 w-6" />
-            </button>
           </div>
           <Saved>
             {formatCurrency(currentSaved)}{" "}

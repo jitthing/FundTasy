@@ -92,7 +92,7 @@ const MyPigsHead = styled.div`
 `;
 
 const MyPigsBody = styled.div`
-  height: calc(100vh - 80px);
+  height: calc(100vh - 10vh);
   display: flex;
   padding: 20px 40px;
   gap: 20px;

@@ -173,7 +173,7 @@ const MoneybarText = styled.div`
 `;
 
 const ShopBody = styled.div`
-  height: calc(100vh - 80px);
+  height: calc(100vh - 10vh);
   display: flex;
   padding: 20px 40px;
   gap: 20px;
