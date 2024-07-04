@@ -6,6 +6,7 @@ import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
+import formatCurrency from "../../utils/formatCurrency";
 
 export default function GoalCard({ goals, updateGoals }) {
   // console.log(goals);
@@ -24,6 +25,7 @@ export default function GoalCard({ goals, updateGoals }) {
               numDays="1"
               startDate={goal.startDate}
               endDate="1/7/24"
+              currentSaved={goal.saved}
               currentSaved={goal.saved}
               rate="20"
               lastTopUpAmt="9"
@@ -140,7 +142,7 @@ function GoalBox(props) {
             </button>
           </div>
           <Saved>
-            ${currentSaved}{" "}
+            {formatCurrency(currentSaved)}{" "}
             <div
               style={{
                 display: "inline-block",

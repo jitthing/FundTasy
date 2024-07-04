@@ -5,6 +5,8 @@ import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
 import getActiveGoals from "../utils/getActiveGoals";
+import axios from "axios";
+import { IoClose } from "react-icons/io5";
 const moment = require("moment");
 ;
 
@@ -30,6 +32,21 @@ export default function Transactions() {
     fetchTransactions();
   }, [updateTransactions]);
 
+  const deleteTransaction = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:8000/delete_transaction/${id}`);
+      if (response.status === 200) {
+        alert("Transaction successfully deleted");
+        setUpdateTransactions((prev) => !prev);
+      } else {
+        alert("Failed to delete transaction: Server responded with status " + response.status);
+      }
+    } catch (error) {
+      alert("Failed to delete transaction: " + error.message);
+      console.error("Error deleting transaction:", error);
+    }
+  };
+  
   const toggleType = (type) => {
     if (type === "spending") {
       changeType("coins");
@@ -46,13 +63,6 @@ export default function Transactions() {
     showForm(false);
   }
   
-  const removeTransaction = async () => {
-    try {
-      //implement logic
-    } catch (error) {
-      alert("Failed to remove transaction", error);
-    }
-  };
 
   return (
     <PageContainer>
@@ -93,14 +103,14 @@ export default function Transactions() {
           </FilterButton>
         </TransactionNeck>
 
-        {type === "spending" && <SpendingTable transactions={transactions} />}
+        {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} />}
         {type === "coins" && <CoinsTable />}
       </TransactionContainer>
     </PageContainer>
   );
 }
 
-const SpendingTable = ({ transactions }) => {
+const SpendingTable = ({ transactions, deleteTransaction}) => {
   return (
     <>
       <TransactionBody>
@@ -112,7 +122,10 @@ const SpendingTable = ({ transactions }) => {
         </TableHead>
         {transactions.map((transaction) => (
           <TransactionDiv key={transaction.id}>
-            <RemoveButton>-</RemoveButton>
+            <button onClick={() => deleteTransaction(transaction._id)}
+            className="z-10 absolute text-gray-600 hover:text-gray-800">
+              <IoClose className="h-6 w-6" />
+            </button>
             <TransactionTitle >{transaction.title}</TransactionTitle>
             <TransactionCategory>
               <CategoryButton>{transaction.category}</CategoryButton>
@@ -191,22 +204,22 @@ const CoinsTable = () => {
   );
 };
 
-const RemoveButton = styled.button`
-  background-color: gray;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 10px;
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  &:hover {
-    background-color: red;
-  }
-`;
+// const RemoveButton = styled.button`
+//   background-color: gray;
+//   color: white;
+//   border: none;
+//   border-radius: 50%;
+//   padding: 10px;
+//   width: 25px;
+//   height: 25px;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   &:hover {
+//     background-color: red;
+//   }
+// `;
 
 const EditIcon = styled.img`
   width: 20px;
@@ -358,7 +371,7 @@ const TransactionBody = styled.div`
 `;
 
 const TableHead = styled.div`
-  width: 100%;
+  width: 95%;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -366,7 +379,7 @@ const TableHead = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: grey;
-  text-align: left;
+  text-align: center;
   &:hover {
     background-color: #f8f8f8;
     transition: 0.2s;
@@ -375,7 +388,7 @@ const TableHead = styled.div`
 
 const HeadTitle = styled.div`
   width: 35%;
-  padding-left: 20px;
+  padding-left: 50px;
   text-align: left;
 `;
 
@@ -410,7 +423,7 @@ const TransactionDiv = styled.div`
 
 const TransactionTitle = styled.div`
   width: 35%;
-  padding-left: 20px;
+  padding-left: 50px;
   font-weight: bold;
 `;
 
@@ -418,6 +431,7 @@ const TransactionCategory = styled.div`
   width: 20%;
   display: flex;
   justify-content: start;
+  padding-left: 75px;
   align-items: center;
 `;
 
@@ -455,12 +469,13 @@ const GoalStatus = styled.div`
 const TransactionDateTime = styled.div`
   width: 20%;
   font-size: 14px;
+  padding-left: 50px;
 `;
 
 const TransactionAmount = styled.div`
   width: 25%;
   text-align: right;
-  padding-right: 20px;
+  padding-right: 60px;
 `;
 
 const CoinTitleHead = styled.div`
