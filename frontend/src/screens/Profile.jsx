@@ -26,7 +26,7 @@ function Profile() {
   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
   const [statusMessage, setStatusMessage] = React.useState(null);
   const [hasEdited, setHasEdited] = React.useState(false);
-  const [displayPig, setdisplayPig] = useState(undefined)
+  const [displayPig, setdisplayPig] = useState(undefined);
 
   function handleShowBanner() {
     setShowBanner(true);
@@ -42,7 +42,6 @@ function Profile() {
         lastName: lastName,
         email: email,
         income: income,
-        displayPig: displayPig
       }, {
         headers: {
           'Authorization': `Bearer ${getToken()}`
