@@ -59,7 +59,7 @@ router.post("/all_models", getAllModels);
 router.post("/newModel", create_model);
 
 // OwnedPigs Router
-router.post("/get_owned_pigs", getAllOwnedPigs);
+router.get("/get_owned_pigs", getAllOwnedPigs);
 
 // Amazon Scraper Router
 router.post("/scrape_amazon", scrapeAmazon);

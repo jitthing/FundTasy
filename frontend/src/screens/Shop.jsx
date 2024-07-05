@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar.js";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import getOwnedPigs from "../utils/getOwnedPigs.js";
 // import { calcPosFromAngles } from "@react-three/drei";
 // import { flushGlobalEffects } from "@react-three/fiber";
 import FilterPigs from "../components/filterPigs.js";
@@ -15,33 +16,43 @@ import BuyMenu from "../components/buyMenu.js";
 // 4. Buy menu
 
 export default function Shop() {
-
   const [unownedFilter, setUnownedFilter] = useState(true); // Filter for unowned pigs
-  const [ownedFilter, setOwnedFilter] = useState(true);     // Filter for owned pigs
-  const [models, setModels] = useState([]);         // Array to store models
-  const [ownedPigs, setOwnedPigs] = useState([]);   // Array to store owned Pigs
+  const [ownedFilter, setOwnedFilter] = useState(true); // Filter for owned pigs
+  const [models, setModels] = useState([]); // Array to store models
+  const [ownedPigs, setOwnedPigs] = useState([]); // Array to store owned Pigs
   const [formActive, showForm] = useState(false); // For filter menu
   const [buyMenuActive, showBuyMenu] = useState(false); // For buy menu
   const [lastPreviewedPig, setLastPreviewedPig] = useState(""); // For buy menu
-    
+
+  useEffect(() => {
+    async function fetchWishlist() {
+      try {
+        const response = await getOwnedPigs();
+        // console.log(wishlistResponse);
+        setOwnedPigs(response.want);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    }
+    fetchWishlist();
+  }, []);
+
   function toggleUnownedFilter() {
     setUnownedFilter(!unownedFilter);
   }
 
   function toggleOwnedFilter() {
     setOwnedFilter(!ownedFilter);
-  } 
+  }
 
-  function openBuyMenu() {
+  function openBuyMenu(pigName) {
     showBuyMenu(true);
+    setLastPreviewedPig(pigName);
   }
 
   function closeBuyMenu() {
     showBuyMenu(false);
-  }
-
-  function handleLastPreviewedPig(pigName) {
-    setLastPreviewedPig(pigName);
+    setLastPreviewedPig("");
   }
 
   function openForm() {
@@ -55,31 +66,15 @@ export default function Shop() {
   function checkIfOwned(pigname) {
     return ownedPigs.includes(pigname);
   }
-  useEffect(() => {
-  async function fetchOwnedPigs() {
-    try {
-        const response = await axios.post("http://localhost:8000/get_owned_pigs", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          });
-          const data = await response.data;
-          setOwnedPigs(data);
-    } catch (error) {
-        console.error("Failed to fetch ownedPigs", error);
-    }
-  }
-  fetchOwnedPigs();
-}, []);
 
   const unownedPigs = models.filter((model) => !ownedPigs.includes(model));
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.post("http://localhost:8000/all_models");   
+        const response = await axios.post("http://localhost:8000/all_models");
         const data = await response.data;
-        // console.log(data);
+        console.log(data);
         setModels(data);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -87,9 +82,6 @@ export default function Shop() {
     }
     fetchData();
   }, []);
-
-
-
 
   return (
     <PageContainer>
@@ -103,7 +95,9 @@ export default function Shop() {
           unownedFilter={unownedFilter}
         />
       )}
-      {buyMenuActive && <BuyMenu closeBuyMenu={closeBuyMenu} pigName={"Copper"}/>}
+      {buyMenuActive && (
+        <BuyMenu closeBuyMenu={closeBuyMenu} pigName={lastPreviewedPig} />
+      )}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
@@ -124,18 +118,24 @@ export default function Shop() {
           {/* {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
           ))} */}
-          {ownedFilter && ownedPigs.map((model) => (
-            <PigCard 
-            pigname={model.toLowerCase()} pigTitle={model} owned={true} 
-            openBuyMenu={openBuyMenu}
-            />
-          ))}
-          {unownedFilter && unownedPigs.map((model) => (
-            <PigCard 
-            pigname={model.toLowerCase()} pigTitle={model} owned={false} 
-            openBuyMenu={openBuyMenu}
-            />
-          ))}
+          {ownedFilter &&
+            ownedPigs.map((model) => (
+              <PigCard
+                pigname={model.toLowerCase()}
+                pigTitle={model}
+                owned={true}
+                openBuyMenu={openBuyMenu}
+              />
+            ))}
+          {unownedFilter &&
+            unownedPigs.map((model) => (
+              <PigCard
+                pigname={model.toLowerCase()}
+                pigTitle={model}
+                owned={false}
+                openBuyMenu={openBuyMenu}
+              />
+            ))}
         </ShopBody>
       </ShopContainer>
     </PageContainer>
@@ -153,7 +153,7 @@ function PigCard(props) {
         {props.owned ? (
           <OwnedOption>Owned</OwnedOption>
         ) : (
-          <BuyOption onClick={props.openBuyMenu}>
+          <BuyOption onClick={() => props.openBuyMenu(props.pigname)}>
             <BuyText>Buy</BuyText>
             <SmallCoin srcSet="icons/coin.png" />
             <CardPrice>???</CardPrice>
@@ -300,7 +300,6 @@ const BuyText = styled.div`
   font-size: 16px;
   vertical-align: middle;
 `;
-
 
 const FilterButton = styled.div`
   display: flex;

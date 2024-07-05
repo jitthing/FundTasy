@@ -72,7 +72,7 @@ const authenticateUser = async (req, res) => {
 // Shared function to get user from token
 const getUserFromToken = async (req) => {
   try {
-    console.log("working");
+    // console.log("working");
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
@@ -208,10 +208,10 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User does not exist/not found" });
     } else if (!user.password) {
       return res.status(400).json({
-        message: "Please log in with the service you used to create your account",
+        message:
+          "Please log in with the service you used to create your account",
       });
-    }
-     else {
+    } else {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: "1hr",
       });
@@ -361,7 +361,6 @@ const updateBankBalance = async (req, res) => {
   }
 };
 
-
 const updateCoinBalance = async (req, res) => {
   const amount = req.body.amount;
   const { user } = await getUserFromToken(req);
@@ -378,8 +377,6 @@ const updateCoinBalance = async (req, res) => {
     return res.status(400).json({ message: "Unable to update coin balance" });
   }
 };
-
-
 
 module.exports = {
   authenticateUser,

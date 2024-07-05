@@ -1,7 +1,7 @@
 import axios from "axios";
-export default async function getActiveGoals() {
+export default async function getOwnedPigs() {
   try {
-    const response = await axios.get("http://localhost:8000/all_active_items", {
+    const response = await axios.get("http://localhost:8000/get_owned_pigs", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },
