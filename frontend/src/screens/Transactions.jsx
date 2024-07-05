@@ -113,6 +113,7 @@ export default function Transactions() {
 const SpendingTable = ({ transactions, deleteTransaction}) => {
   return (
     <>
+    <TransactionListWrapper>
       <TransactionBody>
         <TableHead>
           <HeadTitle>Title</HeadTitle>
@@ -120,10 +121,10 @@ const SpendingTable = ({ transactions, deleteTransaction}) => {
           <HeadDateTime>Date</HeadDateTime>
           <HeadAmount>Amount</HeadAmount>
         </TableHead>
-        {transactions.map((transaction) => (
+        {transactions.slice().reverse().map((transaction) => (
           <TransactionDiv key={transaction.id}>
             <button onClick={() => deleteTransaction(transaction._id)}
-            className="z-10 absolute text-gray-600 hover:text-gray-800">
+            className="z-10 text-gray-600 hover:text-gray-800">
               <IoClose className="h-6 w-6" />
             </button>
             <TransactionTitle >{transaction.title}</TransactionTitle>
@@ -139,6 +140,7 @@ const SpendingTable = ({ transactions, deleteTransaction}) => {
           </TransactionDiv>
         ))}
       </TransactionBody>
+      </TransactionListWrapper>
     </>
   );
 };
@@ -204,22 +206,11 @@ const CoinsTable = () => {
   );
 };
 
-// const RemoveButton = styled.button`
-//   background-color: gray;
-//   color: white;
-//   border: none;
-//   border-radius: 50%;
-//   padding: 10px;
-//   width: 25px;
-//   height: 25px;
-//   cursor: pointer;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   &:hover {
-//     background-color: red;
-//   }
-// `;
+const TransactionListWrapper = styled.div`
+  max-height: 70vh; 
+  overflow-y: auto;
+  width: 100%;
+`;
 
 const EditIcon = styled.img`
   width: 20px;
@@ -371,7 +362,7 @@ const TransactionBody = styled.div`
 `;
 
 const TableHead = styled.div`
-  width: 95%;
+  width: 100%;
   height: 40px;
   display: flex;
   justify-content: space-between;
@@ -388,12 +379,13 @@ const TableHead = styled.div`
 
 const HeadTitle = styled.div`
   width: 35%;
-  padding-left: 50px;
+  padding-left: 130px;
   text-align: left;
 `;
 
 const HeadCategory = styled.div`
   width: 20%;
+  padding-left: 35px
 `;
 
 const HeadDateTime = styled.div`
@@ -403,21 +395,25 @@ const HeadDateTime = styled.div`
 const HeadAmount = styled.div`
   width: 25%;
   text-align: right;
-  padding-right: 20px;
+  padding-right: 100px;
 `;
 
 const TransactionDiv = styled.div`
-  width: 100%;
-  height: 70px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 16px;
-  text-align: left;
-  border-top: 1px solid #cecece;
+  justify-content: space-between;
+  width: 100%;
+  height: 80px; 
+  padding: 10px 30px;
+  margin: 20px; 
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
   &:hover {
     background-color: #f1f1f1;
     transition: 0.2s;
+  }
+  &:last-child {
+    border-bottom: none; 
   }
 `;
 
