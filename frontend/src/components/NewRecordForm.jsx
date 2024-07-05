@@ -3,6 +3,7 @@ import styled from "styled-components";
 import getUser from "../utils/getUser";
 import axios from "axios";
 import truncateText from "../utils/truncateText";
+
 /*
  TODO
  - Add a calendar pciker for the date

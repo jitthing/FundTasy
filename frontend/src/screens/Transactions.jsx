@@ -16,6 +16,7 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [updateTransactions, setUpdateTransactions] = useState(false);
   const [allGoals, setAllGoals] = useState([]);
+  const [editTransaction, setEditTransaction] = useState(null);
   
 
   useEffect(() => {
@@ -46,6 +47,11 @@ export default function Transactions() {
       console.error("Error deleting transaction:", error);
     }
   };
+
+  const toggleEditModal = (transaction) => {
+    setEditTransaction(transaction);
+    showForm(true); 
+};
   
   const toggleType = (type) => {
     if (type === "spending") {
@@ -61,6 +67,7 @@ export default function Transactions() {
 
   function closeForm() {
     showForm(false);
+    setEditTransaction(null);
   }
   
 
@@ -72,6 +79,7 @@ export default function Transactions() {
           closeForm={closeForm}
           updateTransactions={setUpdateTransactions}
           allGoals={allGoals}
+          editTransaction={editTransaction}
         />
       )}
       <TransactionContainer>
@@ -103,14 +111,14 @@ export default function Transactions() {
           </FilterButton>
         </TransactionNeck>
 
-        {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} />}
+        {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} toggleEditModal={toggleEditModal}/>}
         {type === "coins" && <CoinsTable />}
       </TransactionContainer>
     </PageContainer>
   );
 }
 
-const SpendingTable = ({ transactions, deleteTransaction}) => {
+const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
   return (
     <>
     <TransactionListWrapper>
@@ -123,10 +131,7 @@ const SpendingTable = ({ transactions, deleteTransaction}) => {
         </TableHead>
         {transactions.slice().reverse().map((transaction) => (
           <TransactionDiv key={transaction.id}>
-            <button onClick={() => deleteTransaction(transaction._id)}
-            className="z-10 text-gray-600 hover:text-gray-800">
-              <IoClose className="h-6 w-6" />
-            </button>
+
             <TransactionTitle >{transaction.title}</TransactionTitle>
             <TransactionCategory>
               <CategoryButton>{transaction.category}</CategoryButton>
@@ -136,7 +141,12 @@ const SpendingTable = ({ transactions, deleteTransaction}) => {
             <EditIcon
                 src="icons/edit-black.png"
                 alt="Edit"
+                onClick={()=>toggleEditModal(transaction)}
             />
+            <button onClick={() => deleteTransaction(transaction._id)}
+            className="z-10 text-gray-600 hover:text-gray-800">
+              <IoClose className="h-6 w-6" />
+            </button>
           </TransactionDiv>
         ))}
       </TransactionBody>
@@ -219,6 +229,8 @@ const EditIcon = styled.img`
   object-fit: contain;
   cursor: pointer;
   margin-left: 10px; /* Add space between value and icon */
+  margin-right: 10px;
+  
 `;
 
 const PageContainer = styled.div`
@@ -379,13 +391,12 @@ const TableHead = styled.div`
 
 const HeadTitle = styled.div`
   width: 35%;
-  padding-left: 130px;
-  text-align: left;
+  padding-left: 50px;
+  text-align: start;
 `;
 
 const HeadCategory = styled.div`
   width: 20%;
-  padding-left: 35px
 `;
 
 const HeadDateTime = styled.div`
@@ -395,7 +406,7 @@ const HeadDateTime = styled.div`
 const HeadAmount = styled.div`
   width: 25%;
   text-align: right;
-  padding-right: 100px;
+  padding-right: 130px;
 `;
 
 const TransactionDiv = styled.div`
@@ -419,15 +430,15 @@ const TransactionDiv = styled.div`
 
 const TransactionTitle = styled.div`
   width: 35%;
-  padding-left: 50px;
   font-weight: bold;
+  text-align: start;
 `;
 
 const TransactionCategory = styled.div`
   width: 20%;
   display: flex;
   justify-content: start;
-  padding-left: 75px;
+  padding-left: 90px;
   align-items: center;
 `;
 

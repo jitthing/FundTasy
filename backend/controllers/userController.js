@@ -72,6 +72,7 @@ const authenticateUser = async (req, res) => {
 // Shared function to get user from token
 const getUserFromToken = async (req) => {
   try {
+    console.log("working");
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
