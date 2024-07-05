@@ -198,7 +198,7 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
   const handleAddGoal = async () => {
     const userObj = await getUser();
     const userId = userObj.user.username;
-    const title = selectItem == "others" ? customItem : selectItem;
+    const title = selectItem === "others" ? customItem : selectItem;
     try {
       const body = { title: title, price: price, username: userId };
       // console.log(body);
@@ -243,7 +243,7 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
           })}
           <option value="others">Custom Goal</option>
         </select>
-        {selectItem == "others" ? (
+        {selectItem === "others" ? (
           <>
             <h3 className="pb-2 pt-2">Name of Goal:</h3>
             <input
@@ -255,11 +255,11 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
           </>
         ) : null}
         <h3 className="text-lg text-gray-700 font-semibold mb-4">Price:</h3>
-        {selectItem == "others" ? (
+        {selectItem === "others" ? (
           <>
             <input
               className="block w-full px-3 py-1 mb-4 text-base text-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              type="text"
+              type="number"
               placeholder="Please input the custom price"
               onChange={(e) => handleCustomPrice(e.target.value)}
             />

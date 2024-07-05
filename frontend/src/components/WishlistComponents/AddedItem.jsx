@@ -29,7 +29,7 @@ export const AddedItem = ({ item, updateWishlist }) => {
       <DesctiptionWrap>
         <div className="font-extrabold text-xl">${item.price}</div>
         <div>
-          {item.name.length > 50 ? `${item.name.slice(0, 60)}...` : item.name}
+          {item.name.length > 40 ? `${item.name.slice(0, 34)}...` : item.name}
         </div>
       </DesctiptionWrap>
     </CardDiv>
@@ -43,7 +43,7 @@ const DesctiptionWrap = styled.div`
 
 const CardDiv = styled.div`
   width: calc((80vw - 140px) / 3);
-  height: calc((100vh - 140px) / 2);
+  height: calc((100vh - 100px) / 2);
   min-width: 240px;
   min-height: 200px;
   padding: 10px;
@@ -57,7 +57,7 @@ const CardDiv = styled.div`
 
 const WishlistImage = styled.img`
   max-width: 100%;
-  max-height: 75%;
+  max-height: 70%;
   margin: auto;
   object-fit: contain;
   border-radius: 10px;

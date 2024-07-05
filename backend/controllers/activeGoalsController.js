@@ -17,7 +17,7 @@ const getActiveItems = async (req, res) => {
 };
 
 const addActiveItem = async (req, res) => {
-  if (req.body.title == "" || req.body.price == "") {
+  if (!req.body.title || !req.body.price) {
     return res
       .status(400)
       .json({ message: "Please fill in all fields or select an option" });
