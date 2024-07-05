@@ -13,6 +13,7 @@ import updatePig from "../utils/updatePig";
 import getUser from "../utils/getUser";
 import ContributeForm from "../components/ContributeForm";
 import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
+import getTransactions from "../utils/getTransactions";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -25,6 +26,7 @@ export default function HomePage() {
   const [saveTriggered, setSaveTriggered] = useState(false);
   const [contributeFormActive, showContributeForm] = useState(false);
   const [bankBalance, setBankBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
   const currentTime = new Date().toLocaleString();
 
   useEffect(() => {
@@ -51,6 +53,19 @@ export default function HomePage() {
     }
     fetchData();
   }, [updateGoals]);
+
+  useEffect(() => {
+    async function fetchTransactions() {
+      try {
+        const transactionResponse = await getTransactions();
+        setTransactions(transactionResponse.transactions.reverse().slice(0, 3)); 
+      } catch (error) {
+        console.error("Failed to fetch transactions:", error);
+        alert("Failed to fetch transactions: " + error);
+      }
+    }
+    fetchTransactions();
+  }, []);
 
   const selectModel = (model) => {
     setModelUrl("models/" + model + ".glb");
@@ -127,7 +142,7 @@ export default function HomePage() {
           />
         </PigDisplay>
         <BottomDisplay>
-          <TransactionCard />
+          <TransactionCard transactions={transactions}/>
           <BarChartCard />
         </BottomDisplay>
       </Display>

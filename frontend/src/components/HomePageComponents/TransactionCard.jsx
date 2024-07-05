@@ -1,31 +1,29 @@
 import * as React from "react";
 import styled from "styled-components";
+import formatCurrency from "../../utils/formatCurrency";
+const moment = require("moment");
 
-export default function TransactionCard() {
-    return (
-        <TransactionContainer>
-          <TransactionHead>
-            <div>Transactions</div>
-            <a href="/transactions" style={{ fontWeight:"normal", color:"#645df2" }}>See all</a>
-          </TransactionHead>
-          <TransactionBody>
-            <TransactionInfo>
-              <div>Dinner with friends</div>
-              <div style={{ color:"grey" }}>21:33</div>
-            </TransactionInfo>
-            <TransactionAmount>-$12.00</TransactionAmount>
-          </TransactionBody>
-          <TransactionBody>
-            <TransactionInfo>
-              <div>HEAP deposit</div>
-              <div style={{ color:"grey" }}>29 Apr 2024</div>
-            </TransactionInfo>
-            <TransactionAmount>-$30.00</TransactionAmount>
-          </TransactionBody>
-        </TransactionContainer>
-    )
+
+
+export default function TransactionCard({ transactions }) {
+  return (
+    <TransactionContainer>
+      <TransactionHead>
+        <div>Transactions</div>
+        <a href="/transactions" style={{ fontWeight: "normal", color: "#645df2" }}>See all</a>
+      </TransactionHead>
+      {transactions.map((transaction, index) => (
+        <TransactionBody key={index}>
+          <TransactionInfo>
+            <div>{transaction.title}</div>
+            <div style={{ color: "grey" }}>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</div>
+          </TransactionInfo>
+          <TransactionAmount>{formatCurrency(transaction.amount)}</TransactionAmount>
+        </TransactionBody>
+      ))}
+    </TransactionContainer>
+  );
 }
-
 
 
 const TransactionContainer = styled.div`
