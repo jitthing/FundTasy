@@ -17,6 +17,7 @@ const {
   getAllModels,
   create_model,
 } = require("../controllers/modelController");
+
 const { protect } = require("../middleware/authMiddleware");
 const { scrapeAmazon } = require("../webScraper");
 const {
@@ -24,17 +25,21 @@ const {
   addItem,
   deleteItem,
 } = require("../controllers/wishlistController");
+
 const {
   newTransaction,
   allTransactions,
   deleteTransaction,
 } = require("../controllers/transactionController");
+
 const {
   getActiveItems,
   addActiveItem,
   deleteActiveItem,
   updateSavedValue,
 } = require("../controllers/activeGoalsController");
+
+const { getAllOwnedPigs } = require("../controllers/ownedPigsController");
 
 const router = express.Router();
 
@@ -52,6 +57,9 @@ router.post("/update_bankbalance", updateBankBalance);
 // Model Router
 router.post("/all_models", getAllModels);
 router.post("/newModel", create_model);
+
+// OwnedPigs Router
+router.post("/get_owned_pigs", getAllOwnedPigs);
 
 // Amazon Scraper Router
 router.post("/scrape_amazon", scrapeAmazon);

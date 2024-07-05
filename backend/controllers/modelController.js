@@ -28,4 +28,5 @@ const create_model = async (req, res) => {
 
   return res.status(200).json({ message: "Model created succesfully" });
 };
+
 module.exports = { getAllModels, create_model };

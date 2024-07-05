@@ -17,13 +17,10 @@ const getActiveItems = async (req, res) => {
 };
 
 const addActiveItem = async (req, res) => {
-  const countGoals = await ActiveGoals.countDocuments({
-    username: req.body.username,
-  });
-  if (countGoals >= 3) {
+  if (req.body.title == "" || req.body.price == "") {
     return res
       .status(400)
-      .json({ message: "You can only have 3 goals at a time" });
+      .json({ message: "Please fill in all fields or select an option" });
   }
 
   const response = await ActiveGoals.findOne({ title: req.body.title });

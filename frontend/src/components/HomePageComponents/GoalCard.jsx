@@ -36,7 +36,6 @@ export default function GoalCard({ goals, updateGoals }) {
         {[...Array(numEmptyGoals)].map((e, i) => {
           return <GoalBox updateGoals={updateGoals} />;
         })}
-
       </GoalBody>
     </GoalContainer>
   );
@@ -102,7 +101,7 @@ function GoalBox(props) {
     return (
       <ActiveGoal>
         <GoalInfo>
-          <button 
+          <button
             onClick={() => handleDeleteItem(props.id, currentSaved)}
             className="text-gray-600 hover:text-gray-800 ml-auto"
           >
