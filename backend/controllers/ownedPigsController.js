@@ -1,4 +1,3 @@
-const { Message } = require("semantic-ui-react");
 const ownedPigs = require("../models/ownedPigsModel");
 const { getUserFromToken } = require("./userController");
 
