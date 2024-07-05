@@ -19,13 +19,13 @@ export const AddedItem = ({ item, updateWishlist }) => {
   };
   return (
     <CardDiv>
-      <WishlistImage src={item.image} />
       <button
         onClick={() => handleDeleteItem(item._id)}
-        className="z-10 absolute text-gray-600 hover:text-gray-800"
+        className="z-10 text-gray-600 hover:text-gray-800"
       >
         <IoClose className="h-6 w-6" />
       </button>
+      <WishlistImage src={item.image} />
       <DesctiptionWrap>
         <div className="font-extrabold text-xl">${item.price}</div>
         <div>
