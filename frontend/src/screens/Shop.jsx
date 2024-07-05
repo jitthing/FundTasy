@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 // import { calcPosFromAngles } from "@react-three/drei";
 // import { flushGlobalEffects } from "@react-three/fiber";
 import FilterPigs from "../components/filterPigs.js";
+import BuyMenu from "../components/buyMenu.js";
 
 // TODO:
 // 1. Fetch the list of owned pigs from the backend
@@ -20,6 +21,8 @@ export default function Shop() {
   const [models, setModels] = useState([]);         // Array to store models
   const [ownedPigs, setOwnedPigs] = useState([]);   // Array to store owned Pigs
   const [formActive, showForm] = useState(false); // For filter menu
+  const [buyMenuActive, showBuyMenu] = useState(false); // For buy menu
+  const [lastPreviewedPig, setLastPreviewedPig] = useState(""); // For buy menu
     
   function toggleUnownedFilter() {
     setUnownedFilter(!unownedFilter);
@@ -29,6 +32,18 @@ export default function Shop() {
     setOwnedFilter(!ownedFilter);
   } 
 
+  function openBuyMenu() {
+    showBuyMenu(true);
+  }
+
+  function closeBuyMenu() {
+    showBuyMenu(false);
+  }
+
+  function handleLastPreviewedPig(pigName) {
+    setLastPreviewedPig(pigName);
+  }
+
   function openForm() {
     showForm(true);
   }
@@ -37,10 +52,32 @@ export default function Shop() {
     showForm(false);
   }
 
+  function checkIfOwned(pigname) {
+    return ownedPigs.includes(pigname);
+  }
+  useEffect(() => {
+  async function fetchOwnedPigs() {
+    try {
+        const response = await axios.post("http://localhost:8000/get_owned_pigs", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          });
+          const data = await response.data;
+          setOwnedPigs(data);
+    } catch (error) {
+        console.error("Failed to fetch ownedPigs", error);
+    }
+  }
+  fetchOwnedPigs();
+}, []);
+
+  const unownedPigs = models.filter((model) => !ownedPigs.includes(model));
+
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.post("http://localhost:8000/all_models");
+        const response = await axios.post("http://localhost:8000/all_models");   
         const data = await response.data;
         // console.log(data);
         setModels(data);
@@ -66,6 +103,7 @@ export default function Shop() {
           unownedFilter={unownedFilter}
         />
       )}
+      {buyMenuActive && <BuyMenu closeBuyMenu={closeBuyMenu} pigName={"Copper"}/>}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
@@ -86,8 +124,17 @@ export default function Shop() {
           {/* {Object.keys(mypigs).map((model) => (
             <PigCard pigname={model} pigTitle={mypigs[model]} />
           ))} */}
-          {models.map((model) => (
-            <PigCard pigname={model.toLowerCase()} pigTitle={model} owned={true} />
+          {ownedFilter && ownedPigs.map((model) => (
+            <PigCard 
+            pigname={model.toLowerCase()} pigTitle={model} owned={true} 
+            openBuyMenu={openBuyMenu}
+            />
+          ))}
+          {unownedFilter && unownedPigs.map((model) => (
+            <PigCard 
+            pigname={model.toLowerCase()} pigTitle={model} owned={false} 
+            openBuyMenu={openBuyMenu}
+            />
           ))}
         </ShopBody>
       </ShopContainer>
@@ -106,7 +153,7 @@ function PigCard(props) {
         {props.owned ? (
           <OwnedOption>Owned</OwnedOption>
         ) : (
-          <BuyOption>
+          <BuyOption onClick={props.openBuyMenu}>
             <BuyText>Buy</BuyText>
             <SmallCoin srcSet="icons/coin.png" />
             <CardPrice>???</CardPrice>
@@ -127,7 +174,6 @@ const PageContainer = styled.div`
 const ShopContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   width: 80vw;
   font-family: Inter, sans-serif;
 `;
