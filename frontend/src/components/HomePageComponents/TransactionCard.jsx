@@ -50,7 +50,7 @@ const TransactionBody = styled.div`
   align-items: center;
   height: 50px;
   width: 100%;
-  padding: 5px 0px;
+  padding: 35px 0px;
   font-size: 14px;
 `
 

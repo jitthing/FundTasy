@@ -58,7 +58,7 @@ export default function HomePage() {
     async function fetchTransactions() {
       try {
         const transactionResponse = await getTransactions();
-        setTransactions(transactionResponse.transactions.reverse().slice(0, 3)); 
+        setTransactions(transactionResponse.transactions.reverse().slice(0, 2)); 
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
         alert("Failed to fetch transactions: " + error);
