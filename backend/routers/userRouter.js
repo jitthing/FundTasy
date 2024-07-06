@@ -30,6 +30,7 @@ const {
   newTransaction,
   allTransactions,
   deleteTransaction,
+  editTransaction,
 } = require("../controllers/transactionController");
 
 const {
@@ -79,6 +80,7 @@ router.post("/update_saved_amount", updateSavedValue);
 router.post("/new_transaction", newTransaction);
 router.get("/all_transactions", allTransactions);
 router.delete("/delete_transaction/:id", deleteTransaction);
+router.put("/edit_transaction/:id", editTransaction)
 
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });

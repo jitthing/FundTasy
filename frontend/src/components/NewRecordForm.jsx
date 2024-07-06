@@ -10,10 +10,19 @@ import truncateText from "../utils/truncateText";
  - Create a banner instead of using alert
 */
 
-export default function NewRecordForm({ closeForm, updateTransactions, allGoals }) {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("others");
-  const [amount, setAmount] = useState("0.00");
+export default function NewRecordForm({ closeForm, updateTransactions, allGoals, editTransaction }) {
+  const [title, setTitle] = useState(editTransaction ? editTransaction.title : "");
+  const [category, setCategory] = useState(editTransaction ? editTransaction.category : "others");
+  const [amount, setAmount] = useState(editTransaction ? editTransaction.amount : "0.00");
+  
+
+  useEffect(() => {
+    if (editTransaction) {
+      setTitle(editTransaction.title);
+      setCategory(editTransaction.category);
+      setAmount(editTransaction.amount);
+    }
+  }, [editTransaction]);
 
   const createTransaction = async (formData) => {
     try {
@@ -33,7 +42,23 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
     }
   };
 
-  const handleSubmit = (e) => {
+  const updateTransaction = async (id, formData) => {
+    try {
+      const userObj = await getUser();
+      const username = userObj.user.username;
+      const response = await axios.put(
+        `http://localhost:8000/edit_transaction/${id}`,
+        { formData, username }
+      );
+      updateTransactions((prev) => !prev);
+      alert("Transaction updated!");
+    } catch (error) {
+      console.log("Error updating transaction: ", error);
+      alert("Error updating transaction!");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, category, title } = e.target.elements;
     const formData = {
@@ -43,7 +68,11 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
       amount: amount.value,
     };
     try {
-      createTransaction(formData);
+      if (editTransaction) {
+        await updateTransaction(editTransaction._id, formData);
+      } else {
+        await createTransaction(formData);
+      }
       closeForm();
     } catch (error) {
       console.log("Error creating transaction: ", error);
@@ -56,16 +85,16 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
         <form onSubmit={handleSubmit}>
           <NewRecordHead>
             <CloseIcon srcSet="icons/close.png" onClick={closeForm} />
-            <NewRecordTitle>New Record</NewRecordTitle>
+            <NewRecordTitle>{editTransaction ? "Edit Record" : "New Record"}</NewRecordTitle>
           </NewRecordHead>
           <NewRecordBody>
             <FormBlock width="100%">
               <FormLabel>Title</FormLabel>
-              <FormTextInput name="title" required placeholder="Title" />
+              <FormTextInput name="title" required placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}/>
             </FormBlock>
             <FormBlock width="100%">
               <FormLabel>Category</FormLabel>
-              <FormDropdown required name="category">
+              <FormDropdown required name="category" value={category} onChange={(e) => setCategory(e.target.value)}>
                 <FormOption value="" disabled selected>Select Category</FormOption>
                 <FormOption value='Food'>Food</FormOption>
                 <FormOption value='Lifestyle'>Lifestyle</FormOption>
@@ -95,12 +124,14 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals 
                   min="0"
                   step="0.01"
                   placeholder="0.00"
+                  value={amount} 
+                  onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
             </FormBlock>
           </NewRecordBody>
           <FormBottom>
-            <FormSubmit type="submit">Submit</FormSubmit>
+            <FormSubmit type="submit">{editTransaction ? "Update" : "Submit"}</FormSubmit>
           </FormBottom>
         </form>
       </NewRecordModal>
