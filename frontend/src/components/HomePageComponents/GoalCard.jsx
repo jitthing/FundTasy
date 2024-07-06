@@ -18,6 +18,7 @@ export default function GoalCard({ goals, updateGoals }) {
         {goals.map((goal) => {
           return (
             <GoalBox
+              title={goal.title}
               id={goal._id}
               active
               toSave={goal.price}
@@ -42,6 +43,7 @@ export default function GoalCard({ goals, updateGoals }) {
 }
 
 function GoalBox(props) {
+  const title = props.title;
   const isActive = props.active;
   const danger = props.danger;
   const toSave = props.toSave;
@@ -101,27 +103,29 @@ function GoalBox(props) {
     return (
       <ActiveGoal>
         <GoalInfo>
-          <button
-            onClick={() => handleDeleteItem(props.id, currentSaved)}
-            className="text-gray-600 hover:text-gray-800 ml-auto"
-          >
-            <IoClose className="h-6 w-6" />
-          </button>
           <div className="flex justify between-line">
             <Goal>
-              <div style={{ display: "inline-block", fontWeight: "bold" }}>
-                Save ${toSave} in {numDays} days{" "}
+              <div style={{ display: "inline-block", fontWeight: "bold", width:"55%" }}>
+                {title}
               </div>
               <div
                 style={{
                   display: "inline-block",
                   fontSize: "12px",
                   color: "grey",
+                  textAlign: "right",
+                  width: "30%"
                 }}
               >
                 {" "}
-                ({startDate} - {endDate})
-              </div>
+                Created on <br/>{startDate}
+              </div>              
+              <button
+                onClick={() => handleDeleteItem(props.id, currentSaved)}
+                className="text-gray-600 hover:text-gray-800 ml-auto"
+              >
+                <IoClose className="h-6 w-6" />
+              </button>
             </Goal>
           </div>
           <Saved>
@@ -297,7 +301,7 @@ const GoalContainer = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 27vh;
+  height: 26vh;
   width: 100%;
   border-radius: 8px;
   box-shadow: 0px 0px 2px #acacac;
@@ -354,20 +358,23 @@ const AddIcon = styled.img`
 `;
 
 const ActiveGoal = styled.div`
-  width: 30%;
+  width: 32%;
   height: 100%;
   background-color: #fff;
 `;
 
 const Goal = styled.div`
+  width: 100%;
+  height: 20px;
   text-align: left;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: start;
 `;
 
 const GoalInfo = styled.div`
+  width: 100%;
   height: 80%;
   padding: 10px 0px;
   display: flex;

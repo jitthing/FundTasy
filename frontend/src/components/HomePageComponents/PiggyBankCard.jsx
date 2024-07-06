@@ -17,8 +17,8 @@ export default function PiggyBankCard({ bankBalance, currentTime, openContribute
                 </PiggyBody>
                 <PiggyBottom>
                     <LastUpdated>Last updated {currentTime}</LastUpdated>
-                    {valid && (<ContributeButton onClick={openContributeForm} activeGoals={activeGoals} bankBalance={bankBalance}>Allocate</ContributeButton>)}
-                    {!valid && (<DisabledButton>Allocate</DisabledButton>)}
+                    {!valid && (<ContributeButton onClick={openContributeForm} activeGoals={activeGoals} bankBalance={bankBalance}>Allocate</ContributeButton>)}
+                    {valid && (<DisabledButton>Allocate</DisabledButton>)}
                 </PiggyBottom>
             </PiggyContainer>
         </>
@@ -28,7 +28,7 @@ export default function PiggyBankCard({ bankBalance, currentTime, openContribute
 const PiggyContainer = styled.div`
     margin-top: auto;
     width: 100%;
-    height: 25vh;
+    height: 26vh;
     border-radius: 8px;
     box-shadow: 0px 0px 2px #bcbcbc;
     padding: 10px 20px;

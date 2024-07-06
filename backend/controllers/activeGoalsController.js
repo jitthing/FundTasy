@@ -67,17 +67,17 @@ const deleteActiveItem = async (req, res) => {
 
 const updateSavedValue = async (req, res) => {
   const amount = req.body.amount;
-  const goalObj = await ActiveGoals.findById(req.body.id);
-  const newSaved = goalObj.saved + amount;
+  const goalObj = await ActiveGoals.findById(req.body.goalId);
+  const newSaved = parseFloat(goalObj.saved) + parseFloat(amount);
   const updated = await ActiveGoals.findOneAndUpdate(
-    { _id: req.body.id },
-    { $set: { saved: newSaved } },
+    { _id: req.body.goalId },
+    { saved: newSaved },
     { new: true }
   );
   if (updated) {
-    return res.status(200).json({ message: "Bank balance updated" });
+    return res.status(200).json({ message: "Saved value updated" });
   } else {
-    return res.status(500).json({ message: "Unable to update bank balance" });
+    return res.status(500).json({ message: "Unable to update saved value" });
   }
 };
 

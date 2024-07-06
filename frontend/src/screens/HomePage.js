@@ -124,7 +124,7 @@ export default function HomePage() {
 
   return (
     <PageContainer>
-      {contributeFormActive && (<ContributeForm closeContributeForm={closeContributeForm} activeGoals={activeGoals} bankBalance={bankBalance} />)}
+      {contributeFormActive && (<ContributeForm closeContributeForm={closeContributeForm} activeGoals={activeGoals} bankBalance={bankBalance} updateBankBalance={setBankBalance} updateGoals={setUpdateGoals} />)}
       <Navbar page="home" />
       <Display>
         <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
@@ -153,6 +153,7 @@ export default function HomePage() {
           closeContributeForm={closeContributeForm}
           currentTime={currentTime}
           activeGoals={activeGoals}
+          updateBankBalance={setBankBalance}
         />
         <Social />
       </Div>

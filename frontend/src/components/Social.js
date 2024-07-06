@@ -73,7 +73,7 @@ const SocialContainer = styled.div`
     align-content: flex-end;
     max-width: 360px;
     width: 100%;
-    height: 72%;
+    height: 75%;
     flex-direction: column;
     font-size: 24px;
     color: #7b7b7b;
