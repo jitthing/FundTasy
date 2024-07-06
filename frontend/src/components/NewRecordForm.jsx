@@ -12,8 +12,8 @@ import truncateText from "../utils/truncateText";
 
 export default function NewRecordForm({ closeForm, updateTransactions, allGoals, editTransaction }) {
   const [title, setTitle] = useState(editTransaction ? editTransaction.title : "");
-  const [category, setCategory] = useState(editTransaction ? editTransaction.category : "others");
-  const [amount, setAmount] = useState(editTransaction ? editTransaction.amount : "0.00");
+  const [category, setCategory] = useState(editTransaction ? editTransaction.category : null);
+  const [amount, setAmount] = useState(editTransaction ? editTransaction.amount : null);
   
 
   useEffect(() => {
