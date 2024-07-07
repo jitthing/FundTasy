@@ -14,7 +14,7 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
   const [title, setTitle] = useState(editTransaction ? editTransaction.title : "");
   const [category, setCategory] = useState(editTransaction ? editTransaction.category : null);
   const [amount, setAmount] = useState(editTransaction ? editTransaction.amount : null);
-  
+
 
   useEffect(() => {
     if (editTransaction) {
@@ -29,10 +29,16 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
       const userObj = await getUser();
       const username = userObj.user.username;
       console.log(formData);
-      const response = await axios.post(
+      const transactionResponse = await axios.post(
         "http://localhost:8000/new_transaction",
         { formData, username }
       );
+      const amount = formData.amount;
+      const updateBalanceResponse = await axios.post("http://localhost:8000/update_bankbalance", {amount}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
       // console.log(response.data);
       updateTransactions((prev) => !prev);
       alert("Transaction created!");
@@ -90,7 +96,7 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
           <NewRecordBody>
             <FormBlock width="100%">
               <FormLabel>Title</FormLabel>
-              <FormTextInput name="title" required placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)}/>
+              <FormTextInput name="title" required placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </FormBlock>
             <FormBlock width="100%">
               <FormLabel>Category</FormLabel>
@@ -124,7 +130,7 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
                   min="0"
                   step="0.01"
                   placeholder="0.00"
-                  value={amount} 
+                  value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>

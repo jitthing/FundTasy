@@ -5,116 +5,116 @@ import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
 
 export default function ContributeForm({ closeContributeForm, activeGoals, bankBalance, updateBankBalance }) {
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const { amount, goal } = e.target.elements;
-        const formData = {
-            goalId: goal.value,
-            amount: amount.value
-        };
-        console.log("trying");
-        try {
-            const response = await axios.post(
-                "http://localhost:8000/update_bankbalance",
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                    }
-                }
-            )
-            console.log(response);
-        } catch (error) {
-            console.error("Unable to allocate funds: " + error);
+  const [selectedGoalAmount, setSelectedGoalAmount] = useState(0);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { amount, goal } = e.target.elements;
+    const formData = {
+      goalId: goal.value,
+      amount: amount.value
+    };
+    console.log("trying");
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/update_bankbalance",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          }
         }
-        try {
-            const response = await axios.post(
-                "http://localhost:8000/update_saved_amount",
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                    }
-                }
-            )
-            console.log(response);
-        } catch (error) {
-            console.error("Unable to allocate funds: " + error);
-        }
-        updateBankBalance(bankBalance - parseFloat(amount.value));
-        closeContributeForm();
+      )
+      console.log(response);
+    } catch (error) {
+      console.error("Unable to allocate funds: " + error);
     }
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/update_saved_amount",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          }
+        }
+      )
+      console.log(response);
+    } catch (error) {
+      console.error("Unable to allocate funds: " + error);
+    }
+    updateBankBalance(bankBalance - parseFloat(amount.value));
+    closeContributeForm();
+  }
 
-    return (
-        <ContributeBackdrop onClick={closeContributeForm}>
-            <ContributeModal onClick={(e) => e.stopPropagation()}>
-                <form onSubmit={handleSubmit}>
-                    <Head>
-                        <CloseIcon srcSet="icons/close.png" onClick={closeContributeForm} />
-                        <Title>Allocate Funds</Title>
-                    </Head>
-                    <Body>
-                        <FormBlock>
-                            <FormLabel>Select Amount: <div style={{ display:"inline-block", fontWeight:"normal", fontSize:"12px" }}>(You may only allocate up to {formatCurrency(bankBalance)})</div></FormLabel>
-                            <div
-                                style={{
-                                display: "flex",
-                                justifyContent: "start",
-                                alignItems: "center",
-                                gap: "10px",
-                                }}
-                            >
-                                <div style={{ display: "inline-block", fontWeight: "bold" }}>$</div>
-                                <TextInput
-                                    type="number"
-                                    required
-                                    name="amount"
-                                    min="0.01"
-                                    max={20}
-                                    step="0.01"
-                                    placeholder="0.00"
-                                />
-                            </div>
-                        </FormBlock>
-                        <GoalBlock>
-                            <FormLabel>Select Goal: </FormLabel>
-                            {activeGoals.map((goal) => {
-                                return (
-                                    <GoalBox>
-                                        <GoalRadio type="radio" name="goal" value={goal._id} />
-                                        <GoalInfo>
-                                        <GoalTitle>{goal.title} [{formatCurrency(goal.price)}] <GoalProgress>({getPercentage(goal.saved, goal.price)}% completed)</GoalProgress></GoalTitle>
-                                            <ProgressBar percentage={getPercentage(goal.saved, goal.price)} />
-                                        </GoalInfo>
-                                    </GoalBox>
-                                )
-                            })}
-                        </GoalBlock>
-                    </Body>
-                    <Bottom>
-                        <Submit type="submit">Confirm Allocation</Submit>
-                    </Bottom>
-                </form>
-            </ContributeModal>
-        </ContributeBackdrop>
-    )
+  return (
+    <ContributeBackdrop onClick={closeContributeForm}>
+      <ContributeModal onClick={(e) => e.stopPropagation()}>
+        <form onSubmit={handleSubmit}>
+          <Head>
+            <CloseIcon srcSet="icons/close.png" onClick={closeContributeForm} />
+            <Title>Allocate Funds</Title>
+          </Head>
+          <Body>
+            <FormBlock>
+              <FormLabel>Select Amount: <div style={{ display: "inline-block", fontWeight: "normal", fontSize: "12px" }}>(You may only allocate up to {formatCurrency(bankBalance)})</div></FormLabel>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <div style={{ display: "inline-block", fontWeight: "bold" }}>$</div>
+                <TextInput
+                  type="number"
+                  required
+                  name="amount"
+                  min="0.01"
+                  max={Math.min(selectedGoalAmount, bankBalance)}
+                  step="0.01"
+                  placeholder="0.00"
+                />
+              </div>
+            </FormBlock>
+            <GoalBlock>
+              <FormLabel>Select Goal: </FormLabel>
+              {activeGoals.map((goal) => {
+                return (
+                  <GoalBox>
+                    <GoalRadio onChange={() => setSelectedGoalAmount(goal.price-goal.saved)} type="radio" name="goal" value={goal._id} />
+                    <GoalInfo>
+                      <GoalTitle>{goal.title} [{formatCurrency(goal.price)}] <GoalProgress>({getPercentage(goal.saved, goal.price)}% completed)</GoalProgress></GoalTitle>
+                      <ProgressBar percentage={getPercentage(goal.saved, goal.price)} />
+                    </GoalInfo>
+                  </GoalBox>
+                )
+              })}
+            </GoalBlock>
+          </Body>
+          <Bottom>
+            <Submit type="submit">Confirm Allocation</Submit>
+          </Bottom>
+        </form>
+      </ContributeModal>
+    </ContributeBackdrop>
+  )
 }
 
 function ProgressBar(props) {
-    const percentage = props.percentage;
-    const percent = ""+percentage+"%";
-    return (
-      <>
-        <ProgressBase>
-          <ProgressFill style={{ width: percent }} />
-        </ProgressBase>
-      </>
-    );
-  }
+  const percentage = props.percentage;
+  const percent = "" + percentage + "%";
+  return (
+    <>
+      <ProgressBase>
+        <ProgressFill style={{ width: percent }} />
+      </ProgressBase>
+    </>
+  );
+}
 
 function getPercentage(saved, total) {
-    return parseFloat(saved)/parseFloat(total) * 100.0;
+  return (parseFloat(saved) / parseFloat(total) * 100.0).toFixed(2);
 }
 
 const ContributeBackdrop = styled.div`

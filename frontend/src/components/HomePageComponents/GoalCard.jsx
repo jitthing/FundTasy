@@ -106,7 +106,7 @@ function GoalBox(props) {
           <div className="flex justify between-line">
             <Goal>
               <div style={{ display: "inline-block", fontWeight: "bold", width:"55%" }}>
-                {title}
+                {truncateText(title, 30)}
               </div>
               <div
                 style={{

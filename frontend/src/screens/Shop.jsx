@@ -8,6 +8,7 @@ import getOwnedPigs from "../utils/getOwnedPigs.js";
 // import { flushGlobalEffects } from "@react-three/fiber";
 import FilterPigs from "../components/filterPigs.js";
 import BuyMenu from "../components/buyMenu.js";
+import getUser from "../utils/getUser.js";
 
 // TODO:
 // 1. Fetch the list of owned pigs from the backend
@@ -23,11 +24,14 @@ export default function Shop() {
   const [formActive, showForm] = useState(false); // For filter menu
   const [buyMenuActive, showBuyMenu] = useState(false); // For buy menu
   const [lastPreviewedPig, setLastPreviewedPig] = useState(""); // For buy menu
+  const [userCoins, setUserCoins] = useState(0);
 
   useEffect(() => {
     async function fetchWishlist() {
       try {
         const response = await getOwnedPigs();
+        const user = await getUser();
+        setUserCoins(user.user.coinBalance);
         // console.log(wishlistResponse);
         setOwnedPigs(response.want);
       } catch (error) {
@@ -35,7 +39,7 @@ export default function Shop() {
       }
     }
     fetchWishlist();
-  }, []);
+  }, [userCoins]);
 
   function toggleUnownedFilter() {
     setUnownedFilter(!unownedFilter);
@@ -108,7 +112,7 @@ export default function Shop() {
           <div style={{ width: "200px" }}>
             <Moneybar>
               <BigCoin srcSet="icons/coin.png" />
-              <MoneybarText>????</MoneybarText>
+              <MoneybarText>{userCoins}</MoneybarText>
             </Moneybar>
           </div>
         </ShopHead>

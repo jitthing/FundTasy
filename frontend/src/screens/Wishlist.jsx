@@ -88,4 +88,5 @@ const SearchAndItemsWrapper = styled.div`
   height: 100vh;
   font-family: Inter, sans-serif;
   width: 100%;
+  overflow: hidden;
 `;

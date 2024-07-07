@@ -12,7 +12,7 @@ export default function PiggyBankCard({ bankBalance, currentTime, openContribute
                 <PiggyBody>
                     <BankContainer>
                         <Balance>Fund Balance: <Statement>{statement}</Statement></Balance>
-                        <Amount>{formatCurrency(bankBalance)}</Amount>
+                        <Amount bankBalance={bankBalance}>{formatCurrency(bankBalance)}</Amount>
                     </BankContainer>
                 </PiggyBody>
                 <PiggyBottom>
@@ -71,6 +71,7 @@ const Amount = styled.div`
     padding: 10px;
     font-size: 36px;
     font-weight: bold;
+    color: ${props => props.bankBalance < 0 ? 'red' : ''};
 `
 
 const LastUpdated = styled.div`
