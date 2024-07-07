@@ -28,6 +28,7 @@ export default function HomePage() {
   const [bankBalance, setBankBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const currentTime = new Date().toLocaleString();
+  const [userIncome, setUserIncome] = useState(0);
 
   useEffect(() => {
     async function getUserId() {
@@ -36,6 +37,7 @@ export default function HomePage() {
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
       updateModel(`models/${userObj.user.displayPig}.glb`);
+      setUserIncome(userObj.user.income);
     }
     getUserId();
   }, []);
@@ -143,7 +145,7 @@ export default function HomePage() {
         </PigDisplay>
         <BottomDisplay>
           <TransactionCard transactions={transactions}/>
-          <BarChartCard />
+          <BarChartCard income={userIncome} />
         </BottomDisplay>
       </Display>
       <Div>

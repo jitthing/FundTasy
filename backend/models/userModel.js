@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   coinBalance: { type: Number, default: 0 },
   income: { type: Number, default: 0 },
-  displayPig: String,
+  displayPig: { type: String, default: "basic" },
   bankBalance : {type: Number, default: 0},
 });
 

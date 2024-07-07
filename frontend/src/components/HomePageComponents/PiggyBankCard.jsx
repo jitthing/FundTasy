@@ -17,8 +17,8 @@ export default function PiggyBankCard({ bankBalance, currentTime, openContribute
                 </PiggyBody>
                 <PiggyBottom>
                     <LastUpdated>Last updated {currentTime}</LastUpdated>
-                    {!valid && (<ContributeButton onClick={openContributeForm} activeGoals={activeGoals} bankBalance={bankBalance}>Allocate</ContributeButton>)}
-                    {valid && (<DisabledButton>Allocate</DisabledButton>)}
+                    {valid && (<ContributeButton onClick={openContributeForm} activeGoals={activeGoals} bankBalance={bankBalance}>Allocate</ContributeButton>)}
+                    {!valid && (<DisabledButton>Allocate</DisabledButton>)}
                 </PiggyBottom>
             </PiggyContainer>
         </>

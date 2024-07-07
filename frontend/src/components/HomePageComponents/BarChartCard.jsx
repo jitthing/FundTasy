@@ -1,17 +1,53 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { BarChart } from '@mui/x-charts/BarChart';
 import styled from "styled-components";
+import getTransactions from "../../utils/getTransactions";
 
-export default function BarChartCard() {
+export default function BarChartCard({ income }) {
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const transactionResponse = await getTransactions();
+        setTransactions(transactionResponse.transactions);
+      } catch (error) {
+        alert("Failed to fetch transactions", error);
+      }
+    };
+    fetchTransactions();
+  });
+
     return (
         <ChartContainer>
             <ChartHead>Savings</ChartHead>
-            <HorizontalBars />
+            <HorizontalBars transactions={transactions} income={income} />
         </ChartContainer>
     )
 }
 
-function HorizontalBars() {
+function HorizontalBars({ transactions, income }) {
+
+    const dataset = [];
+
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    const monthNow = new Date().getMonth();
+    for (let i = 2; i >= 0; i--) {
+      var m = (monthNow - i) < 0 ? (12 - monthNow):(monthNow - i);
+      var totalSavings = income;
+      for (let j = 0; j < transactions.length; j++) {
+        if (new Date(transactions[j].date).getMonth() == m) {
+          totalSavings -= transactions[j].amount;
+        }
+      }
+      dataset.push({
+        month: monthNames[m],
+        savings: totalSavings
+      });
+    }
 
     const chartSetting = {
         xAxis: [
@@ -22,21 +58,6 @@ function HorizontalBars() {
         width: 400,
         height: 150,
       };
-    
-    const dataset = [
-        {
-            month:'Apr',
-            savings: 217
-        },
-        {
-            month: 'May',
-            savings: 434
-        }, 
-        {
-            month: 'Jun',
-            savings: 89
-        }
-    ]
     
     const valueFormatter = (value) => `$${value}`;
     return (

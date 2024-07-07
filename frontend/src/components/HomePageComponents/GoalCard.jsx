@@ -46,11 +46,11 @@ function GoalBox(props) {
   const title = props.title;
   const isActive = props.active;
   const danger = props.danger;
-  const toSave = props.toSave;
+  const toSave = formatCurrency(props.toSave);
   const numDays = props.numDays;
   const startDate = props.startDate;
   const endDate = props.endDate;
-  const currentSaved = props.currentSaved;
+  const currentSaved = formatCurrency(props.currentSaved);
   const rate = props.rate;
   const lastTopUpAmt = props.lastTopUpAmt;
   const lastTopUpDate = props.lastTopUpDate;
@@ -129,7 +129,7 @@ function GoalBox(props) {
             </Goal>
           </div>
           <Saved>
-            {formatCurrency(currentSaved)}{" "}
+            {currentSaved}{" "}
             <div
               style={{
                 display: "inline-block",
@@ -137,7 +137,7 @@ function GoalBox(props) {
                 fontWeight: "normal",
               }}
             >
-              saved
+              <div style={{ display:"inline-block", fontWeight:"bold" }}>/ {toSave}</div> 
             </div>
           </Saved>
           <Details>
