@@ -121,7 +121,7 @@ export default function Transactions() {
 const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
   return (
     <>
-    <TransactionListWrapper>
+    
       <TransactionBody>
         <TableHead>
           <HeadTitle>Title</HeadTitle>
@@ -129,6 +129,7 @@ const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
           <HeadDateTime>Date</HeadDateTime>
           <HeadAmount>Amount</HeadAmount>
         </TableHead>
+        <TransactionListWrapper>
         {transactions.slice().reverse().map((transaction) => (
           <TransactionDiv key={transaction.id}>
 
@@ -137,20 +138,26 @@ const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
               <CategoryButton>{transaction.category}</CategoryButton>
             </TransactionCategory>
             <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
-            <TransactionAmount>-{formatCurrency(transaction.amount)}</TransactionAmount>
-            <EditIcon
-                src="icons/edit-black.png"
-                alt="Edit"
-                onClick={()=>toggleEditModal(transaction)}
-            />
-            <button onClick={() => deleteTransaction(transaction._id)}
-            className="z-10 text-gray-600 hover:text-gray-800">
-              <IoClose className="h-6 w-6" />
-            </button>
+            <TransactionAmount>
+              -{formatCurrency(transaction.amount)}              
+              <TransactionOptions>
+                <EditIcon
+                    src="icons/edit-black.png"
+                    alt="Edit"
+                    onClick={()=>toggleEditModal(transaction)}
+                    style={{ display:"inline-block" }}
+                />
+                <button
+                    style={{ display:"inline-block" }} onClick={() => deleteTransaction(transaction._id)}
+                className="z-10 text-gray-600 hover:text-gray-800">
+                  <IoClose className="h-6 w-6" />
+                </button>
+              </TransactionOptions>
+            </TransactionAmount>
           </TransactionDiv>
         ))}
-      </TransactionBody>
       </TransactionListWrapper>
+      </TransactionBody>
     </>
   );
 };
@@ -218,8 +225,10 @@ const CoinsTable = () => {
 
 const TransactionListWrapper = styled.div`
   max-height: 70vh; 
-  overflow-y: auto;
   width: 100%;
+  overflow-y: auto;
+  overflow-x:hidden;
+
 `;
 
 const EditIcon = styled.img`
@@ -391,22 +400,22 @@ const TableHead = styled.div`
 
 const HeadTitle = styled.div`
   width: 35%;
-  padding-left: 50px;
+  padding-left: 30px;
   text-align: start;
 `;
 
 const HeadCategory = styled.div`
   width: 20%;
+  text-align: center;
 `;
 
 const HeadDateTime = styled.div`
-  width: 20%;
+  width: 25%;
 `;
 
 const HeadAmount = styled.div`
-  width: 25%;
-  text-align: right;
-  padding-right: 130px;
+  width: 20%;
+  text-align: left;
 `;
 
 const TransactionDiv = styled.div`
@@ -415,8 +424,7 @@ const TransactionDiv = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 80px; 
-  padding: 10px 30px;
-  margin: 20px; 
+  padding: 10px 0px;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
   &:hover {
@@ -431,14 +439,14 @@ const TransactionDiv = styled.div`
 const TransactionTitle = styled.div`
   width: 35%;
   font-weight: bold;
-  text-align: start;
+  text-align: left;
+  padding-left: 30px;
 `;
 
 const TransactionCategory = styled.div`
   width: 20%;
   display: flex;
-  justify-content: start;
-  padding-left: 90px;
+  justify-content: center;
   align-items: center;
 `;
 
@@ -474,16 +482,25 @@ const GoalStatus = styled.div`
 `;
 
 const TransactionDateTime = styled.div`
-  width: 20%;
+  width: 25%;
   font-size: 14px;
-  padding-left: 50px;
 `;
 
 const TransactionAmount = styled.div`
-  width: 25%;
-  text-align: right;
-  padding-right: 60px;
+  width: 20%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 30px;
 `;
+
+const TransactionOptions = styled.div`
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+`
 
 const CoinTitleHead = styled.div`
   width: 35%;

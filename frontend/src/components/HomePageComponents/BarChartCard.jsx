@@ -35,9 +35,10 @@ function HorizontalBars({ transactions, income }) {
     ];
 
     const monthNow = new Date().getMonth();
+    const day = new Date().getDate();
     for (let i = 2; i >= 0; i--) {
       var m = (monthNow - i) < 0 ? (12 - monthNow):(monthNow - i);
-      var totalSavings = income;
+      var totalSavings = (i == 0) ? (income * day/30):income;
       for (let j = 0; j < transactions.length; j++) {
         if (new Date(transactions[j].date).getMonth() == m) {
           totalSavings -= transactions[j].amount;

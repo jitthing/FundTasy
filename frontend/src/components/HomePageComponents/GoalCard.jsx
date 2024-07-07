@@ -46,16 +46,16 @@ function GoalBox(props) {
   const title = props.title;
   const isActive = props.active;
   const danger = props.danger;
-  const toSave = formatCurrency(props.toSave);
+  const toSave = props.toSave;
   const numDays = props.numDays;
   const startDate = props.startDate;
   const endDate = props.endDate;
-  const currentSaved = formatCurrency(props.currentSaved);
+  const currentSaved = props.currentSaved;
   const rate = props.rate;
   const lastTopUpAmt = props.lastTopUpAmt;
   const lastTopUpDate = props.lastTopUpDate;
   const daysLeft = props.daysLeft;
-  const percentage = (parseInt(currentSaved) / parseInt(toSave)) * 100 + "%";
+  const percentage = (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
 
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [wishlistItems, setItems] = React.useState([]);
@@ -129,7 +129,7 @@ function GoalBox(props) {
             </Goal>
           </div>
           <Saved>
-            {currentSaved}{" "}
+            {formatCurrency(currentSaved)}{" "}
             <div
               style={{
                 display: "inline-block",
@@ -137,7 +137,7 @@ function GoalBox(props) {
                 fontWeight: "normal",
               }}
             >
-              <div style={{ display:"inline-block", fontWeight:"bold" }}>/ {toSave}</div> 
+              <div style={{ display:"inline-block", fontWeight:"bold" }}>/ {formatCurrency(toSave)}</div> 
             </div>
           </Saved>
           <Details>
