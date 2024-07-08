@@ -226,51 +226,6 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
               </CoinAmount>
             </TransactionDiv>
           ))}
-        <TransactionDiv>
-          <CoinTitle>Unlock Ninja Skin</CoinTitle>
-          <CoinType>
-            <CoinTypeButton>Purchase</CoinTypeButton>
-          </CoinType>
-          <CoinGoal>
-            <CoinGoalName>-</CoinGoalName>
-            <CoinGoalStatus>-</CoinGoalStatus>
-          </CoinGoal>
-          <CoinDateTime>28 Jun 2024 14:44</CoinDateTime>
-          <CoinAmount isSpending>
-            -25000
-            <OinkCoin srcSet="icons/coin.png" />
-          </CoinAmount>
-        </TransactionDiv>
-        <TransactionDiv>
-          <CoinTitle>Completed "Save $90 in 14 days"</CoinTitle>
-          <CoinType>
-            <CoinTypeButton>Reward Bonus</CoinTypeButton>
-          </CoinType>
-          <CoinGoal>
-            <CoinGoalName>Save $90 in 14 days</CoinGoalName>
-            <CoinGoalStatus>Completed</CoinGoalStatus>
-          </CoinGoal>
-          <CoinDateTime>23 Jan 2024 09:57</CoinDateTime>
-          <CoinAmount>
-            +5000
-            <OinkCoin srcSet="icons/coin.png" />
-          </CoinAmount>
-        </TransactionDiv>
-        <TransactionDiv>
-          <CoinTitle>Completed "Save $90 in 14 days"</CoinTitle>
-          <CoinType>
-            <CoinTypeButton>Reward</CoinTypeButton>
-          </CoinType>
-          <CoinGoal>
-            <CoinGoalName>Save $90 in 14 days</CoinGoalName>
-            <CoinGoalStatus>Completed</CoinGoalStatus>
-          </CoinGoal>
-          <CoinDateTime>23 Jan 2024 09:57</CoinDateTime>
-          <CoinAmount>
-            +9000
-            <OinkCoin srcSet="icons/coin.png" />
-          </CoinAmount>
-        </TransactionDiv>
         </>
         )}
       </TransactionBody>
