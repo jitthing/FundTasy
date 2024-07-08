@@ -43,7 +43,7 @@ const scrapeAmazon = async (req, res) => {
   });
   // console.log(results.slice(0, 6));
   await browser.close();
-  return res.status(200).json(results.slice(0, 9));
+  return res.status(200).json(results.slice(0, 19));
 };
 
 module.exports = { scrapeAmazon };

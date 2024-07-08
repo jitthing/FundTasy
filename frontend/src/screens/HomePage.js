@@ -40,11 +40,11 @@ export default function HomePage() {
       setUserIncome(userObj.user.income);
     }
     getUserId();
-  }, []);
+  }, [updateGoals]);
 
   useEffect(() => {
     async function fetchData() {
-      try{
+      try {
         const response = await getActiveGoals();
         // console.log(response.userGoals);
         setActiveGoals(response.userGoals);
@@ -60,7 +60,7 @@ export default function HomePage() {
     async function fetchTransactions() {
       try {
         const transactionResponse = await getTransactions();
-        setTransactions(transactionResponse.transactions.reverse().slice(0, 2)); 
+        setTransactions(transactionResponse.transactions.reverse().slice(0, 2));
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
         alert("Failed to fetch transactions: " + error);
@@ -94,7 +94,7 @@ export default function HomePage() {
   useEffect(() => {
     async function handleSaveClick() {
       async function updatepig() {
-        try{
+        try {
           const response = await updatePig(userId, modelUrl, currentModel);
           console.log(response);
           updateModel(`models/${response.displayPig}.glb`);
@@ -114,19 +114,27 @@ export default function HomePage() {
   const handleSave = () => {
     setShow(!show);
     setSaveTriggered(true);
-  }
+  };
 
   const openContributeForm = () => {
     showContributeForm(true);
-  }
+  };
 
   const closeContributeForm = () => {
     showContributeForm(false);
-  }
+  };
 
   return (
     <PageContainer>
-      {contributeFormActive && (<ContributeForm closeContributeForm={closeContributeForm} activeGoals={activeGoals} bankBalance={bankBalance} updateBankBalance={setBankBalance} updateGoals={setUpdateGoals} />)}
+      {contributeFormActive && (
+        <ContributeForm
+          updateGoals={setUpdateGoals}
+          closeContributeForm={closeContributeForm}
+          activeGoals={activeGoals}
+          bankBalance={bankBalance}
+          updateBankBalance={setBankBalance}
+        />
+      )}
       <Navbar page="home" />
       <Display>
         <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
@@ -144,14 +152,14 @@ export default function HomePage() {
           />
         </PigDisplay>
         <BottomDisplay>
-          <TransactionCard transactions={transactions}/>
+          <TransactionCard transactions={transactions} />
           <BarChartCard income={userIncome} />
         </BottomDisplay>
       </Display>
       <Div>
-        <PiggyBankCard 
-          bankBalance={bankBalance} 
-          openContributeForm={openContributeForm} 
+        <PiggyBankCard
+          bankBalance={bankBalance}
+          openContributeForm={openContributeForm}
           closeContributeForm={closeContributeForm}
           currentTime={currentTime}
           activeGoals={activeGoals}
@@ -197,18 +205,18 @@ const BottomDisplay = styled.div`
 `;
 
 const Div = styled.div`
-    display: flex;
-    align-content: flex-end;
-    gap: 10px;
-    max-width: 360px;
-    width: 30vw;
-    height: 100vh;
-    flex-direction: column;
-    font-size: 24px;
-    color: #7b7b7b;
-    font-family: Inter, sans-serif;
-    margin: 0px;
-    padding: 10px 5px 10px 0px;
-    margin-left: auto;
-    margin-right: 5px;
-`
+  display: flex;
+  align-content: flex-end;
+  gap: 10px;
+  max-width: 360px;
+  width: 30vw;
+  height: 100vh;
+  flex-direction: column;
+  font-size: 24px;
+  color: #7b7b7b;
+  font-family: Inter, sans-serif;
+  margin: 0px;
+  padding: 10px 5px 10px 0px;
+  margin-left: auto;
+  margin-right: 5px;
+`;

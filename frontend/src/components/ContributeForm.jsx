@@ -4,14 +4,20 @@ import getUser from "../utils/getUser";
 import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
 
-export default function ContributeForm({ closeContributeForm, activeGoals, bankBalance, updateBankBalance }) {
+export default function ContributeForm({
+  closeContributeForm,
+  activeGoals,
+  bankBalance,
+  updateBankBalance,
+  updateGoals,
+}) {
   const [selectedGoalAmount, setSelectedGoalAmount] = useState(0);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, goal } = e.target.elements;
     const formData = {
       goalId: goal.value,
-      amount: amount.value
+      amount: amount.value,
     };
     console.log("trying");
     try {
@@ -21,9 +27,9 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          }
+          },
         }
-      )
+      );
       console.log(response);
     } catch (error) {
       console.error("Unable to allocate funds: " + error);
@@ -35,16 +41,17 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          }
+          },
         }
-      )
+      );
       console.log(response);
+      updateGoals((prev) => !prev);
     } catch (error) {
       console.error("Unable to allocate funds: " + error);
     }
     updateBankBalance(bankBalance - parseFloat(amount.value));
     closeContributeForm();
-  }
+  };
 
   return (
     <ContributeBackdrop onClick={closeContributeForm}>
@@ -56,7 +63,18 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
           </Head>
           <Body>
             <FormBlock>
-              <FormLabel>Select Amount: <div style={{ display: "inline-block", fontWeight: "normal", fontSize: "12px" }}>(You may only allocate up to {formatCurrency(bankBalance)})</div></FormLabel>
+              <FormLabel>
+                Select Amount:{" "}
+                <div
+                  style={{
+                    display: "inline-block",
+                    fontWeight: "normal",
+                    fontSize: "12px",
+                  }}
+                >
+                  (You may only allocate up to {formatCurrency(bankBalance)})
+                </div>
+              </FormLabel>
               <div
                 style={{
                   display: "flex",
@@ -65,7 +83,9 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
                   gap: "10px",
                 }}
               >
-                <div style={{ display: "inline-block", fontWeight: "bold" }}>$</div>
+                <div style={{ display: "inline-block", fontWeight: "bold" }}>
+                  $
+                </div>
                 <TextInput
                   type="number"
                   required
@@ -82,13 +102,27 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
               {activeGoals.map((goal) => {
                 return (
                   <GoalBox>
-                    <GoalRadio onChange={() => setSelectedGoalAmount(goal.price-goal.saved)} type="radio" name="goal" value={goal._id} />
+                    <GoalRadio
+                      onChange={() =>
+                        setSelectedGoalAmount(goal.price - goal.saved)
+                      }
+                      type="radio"
+                      name="goal"
+                      value={goal._id}
+                    />
                     <GoalInfo>
-                      <GoalTitle>{goal.title} [{formatCurrency(goal.price)}] <GoalProgress>({getPercentage(goal.saved, goal.price)}% completed)</GoalProgress></GoalTitle>
-                      <ProgressBar percentage={getPercentage(goal.saved, goal.price)} />
+                      <GoalTitle>
+                        {goal.title} [{formatCurrency(goal.price)}]{" "}
+                        <GoalProgress>
+                          ({getPercentage(goal.saved, goal.price)}% completed)
+                        </GoalProgress>
+                      </GoalTitle>
+                      <ProgressBar
+                        percentage={getPercentage(goal.saved, goal.price)}
+                      />
                     </GoalInfo>
                   </GoalBox>
-                )
+                );
               })}
             </GoalBlock>
           </Body>
@@ -98,7 +132,7 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
         </form>
       </ContributeModal>
     </ContributeBackdrop>
-  )
+  );
 }
 
 function ProgressBar(props) {
@@ -114,7 +148,7 @@ function ProgressBar(props) {
 }
 
 function getPercentage(saved, total) {
-  return (parseFloat(saved) / parseFloat(total) * 100.0).toFixed(2);
+  return ((parseFloat(saved) / parseFloat(total)) * 100.0).toFixed(2);
 }
 
 const ContributeBackdrop = styled.div`
@@ -199,48 +233,48 @@ const TextInput = styled.input`
 `;
 
 const GoalBlock = styled.div`
-    width: 100%;    
-    max-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    gap: 10x;
-`
+  width: 100%;
+  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 10x;
+`;
 
 const GoalBox = styled.div`
-    width: 100%;
-    height: 90px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 5x;
-`
+  width: 100%;
+  height: 90px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 5x;
+`;
 
 const GoalRadio = styled.input`
-    width: 20px;
-    height: 20px;
-`
+  width: 20px;
+  height: 20px;
+`;
 
 const GoalInfo = styled.div`
-    width: 90%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-`
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
+`;
 
 const GoalTitle = styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    text-align: left;
-`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+`;
 
 const GoalProgress = styled.div`
-    display: inline-block;
-    font-size: 14px;
-    color: grey;
-`
+  display: inline-block;
+  font-size: 14px;
+  color: grey;
+`;
 
 const ProgressBase = styled.div`
   width: 100%;
