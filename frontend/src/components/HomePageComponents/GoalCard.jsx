@@ -55,7 +55,8 @@ function GoalBox(props) {
   const lastTopUpAmt = props.lastTopUpAmt;
   const lastTopUpDate = props.lastTopUpDate;
   const daysLeft = props.daysLeft;
-  const percentage = (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
+  const percentage =
+    (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
 
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [wishlistItems, setItems] = React.useState([]);
@@ -95,7 +96,7 @@ function GoalBox(props) {
         alert("Item deleted!");
       }
     } catch (error) {
-      alert(`${error.response}`);
+      alert(`${error.response.data.message}`);
     }
   };
 
@@ -105,7 +106,13 @@ function GoalBox(props) {
         <GoalInfo>
           <div className="flex justify between-line">
             <Goal>
-              <div style={{ display: "inline-block", fontWeight: "bold", width:"55%" }}>
+              <div
+                style={{
+                  display: "inline-block",
+                  fontWeight: "bold",
+                  width: "55%",
+                }}
+              >
                 {truncateText(title, 30)}
               </div>
               <div
@@ -114,12 +121,13 @@ function GoalBox(props) {
                   fontSize: "12px",
                   color: "grey",
                   textAlign: "right",
-                  width: "30%"
+                  width: "30%",
                 }}
               >
                 {" "}
-                Created on <br/>{startDate}
-              </div>              
+                Created on <br />
+                {startDate}
+              </div>
               <button
                 onClick={() => handleDeleteItem(props.id, currentSaved)}
                 className="text-gray-600 hover:text-gray-800 ml-auto"
@@ -137,7 +145,9 @@ function GoalBox(props) {
                 fontWeight: "normal",
               }}
             >
-              <div style={{ display:"inline-block", fontWeight:"bold" }}>/ {formatCurrency(toSave)}</div> 
+              <div style={{ display: "inline-block", fontWeight: "bold" }}>
+                / {formatCurrency(toSave)}
+              </div>
             </div>
           </Saved>
           <Details>

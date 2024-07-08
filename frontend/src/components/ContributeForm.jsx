@@ -15,42 +15,47 @@ export default function ContributeForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, goal } = e.target.elements;
-    const formData = {
-      goalId: goal.value,
-      amount: amount.value,
-    };
-    console.log("trying");
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/update_bankbalance",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error("Unable to allocate funds: " + error);
-    }
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/update_saved_amount",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      console.log(response);
+    if (parseFloat(amount.value) > selectedGoalAmount) {
+      alert("Contribution exceeds remaining amount");
+    } else {
+      const formData = {
+        goalId: goal.value,
+        amount: amount.value,
+      };
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/update_bankbalance",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Unable to allocate funds: " + error);
+      }
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/update_saved_amount",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(
+          "Unable to allocate funds: " + `${error.response.data.message}`
+        );
+      }
       updateGoals((prev) => !prev);
-    } catch (error) {
-      console.error("Unable to allocate funds: " + error);
+      updateBankBalance(bankBalance - parseFloat(amount.value));
+      closeContributeForm();
     }
-    updateBankBalance(bankBalance - parseFloat(amount.value));
-    closeContributeForm();
   };
 
   return (
@@ -91,7 +96,7 @@ export default function ContributeForm({
                   required
                   name="amount"
                   min="0.01"
-                  max={20}
+                  max={bankBalance}
                   step="0.01"
                   placeholder="0.00"
                 />
@@ -110,6 +115,11 @@ export default function ContributeForm({
                       type="radio"
                       name="goal"
                       value={goal._id}
+                    />
+                    <input
+                      type="hidden"
+                      name="saved"
+                      value={parseFloat(goal.price) - parseFloat(goal.saved)}
                     />
                     <GoalInfo>
                       <GoalTitle>

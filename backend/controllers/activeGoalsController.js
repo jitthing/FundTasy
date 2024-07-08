@@ -8,7 +8,10 @@ const getActiveItems = async (req, res) => {
       return res.status(400).json({ message: error });
     }
     const username = user.username;
-    const userGoals = await ActiveGoals.find({ username });
+    const userGoals = await ActiveGoals.find({
+      username: username,
+      status: "In Progress",
+    });
     return res.status(200).json({ message: "testing123", userGoals });
   } catch (error) {
     console.log("Error: " + error);
@@ -23,7 +26,12 @@ const addActiveItem = async (req, res) => {
       .json({ message: "Please fill in all fields or select an option" });
   }
 
-  const response = await ActiveGoals.findOne({ title: req.body.title });
+  const username = req.body.username;
+
+  const response = await ActiveGoals.findOne({
+    username: username,
+    title: req.body.title,
+  });
 
   if (response !== null) {
     return res.status(400).json({ message: "Goal already exists" });
@@ -75,9 +83,22 @@ const updateSavedValue = async (req, res) => {
     { new: true }
   );
   if (updated) {
-    return res.status(200).json({ message: "Saved value updated" });
-  } else {
-    return res.status(500).json({ message: "Unable to update saved value" });
+    if (updated.price === updated.saved) {
+      const completed = await ActiveGoals.findOneAndUpdate(
+        { _id: req.body.goalId },
+        { status: "Completed" },
+        { new: true }
+      );
+      if (completed) {
+        return res.status(200).json({ message: "Saved value updated" });
+      } else {
+        return res
+          .status(500)
+          .json({ message: "Unable to update saved value" });
+      }
+    } else {
+      return res.status(404).json({ message: "Something went wrong" });
+    }
   }
 };
 
