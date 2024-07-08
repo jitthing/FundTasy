@@ -48,9 +48,9 @@ const TransactionBody = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 32%;
   width: 100%;
-  padding: 35px 0px;
+  padding: 25px 0px;
   font-size: 14px;
 `
 

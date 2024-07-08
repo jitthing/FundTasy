@@ -91,7 +91,7 @@ export default function ContributeForm({
                   required
                   name="amount"
                   min="0.01"
-                  max={Math.min(selectedGoalAmount, bankBalance)}
+                  max={20}
                   step="0.01"
                   placeholder="0.00"
                 />
@@ -106,6 +106,7 @@ export default function ContributeForm({
                       onChange={() =>
                         setSelectedGoalAmount(goal.price - goal.saved)
                       }
+                      required
                       type="radio"
                       name="goal"
                       value={goal._id}

@@ -505,6 +505,7 @@ const TransactionOptions = styled.div`
 const CoinTitleHead = styled.div`
   width: 35%;
   padding-left: 20px;
+  text-align: left;
 `;
 
 const CoinTypeHead = styled.div`
@@ -527,14 +528,15 @@ const CoinAmountHead = styled.div`
 
 const CoinTitle = styled.div`
   width: 35%;
-  padding-left: 20px;
   font-weight: bold;
+  padding-left: 20px;
+  text-align: left;
 `;
 
 const CoinType = styled.div`
   width: 15%;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
 `;
 
