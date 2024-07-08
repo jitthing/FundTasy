@@ -71,7 +71,7 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
                   required
                   name="amount"
                   min="0.01"
-                  max={Math.min(selectedGoalAmount, bankBalance)}
+                  max={20}
                   step="0.01"
                   placeholder="0.00"
                 />
@@ -82,7 +82,7 @@ export default function ContributeForm({ closeContributeForm, activeGoals, bankB
               {activeGoals.map((goal) => {
                 return (
                   <GoalBox>
-                    <GoalRadio onChange={() => setSelectedGoalAmount(goal.price-goal.saved)} type="radio" name="goal" value={goal._id} />
+                    <GoalRadio onChange={() => setSelectedGoalAmount(goal.price-goal.saved)} required type="radio" name="goal" value={goal._id} />
                     <GoalInfo>
                       <GoalTitle>{goal.title} [{formatCurrency(goal.price)}] <GoalProgress>({getPercentage(goal.saved, goal.price)}% completed)</GoalProgress></GoalTitle>
                       <ProgressBar percentage={getPercentage(goal.saved, goal.price)} />

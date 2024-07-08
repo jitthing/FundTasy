@@ -365,8 +365,9 @@ const ActiveGoal = styled.div`
 
 const Goal = styled.div`
   width: 100%;
-  height: 20px;
+  height: 32px;
   text-align: left;
+  line-height: 1.1;
   font-size: 16px;
   display: flex;
   justify-content: space-between;
