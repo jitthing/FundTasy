@@ -91,7 +91,7 @@ export default function ContributeForm({
                   required
                   name="amount"
                   min="0.01"
-                  max={20}
+                  max={Math.min(selectedGoalAmount, bankBalance)}
                   step="0.01"
                   placeholder="0.00"
                 />

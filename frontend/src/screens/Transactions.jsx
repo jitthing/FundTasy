@@ -5,10 +5,11 @@ import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
 import getActiveGoals from "../utils/getActiveGoals";
+import getCoinTransactions from "../utils/getCoinTransactions";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
 const moment = require("moment");
-;
+
 
 export default function Transactions() {
   const [type, changeType] = useState("spending");
@@ -17,7 +18,19 @@ export default function Transactions() {
   const [updateTransactions, setUpdateTransactions] = useState(false);
   const [allGoals, setAllGoals] = useState([]);
   const [editTransaction, setEditTransaction] = useState(null);
+  const [coinTransactions, setCoinTransactions] = useState([]);
   
+  useEffect(() => {
+    const fetchCoinTransactions = async () => {
+      try {
+        const coinTransactionResponse = await getCoinTransactions();
+        setCoinTransactions(coinTransactionResponse.coinTransactions);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchCoinTransactions();
+  })
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -69,6 +82,10 @@ export default function Transactions() {
     showForm(false);
     setEditTransaction(null);
   }
+
+  function findGoal(goalId) {
+    return allGoals.find((goal) => goal._id === goalId)
+  }
   
 
   return (
@@ -112,7 +129,7 @@ export default function Transactions() {
         </TransactionNeck>
 
         {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} toggleEditModal={toggleEditModal}/>}
-        {type === "coins" && <CoinsTable />}
+        {type === "coins" && <CoinsTable allCoinTransactions={coinTransactions} findGoal={findGoal} />}
       </TransactionContainer>
     </PageContainer>
   );
@@ -129,40 +146,56 @@ const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
           <HeadDateTime>Date</HeadDateTime>
           <HeadAmount>Amount</HeadAmount>
         </TableHead>
-        <TransactionListWrapper>
-        {transactions.slice().reverse().map((transaction) => (
-          <TransactionDiv key={transaction.id}>
-
-            <TransactionTitle >{transaction.title}</TransactionTitle>
-            <TransactionCategory>
-              <CategoryButton>{transaction.category}</CategoryButton>
-            </TransactionCategory>
-            <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
-            <TransactionAmount>
-              -{formatCurrency(transaction.amount)}              
-              <TransactionOptions>
-                <EditIcon
-                    src="icons/edit-black.png"
-                    alt="Edit"
-                    onClick={()=>toggleEditModal(transaction)}
-                    style={{ display:"inline-block" }}
-                />
-                <button
-                    style={{ display:"inline-block" }} onClick={() => deleteTransaction(transaction._id)}
-                className="z-10 text-gray-600 hover:text-gray-800">
-                  <IoClose className="h-6 w-6" />
-                </button>
-              </TransactionOptions>
-            </TransactionAmount>
-          </TransactionDiv>
-        ))}
-      </TransactionListWrapper>
+        {transactions.length <= 0 && <EmptyList>No transactions made yet</EmptyList>}
+        {transactions.length > 0 && (
+          <TransactionListWrapper>
+          {transactions.slice().reverse().map((transaction) => (
+            <TransactionDiv key={transaction.id}>
+  
+              <TransactionTitle >{transaction.title}</TransactionTitle>
+              <TransactionCategory>
+                <CategoryButton>{transaction.category}</CategoryButton>
+              </TransactionCategory>
+              <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
+              <TransactionAmount>
+                -{formatCurrency(transaction.amount)}              
+                <TransactionOptions>
+                  <EditIcon
+                      src="icons/edit-black.png"
+                      alt="Edit"
+                      onClick={()=>toggleEditModal(transaction)}
+                      style={{ display:"inline-block" }}
+                  />
+                  <button
+                      style={{ display:"inline-block" }} onClick={() => deleteTransaction(transaction._id)}
+                  className="z-10 text-gray-600 hover:text-gray-800">
+                    <IoClose className="h-6 w-6" />
+                  </button>
+                </TransactionOptions>
+              </TransactionAmount>
+            </TransactionDiv>
+          ))}
+          </TransactionListWrapper>
+        )}
       </TransactionBody>
     </>
   );
 };
 
-const CoinsTable = () => {
+const CoinsTable = ({ allCoinTransactions, findGoal }) => {
+  const coinTransactions = allCoinTransactions;
+  coinTransactions.map((ct) => {
+    if (ct.goal != null && findGoal(ct.goal).status === "Completed") {
+      const g = findGoal(ct.goal);
+      ct.status = g.status;
+      ct.title = g.title;
+      ct.price = "Save "+formatCurrency(g.price);
+    } else {
+      ct.title = "-";
+      ct.price = "-";
+      ct.status = "-";
+    }
+  })
   return (
     <>
       <TransactionBody>
@@ -173,6 +206,26 @@ const CoinsTable = () => {
           <CoinDateTimeHead>Date</CoinDateTimeHead>
           <CoinAmountHead>Amount</CoinAmountHead>
         </TableHead>
+        {coinTransactions.length <= 0 && (<EmptyList>No Oink Coins earned or spent yet</EmptyList>)}
+        {coinTransactions.length > 0 && (
+          <>
+          {coinTransactions.slice().reverse().map((ct) => (
+            <TransactionDiv>
+              <CoinTitle>{ct.price === "-" ? ct.description:`Completed "${ct.title}"`}</CoinTitle>
+              <CoinType>
+                <CoinTypeButton>{ct.type}</CoinTypeButton>
+              </CoinType>
+              <CoinGoal>
+                <CoinGoalName>{ct.price}</CoinGoalName>
+                <CoinGoalStatus>{ct.status}</CoinGoalStatus>
+              </CoinGoal>
+              <CoinDateTime>{moment(ct.date).format("DD MMM YYYY HH:mm")}</CoinDateTime>
+              <CoinAmount isSpending={ct.type === "Purchase"}>
+                {ct.type === "Purchase" ? "-":"+"}{ct.amount}
+                <OinkCoin srcSet="icons/coin.png" />
+              </CoinAmount>
+            </TransactionDiv>
+          ))}
         <TransactionDiv>
           <CoinTitle>Unlock Ninja Skin</CoinTitle>
           <CoinType>
@@ -218,6 +271,8 @@ const CoinsTable = () => {
             <OinkCoin srcSet="icons/coin.png" />
           </CoinAmount>
         </TransactionDiv>
+        </>
+        )}
       </TransactionBody>
     </>
   );
@@ -591,3 +646,14 @@ const OinkCoin = styled.img`
   width: 16px;
   height: 16px;
 `;
+
+const EmptyList = styled.div`
+  width: 100%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: grey;
+  font-style: italic;
+`
