@@ -113,7 +113,7 @@ function GoalBox(props) {
                   width: "55%",
                 }}
               >
-                {truncateText(title, 30)}
+                {truncateText(title, 27)}
               </div>
               <div
                 style={{

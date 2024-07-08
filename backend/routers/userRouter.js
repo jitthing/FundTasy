@@ -42,6 +42,11 @@ const {
 
 const { getAllOwnedPigs } = require("../controllers/ownedPigsController");
 
+const {
+  newCoinTransaction,
+  getCoinTransactions
+} = require("../controllers/coinTransactionController");
+
 const router = express.Router();
 
 // User Routers
@@ -81,6 +86,10 @@ router.post("/new_transaction", newTransaction);
 router.get("/all_transactions", allTransactions);
 router.delete("/delete_transaction/:id", deleteTransaction);
 router.put("/edit_transaction/:id", editTransaction)
+
+// Coin Transaction Router
+router.get("/all_coin_transactions", getCoinTransactions);
+router.post("/new_coin_transaction", newCoinTransaction);
 
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });
