@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
-import getActiveGoals from "../utils/getActiveGoals";
+import getAllGoals from "../utils/getAllGoals";
 import getCoinTransactions from "../utils/getCoinTransactions";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
@@ -37,7 +37,7 @@ export default function Transactions() {
       try {
         const transactionResponse = await getTransactions();
         setTransactions(transactionResponse.transactions);
-        const activeGoalsRepsonse = await getActiveGoals();
+        const activeGoalsRepsonse = await getAllGoals();
         setAllGoals(activeGoalsRepsonse.userGoals);
       } catch (error) {
         alert("Failed to fetch transactions", error);
@@ -84,7 +84,7 @@ export default function Transactions() {
   }
 
   function findGoal(goalId) {
-    return allGoals.find((goal) => goal._id === goalId)
+    return allGoals.find((goal) => goal._id === goalId);
   }
   
 

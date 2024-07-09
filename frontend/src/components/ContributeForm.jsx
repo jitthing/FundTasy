@@ -11,11 +11,11 @@ export default function ContributeForm({
   updateBankBalance,
   updateGoals,
 }) {
-  const [selectedGoalAmount, setSelectedGoalAmount] = useState(0);
+  const [selectedGoalAmount, setSelectedGoalAmount] = useState(0.00);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, goal } = e.target.elements;
-    if (parseFloat(amount.value) > selectedGoalAmount) {
+    if (parseFloat(parseFloat(amount.value).toFixed(2)) > parseFloat(parseFloat(selectedGoalAmount).toFixed(2))) {
       alert("Contribution exceeds remaining amount");
     } else {
       const formData = {
@@ -53,7 +53,7 @@ export default function ContributeForm({
         );
       }
       updateGoals((prev) => !prev);
-      updateBankBalance(bankBalance - parseFloat(amount.value));
+      updateBankBalance(bankBalance - parseFloat(parseFloat(amount.value).toFixed(2)));
       closeContributeForm();
     }
   };
@@ -96,7 +96,7 @@ export default function ContributeForm({
                   required
                   name="amount"
                   min="0.01"
-                  max={Math.min(selectedGoalAmount, bankBalance)}
+                  max={bankBalance}
                   step="0.01"
                   placeholder="0.00"
                 />
@@ -119,7 +119,7 @@ export default function ContributeForm({
                     <input
                       type="hidden"
                       name="saved"
-                      value={parseFloat(goal.price) - parseFloat(goal.saved)}
+                      value={parseFloat(parseFloat(goal.price).toFixed(2)) - parseFloat(parseFloat(goal.saved).toFixed(2))}
                     />
                     <GoalInfo>
                       <GoalTitle>

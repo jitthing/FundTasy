@@ -38,6 +38,7 @@ const {
   addActiveItem,
   deleteActiveItem,
   updateSavedValue,
+  getAllGoals,
 } = require("../controllers/activeGoalsController");
 
 const { getAllOwnedPigs } = require("../controllers/ownedPigsController");
@@ -77,6 +78,7 @@ router.delete("/delete_wishlist_item/:id", deleteItem);
 
 // Active Goals Router
 router.get("/all_active_items", getActiveItems);
+router.get("/all_goals", getAllGoals);
 router.post("/add_active_goal", addActiveItem);
 router.delete("/delete_active_goal/:id/:amount", deleteActiveItem);
 router.post("/update_saved_amount", updateSavedValue);
