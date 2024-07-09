@@ -10,7 +10,6 @@ import axios from "axios";
 import { IoClose } from "react-icons/io5";
 const moment = require("moment");
 
-
 export default function Transactions() {
   const [type, changeType] = useState("spending");
   const [formActive, showForm] = useState(false);
@@ -19,7 +18,7 @@ export default function Transactions() {
   const [allGoals, setAllGoals] = useState([]);
   const [editTransaction, setEditTransaction] = useState(null);
   const [coinTransactions, setCoinTransactions] = useState([]);
-  
+
   useEffect(() => {
     const fetchCoinTransactions = async () => {
       try {
@@ -28,9 +27,9 @@ export default function Transactions() {
       } catch (error) {
         console.error(error);
       }
-    }
+    };
     fetchCoinTransactions();
-  })
+  });
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -48,12 +47,17 @@ export default function Transactions() {
 
   const deleteTransaction = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8000/delete_transaction/${id}`);
+      const response = await axios.delete(
+        `http://localhost:8000/delete_transaction/${id}`
+      );
       if (response.status === 200) {
         alert("Transaction successfully deleted");
         setUpdateTransactions((prev) => !prev);
       } else {
-        alert("Failed to delete transaction: Server responded with status " + response.status);
+        alert(
+          "Failed to delete transaction: Server responded with status " +
+            response.status
+        );
       }
     } catch (error) {
       alert("Failed to delete transaction: " + error.message);
@@ -63,9 +67,9 @@ export default function Transactions() {
 
   const toggleEditModal = (transaction) => {
     setEditTransaction(transaction);
-    showForm(true); 
-};
-  
+    showForm(true);
+  };
+
   const toggleType = (type) => {
     if (type === "spending") {
       changeType("coins");
@@ -86,7 +90,6 @@ export default function Transactions() {
   function findGoal(goalId) {
     return allGoals.find((goal) => goal._id === goalId);
   }
-  
 
   return (
     <PageContainer>
@@ -128,17 +131,31 @@ export default function Transactions() {
           </FilterButton>
         </TransactionNeck>
 
-        {type === "spending" && <SpendingTable transactions={transactions} deleteTransaction={deleteTransaction} toggleEditModal={toggleEditModal}/>}
-        {type === "coins" && <CoinsTable allCoinTransactions={coinTransactions} findGoal={findGoal} />}
+        {type === "spending" && (
+          <SpendingTable
+            transactions={transactions}
+            deleteTransaction={deleteTransaction}
+            toggleEditModal={toggleEditModal}
+          />
+        )}
+        {type === "coins" && (
+          <CoinsTable
+            allCoinTransactions={coinTransactions}
+            findGoal={findGoal}
+          />
+        )}
       </TransactionContainer>
     </PageContainer>
   );
 }
 
-const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
+const SpendingTable = ({
+  transactions,
+  deleteTransaction,
+  toggleEditModal,
+}) => {
   return (
     <>
-    
       <TransactionBody>
         <TableHead>
           <HeadTitle>Title</HeadTitle>
@@ -146,35 +163,43 @@ const SpendingTable = ({ transactions, deleteTransaction, toggleEditModal}) => {
           <HeadDateTime>Date</HeadDateTime>
           <HeadAmount>Amount</HeadAmount>
         </TableHead>
-        {transactions.length <= 0 && <EmptyList>No transactions made yet</EmptyList>}
+        {transactions.length <= 0 && (
+          <EmptyList>No transactions made yet</EmptyList>
+        )}
         {transactions.length > 0 && (
           <TransactionListWrapper>
-          {transactions.slice().reverse().map((transaction) => (
-            <TransactionDiv key={transaction.id}>
-  
-              <TransactionTitle >{transaction.title}</TransactionTitle>
-              <TransactionCategory>
-                <CategoryButton>{transaction.category}</CategoryButton>
-              </TransactionCategory>
-              <TransactionDateTime>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</TransactionDateTime>
-              <TransactionAmount>
-                -{formatCurrency(transaction.amount)}              
-                <TransactionOptions>
-                  <EditIcon
-                      src="icons/edit-black.png"
-                      alt="Edit"
-                      onClick={()=>toggleEditModal(transaction)}
-                      style={{ display:"inline-block" }}
-                  />
-                  <button
-                      style={{ display:"inline-block" }} onClick={() => deleteTransaction(transaction._id)}
-                  className="z-10 text-gray-600 hover:text-gray-800">
-                    <IoClose className="h-6 w-6" />
-                  </button>
-                </TransactionOptions>
-              </TransactionAmount>
-            </TransactionDiv>
-          ))}
+            {transactions
+              .slice()
+              .reverse()
+              .map((transaction) => (
+                <TransactionDiv key={transaction.id}>
+                  <TransactionTitle>{transaction.title}</TransactionTitle>
+                  <TransactionCategory>
+                    <CategoryButton>{transaction.category}</CategoryButton>
+                  </TransactionCategory>
+                  <TransactionDateTime>
+                    {moment(transaction.date).format("DD MMM YYYY HH:mm")}
+                  </TransactionDateTime>
+                  <TransactionAmount>
+                    -{formatCurrency(transaction.amount)}
+                    <TransactionOptions>
+                      <EditIcon
+                        src="icons/edit-black.png"
+                        alt="Edit"
+                        onClick={() => toggleEditModal(transaction)}
+                        style={{ display: "inline-block" }}
+                      />
+                      <button
+                        style={{ display: "inline-block" }}
+                        onClick={() => deleteTransaction(transaction._id)}
+                        className="z-10 text-gray-600 hover:text-gray-800"
+                      >
+                        <IoClose className="h-6 w-6" />
+                      </button>
+                    </TransactionOptions>
+                  </TransactionAmount>
+                </TransactionDiv>
+              ))}
           </TransactionListWrapper>
         )}
       </TransactionBody>
@@ -189,13 +214,13 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
       const g = findGoal(ct.goal);
       ct.status = g.status;
       ct.title = g.title;
-      ct.price = "Save "+formatCurrency(g.price);
+      ct.price = "Save " + formatCurrency(g.price);
     } else {
       ct.title = "-";
       ct.price = "-";
       ct.status = "-";
     }
-  })
+  });
   return (
     <>
       <TransactionBody>
@@ -206,27 +231,39 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
           <CoinDateTimeHead>Date</CoinDateTimeHead>
           <CoinAmountHead>Amount</CoinAmountHead>
         </TableHead>
-        {coinTransactions.length <= 0 && (<EmptyList>No Oink Coins earned or spent yet</EmptyList>)}
+        {coinTransactions.length <= 0 && (
+          <EmptyList>No Oink Coins earned or spent yet</EmptyList>
+        )}
         {coinTransactions.length > 0 && (
           <>
-          {coinTransactions.slice().reverse().map((ct) => (
-            <TransactionDiv>
-              <CoinTitle>{ct.price === "-" ? ct.description:`Completed "${ct.title}"`}</CoinTitle>
-              <CoinType>
-                <CoinTypeButton>{ct.type}</CoinTypeButton>
-              </CoinType>
-              <CoinGoal>
-                <CoinGoalName>{ct.price}</CoinGoalName>
-                <CoinGoalStatus>{ct.status}</CoinGoalStatus>
-              </CoinGoal>
-              <CoinDateTime>{moment(ct.date).format("DD MMM YYYY HH:mm")}</CoinDateTime>
-              <CoinAmount isSpending={ct.type === "Purchase"}>
-                {ct.type === "Purchase" ? "-":"+"}{ct.amount}
-                <OinkCoin srcSet="icons/coin.png" />
-              </CoinAmount>
-            </TransactionDiv>
-          ))}
-        </>
+            {coinTransactions
+              .slice()
+              .reverse()
+              .map((ct) => (
+                <TransactionDiv>
+                  <CoinTitle>
+                    {ct.price === "-"
+                      ? ct.description
+                      : `Completed "${ct.title}"`}
+                  </CoinTitle>
+                  <CoinType>
+                    <CoinTypeButton>{ct.type}</CoinTypeButton>
+                  </CoinType>
+                  <CoinGoal>
+                    <CoinGoalName>{ct.price}</CoinGoalName>
+                    <CoinGoalStatus>{ct.status}</CoinGoalStatus>
+                  </CoinGoal>
+                  <CoinDateTime>
+                    {moment(ct.date).format("DD MMM YYYY HH:mm")}
+                  </CoinDateTime>
+                  <CoinAmount isSpending={ct.type === "Purchase"}>
+                    {ct.type === "Purchase" ? "-" : "+"}
+                    {ct.amount}
+                    <OinkCoin srcSet="icons/coin.png" />
+                  </CoinAmount>
+                </TransactionDiv>
+              ))}
+          </>
         )}
       </TransactionBody>
     </>
@@ -234,11 +271,10 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
 };
 
 const TransactionListWrapper = styled.div`
-  max-height: 70vh; 
+  max-height: 70vh;
   width: 100%;
   overflow-y: auto;
-  overflow-x:hidden;
-
+  overflow-x: hidden;
 `;
 
 const EditIcon = styled.img`
@@ -249,7 +285,6 @@ const EditIcon = styled.img`
   cursor: pointer;
   margin-left: 10px; /* Add space between value and icon */
   margin-right: 10px;
-  
 `;
 
 const PageContainer = styled.div`
@@ -338,23 +373,23 @@ const ToggleButton = styled.div`
   transition: 0.1s;
 `;
 
-const ToolBar = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 60vw;
-  height: 36px;
-  align-items: center;
-`;
+// const ToolBar = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   width: 60vw;
+//   height: 36px;
+//   align-items: center;
+// `;
 
-const SearchBar = styled.input`
-  margin: 0px 0px 0px auto;
-  width: 20%;
-  height: 36px;
-  box-shadow: 0px 0px 3px #adadad;
-  border-radius: 8px;
-  font-size: 16px;
-  padding: 0px 15px;
-`;
+// const SearchBar = styled.input`
+//   margin: 0px 0px 0px auto;
+//   width: 20%;
+//   height: 36px;
+//   box-shadow: 0px 0px 3px #adadad;
+//   border-radius: 8px;
+//   font-size: 16px;
+//   padding: 0px 15px;
+// `;
 
 const FilterButton = styled.div`
   display: flex;
@@ -433,7 +468,7 @@ const TransactionDiv = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 80px; 
+  height: 80px;
   padding: 10px 0px;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
@@ -442,7 +477,7 @@ const TransactionDiv = styled.div`
     transition: 0.2s;
   }
   &:last-child {
-    border-bottom: none; 
+    border-bottom: none;
   }
 `;
 
@@ -481,15 +516,15 @@ const CategoryButton = styled.div`
 //   flex-direction: column;
 // `;
 
-const GoalName = styled.div`
-  font-size: 14px;
-`;
+// const GoalName = styled.div`
+//   font-size: 14px;
+// `;
 
-const GoalStatus = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  color: grey;
-`;
+// const GoalStatus = styled.div`
+//   font-size: 12px;
+//   font-weight: bold;
+//   color: grey;
+// `;
 
 const TransactionDateTime = styled.div`
   width: 25%;
@@ -510,7 +545,7 @@ const TransactionOptions = styled.div`
   display: flex;
   align-items: center;
   justify-content: end;
-`
+`;
 
 const CoinTitleHead = styled.div`
   width: 35%;
@@ -611,4 +646,4 @@ const EmptyList = styled.div`
   font-size: 16px;
   color: grey;
   font-style: italic;
-`
+`;

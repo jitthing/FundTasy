@@ -1,42 +1,59 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
+import getUser from "../utils/getUser";
+import axios from "axios";
 
-export default function BuyMenu({closeBuyMenu, pigName}) {
-    return (
-        <BuyMenuBackdrop onclick={closeBuyMenu}>
-            <BuyMenuModal onClick={(e) => e.stopPropagation()}>
-                <BuyMenuHead>
-                    <CloseIcon srcSet="icons/close.png" onClick={closeBuyMenu} />
-                    <BuyMenuTitle>Confirm Purchase</BuyMenuTitle>
-                </BuyMenuHead>
-                <BuyMenuBody>
-                    <PigCard pigname={pigName}/>
-                    {/* <BuyMenuLabel>Are you sure you want to buy this pig?</BuyMenuLabel> */}
-                </BuyMenuBody>
-                <BuyMenuBottom>
-                    <BuyOption>
-                        <BuyText>Confirm</BuyText>
-                        <SmallCoin srcSet="icons/coin.png" />
-                        <CardPrice>???</CardPrice>
-                    </BuyOption>
-                </BuyMenuBottom>
-            </BuyMenuModal>
-        </BuyMenuBackdrop>
-    )
+export default function BuyMenu({ closeBuyMenu, pigName, pigPrice }) {
+  const handleBuyPig = async (pigName, pigPrice) => {
+    try {
+      const userObj = await getUser();
+      const userId = userObj.user.username;
+      const response = await axios.post("http://localhost:8000/buy_pig", {
+        username: userId,
+        pigName: pigName,
+        pigPrice: pigPrice,
+      });
+      if (response) {
+        alert("Pig Bought!");
+        closeBuyMenu();
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  };
+  return (
+    <BuyMenuBackdrop onclick={closeBuyMenu}>
+      <BuyMenuModal onClick={(e) => e.stopPropagation()}>
+        <BuyMenuHead>
+          <CloseIcon srcSet="icons/close.png" onClick={closeBuyMenu} />
+          <BuyMenuTitle>Confirm Purchase</BuyMenuTitle>
+        </BuyMenuHead>
+        <BuyMenuBody>
+          <PigCard pigname={pigName} />
+          {/* <BuyMenuLabel>Are you sure you want to buy this pig?</BuyMenuLabel> */}
+        </BuyMenuBody>
+        <BuyMenuBottom>
+          <BuyOption onClick={() => handleBuyPig(pigName, pigPrice)}>
+            <BuyText>Confirm</BuyText>
+            <SmallCoin srcSet="icons/coin.png" />
+            <CardPrice>{pigPrice}</CardPrice>
+          </BuyOption>
+        </BuyMenuBottom>
+      </BuyMenuModal>
+    </BuyMenuBackdrop>
+  );
 }
 
 function PigCard(props) {
-    const pigimg = `images/${props.pigname}.png`;
-    return (
-      <CardDiv>
-        <PigImage srcSet={pigimg} />
-        <CardInfo>
-          <CardTitle>{props.pigTitle}</CardTitle>
-        </CardInfo>
-      </CardDiv>
-    );
-  }
-
+  const pigimg = `images/${props.pigname}.png`;
+  return (
+    <CardDiv>
+      <PigImage srcSet={pigimg} />
+      <CardInfo>
+        <CardTitle>{props.pigTitle}</CardTitle>
+      </CardInfo>
+    </CardDiv>
+  );
+}
 
 const BuyMenuBackdrop = styled.div`
   z-index: 10;
@@ -132,11 +149,11 @@ const CardPrice = styled.div`
   margin-left: 5px;
 `;
 
-const BuyMenuLabel = styled.div`
-  text-align: center;
-  font-weight: bold;
-  font-size: 14px;
-`;
+// const BuyMenuLabel = styled.div`
+//   text-align: center;
+//   font-weight: bold;
+//   font-size: 14px;
+// `;
 
 const PigImage = styled.img`
   height: 80%;

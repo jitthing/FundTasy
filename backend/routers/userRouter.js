@@ -41,11 +41,14 @@ const {
   getAllGoals,
 } = require("../controllers/activeGoalsController");
 
-const { getAllOwnedPigs } = require("../controllers/ownedPigsController");
+const {
+  getAllOwnedPigs,
+  buyPig,
+} = require("../controllers/ownedPigsController");
 
 const {
   newCoinTransaction,
-  getCoinTransactions
+  getCoinTransactions,
 } = require("../controllers/coinTransactionController");
 
 const router = express.Router();
@@ -67,6 +70,7 @@ router.post("/newModel", create_model);
 
 // OwnedPigs Router
 router.get("/get_owned_pigs", getAllOwnedPigs);
+router.post("/buy_pig", buyPig);
 
 // Amazon Scraper Router
 router.post("/scrape_amazon", scrapeAmazon);
@@ -87,7 +91,7 @@ router.post("/update_saved_amount", updateSavedValue);
 router.post("/new_transaction", newTransaction);
 router.get("/all_transactions", allTransactions);
 router.delete("/delete_transaction/:id", deleteTransaction);
-router.put("/edit_transaction/:id", editTransaction)
+router.put("/edit_transaction/:id", editTransaction);
 
 // Coin Transaction Router
 router.get("/all_coin_transactions", getCoinTransactions);

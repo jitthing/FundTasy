@@ -22,9 +22,7 @@ export default function GoalCard({ goals, updateGoals }) {
               id={goal._id}
               active
               toSave={goal.price}
-              numDays="1"
               startDate={goal.startDate}
-              endDate="1/7/24"
               currentSaved={goal.saved}
               rate="20"
               lastTopUpAmt="9"
@@ -47,9 +45,7 @@ function GoalBox(props) {
   const isActive = props.active;
   const danger = props.danger;
   const toSave = props.toSave;
-  const numDays = props.numDays;
   const startDate = props.startDate;
-  const endDate = props.endDate;
   const currentSaved = props.currentSaved;
   const rate = props.rate;
   const lastTopUpAmt = props.lastTopUpAmt;

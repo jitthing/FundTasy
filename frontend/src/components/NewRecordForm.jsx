@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import getUser from "../utils/getUser";
 import axios from "axios";
-import truncateText from "../utils/truncateText";
+// import truncateText from "../utils/truncateText";
 
 /*
  TODO
@@ -10,11 +10,21 @@ import truncateText from "../utils/truncateText";
  - Create a banner instead of using alert
 */
 
-export default function NewRecordForm({ closeForm, updateTransactions, allGoals, editTransaction }) {
-  const [title, setTitle] = useState(editTransaction ? editTransaction.title : "");
-  const [category, setCategory] = useState(editTransaction ? editTransaction.category : null);
-  const [amount, setAmount] = useState(editTransaction ? editTransaction.amount : null);
-
+export default function NewRecordForm({
+  closeForm,
+  updateTransactions,
+  allGoals,
+  editTransaction,
+}) {
+  const [title, setTitle] = useState(
+    editTransaction ? editTransaction.title : ""
+  );
+  const [category, setCategory] = useState(
+    editTransaction ? editTransaction.category : null
+  );
+  const [amount, setAmount] = useState(
+    editTransaction ? editTransaction.amount : null
+  );
 
   useEffect(() => {
     if (editTransaction) {
@@ -34,14 +44,20 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
         { formData, username }
       );
       const amount = formData.amount;
-      const updateBalanceResponse = await axios.post("http://localhost:8000/update_bankbalance", {amount}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
+      const updateBalanceResponse = await axios.post(
+        "http://localhost:8000/update_bankbalance",
+        { amount },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       // console.log(response.data);
-      updateTransactions((prev) => !prev);
-      alert("Transaction created!");
+      if (transactionResponse && updateBalanceResponse) {
+        updateTransactions((prev) => !prev);
+        alert("Transaction created!");
+      }
     } catch (error) {
       console.log("Error creating transaction: ", error);
       alert("Error creating transaction!");
@@ -56,8 +72,10 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
         `http://localhost:8000/edit_transaction/${id}`,
         { formData, username }
       );
-      updateTransactions((prev) => !prev);
-      alert("Transaction updated!");
+      if (response) {
+        updateTransactions((prev) => !prev);
+        alert("Transaction updated!");
+      }
     } catch (error) {
       console.log("Error updating transaction: ", error);
       alert("Error updating transaction!");
@@ -91,22 +109,37 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
         <form onSubmit={handleSubmit}>
           <NewRecordHead>
             <CloseIcon srcSet="icons/close.png" onClick={closeForm} />
-            <NewRecordTitle>{editTransaction ? "Edit Record" : "New Record"}</NewRecordTitle>
+            <NewRecordTitle>
+              {editTransaction ? "Edit Record" : "New Record"}
+            </NewRecordTitle>
           </NewRecordHead>
           <NewRecordBody>
             <FormBlock width="100%">
               <FormLabel>Title</FormLabel>
-              <FormTextInput name="title" required placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+              <FormTextInput
+                name="title"
+                required
+                placeholder="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </FormBlock>
             <FormBlock width="100%">
               <FormLabel>Category</FormLabel>
-              <FormDropdown required name="category" value={category} onChange={(e) => setCategory(e.target.value)}>
-                <FormOption value="" disabled selected>Select Category</FormOption>
-                <FormOption value='Food'>Food</FormOption>
-                <FormOption value='Lifestyle'>Lifestyle</FormOption>
-                <FormOption value='School'>School</FormOption>
-                <FormOption value='Subscriptions'>Subscriptions</FormOption>
-                <FormOption value='Others'>Others</FormOption>
+              <FormDropdown
+                required
+                name="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <FormOption value="" disabled selected>
+                  Select Category
+                </FormOption>
+                <FormOption value="Food">Food</FormOption>
+                <FormOption value="Lifestyle">Lifestyle</FormOption>
+                <FormOption value="School">School</FormOption>
+                <FormOption value="Subscriptions">Subscriptions</FormOption>
+                <FormOption value="Others">Others</FormOption>
               </FormDropdown>
             </FormBlock>
 
@@ -137,7 +170,9 @@ export default function NewRecordForm({ closeForm, updateTransactions, allGoals,
             </FormBlock>
           </NewRecordBody>
           <FormBottom>
-            <FormSubmit type="submit">{editTransaction ? "Update" : "Submit"}</FormSubmit>
+            <FormSubmit type="submit">
+              {editTransaction ? "Update" : "Submit"}
+            </FormSubmit>
           </FormBottom>
         </form>
       </NewRecordModal>

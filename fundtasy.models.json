@@ -1,105 +1,122 @@
-[{
-  "_id": {
-    "$oid": "66713988dd71a0eb152cbfd3"
+[
+  {
+    "_id": {
+      "$oid": "66713988dd71a0eb152cbfd3"
+    },
+    "modelName": "Basic",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Basic",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6671398ddd71a0eb152cbfd6"
+  {
+    "_id": {
+      "$oid": "6671398ddd71a0eb152cbfd6"
+    },
+    "modelName": "Copper",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Copper",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "66713991dd71a0eb152cbfd9"
+  {
+    "_id": {
+      "$oid": "66713991dd71a0eb152cbfd9"
+    },
+    "modelName": "Steel",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Steel",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "66713997dd71a0eb152cbfdc"
+  {
+    "_id": {
+      "$oid": "66713997dd71a0eb152cbfdc"
+    },
+    "modelName": "24K",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "24K",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "6671399ddd71a0eb152cbfdf"
+  {
+    "_id": {
+      "$oid": "6671399ddd71a0eb152cbfdf"
+    },
+    "modelName": "Conjoined",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Conjoined",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139a2dd71a0eb152cbfe2"
+  {
+    "_id": {
+      "$oid": "667139a2dd71a0eb152cbfe2"
+    },
+    "modelName": "Green",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Green",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139a5dd71a0eb152cbfe5"
+  {
+    "_id": {
+      "$oid": "667139a5dd71a0eb152cbfe5"
+    },
+    "modelName": "Panda",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Panda",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139a9dd71a0eb152cbfe8"
+  {
+    "_id": {
+      "$oid": "667139a9dd71a0eb152cbfe8"
+    },
+    "modelName": "Coke",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Coke",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139addd71a0eb152cbfeb"
+  {
+    "_id": {
+      "$oid": "667139addd71a0eb152cbfeb"
+    },
+    "modelName": "Fanta",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Fanta",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139b4dd71a0eb152cbfee"
+  {
+    "_id": {
+      "$oid": "667139b4dd71a0eb152cbfee"
+    },
+    "modelName": "Ninja",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Ninja",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139b9dd71a0eb152cbff1"
+  {
+    "_id": {
+      "$oid": "667139b9dd71a0eb152cbff1"
+    },
+    "modelName": "Santa",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Santa",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139bfdd71a0eb152cbff4"
+  {
+    "_id": {
+      "$oid": "667139bfdd71a0eb152cbff4"
+    },
+    "modelName": "Chef",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Chef",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139c3dd71a0eb152cbff7"
+  {
+    "_id": {
+      "$oid": "667139c3dd71a0eb152cbff7"
+    },
+    "modelName": "Angel",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Angel",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139c6dd71a0eb152cbffa"
+  {
+    "_id": {
+      "$oid": "667139c6dd71a0eb152cbffa"
+    },
+    "modelName": "Cowboy",
+    "price": 100,
+    "__v": 0
   },
-  "modelName": "Cowboy",
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "667139d4dd71a0eb152cbffd"
-  },
-  "modelName": "Evil",
-  "__v": 0
-}]
+  {
+    "_id": {
+      "$oid": "667139d4dd71a0eb152cbffd"
+    },
+    "modelName": "Evil",
+    "price": 100,
+    "__v": 0
+  }
+]

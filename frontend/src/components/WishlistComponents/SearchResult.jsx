@@ -19,7 +19,11 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
   return (
     <SearchResultWrapper onClick={() => handleClick(result)}>
       <img alt="" src={result.image} width="40" height="20" />
-      {result.title}
+      <InfoWrapper>
+        {result.title}
+        <br></br>
+        <b>${result.price}</b>
+      </InfoWrapper>
     </SearchResultWrapper>
   );
 };
@@ -27,9 +31,19 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
 const SearchResultWrapper = styled.div`
   padding: 10px 20px;
   display: flex;
-  flex-direction: row;
+  // flex-direction: row;
+  // justify-content: center;
   &:hover {
     background-color: #efefef;
     cursor: pointer;
   }
+`;
+
+const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 10px;
+  width: 100%;
 `;

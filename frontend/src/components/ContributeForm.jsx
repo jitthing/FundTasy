@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import getUser from "../utils/getUser";
 import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
 
@@ -11,11 +10,14 @@ export default function ContributeForm({
   updateBankBalance,
   updateGoals,
 }) {
-  const [selectedGoalAmount, setSelectedGoalAmount] = useState(0.00);
+  const [selectedGoalAmount, setSelectedGoalAmount] = useState(0.0);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { amount, goal } = e.target.elements;
-    if (parseFloat(parseFloat(amount.value).toFixed(2)) > parseFloat(parseFloat(selectedGoalAmount).toFixed(2))) {
+    if (
+      parseFloat(parseFloat(amount.value).toFixed(2)) >
+      parseFloat(parseFloat(selectedGoalAmount).toFixed(2))
+    ) {
       alert("Contribution exceeds remaining amount");
     } else {
       const formData = {
@@ -48,12 +50,12 @@ export default function ContributeForm({
         );
         console.log(response);
       } catch (error) {
-        console.error(
-          "Unable to allocate funds: " + `${error.response.data.message}`
-        );
+        console.error(`${error.response.data.message}`);
       }
       updateGoals((prev) => !prev);
-      updateBankBalance(bankBalance - parseFloat(parseFloat(amount.value).toFixed(2)));
+      updateBankBalance(
+        bankBalance - parseFloat(parseFloat(amount.value).toFixed(2))
+      );
       closeContributeForm();
     }
   };
@@ -119,7 +121,10 @@ export default function ContributeForm({
                     <input
                       type="hidden"
                       name="saved"
-                      value={parseFloat(parseFloat(goal.price).toFixed(2)) - parseFloat(parseFloat(goal.saved).toFixed(2))}
+                      value={
+                        parseFloat(parseFloat(goal.price).toFixed(2)) -
+                        parseFloat(parseFloat(goal.saved).toFixed(2))
+                      }
                     />
                     <GoalInfo>
                       <GoalTitle>
