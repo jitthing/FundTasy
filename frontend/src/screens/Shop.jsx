@@ -58,7 +58,7 @@ export default function Shop() {
     setOwnedFilter(!ownedFilter);
   }
 
-  function openBuyMenu(pigName, pigPrice) {
+  function openBuyMenu(pigName, pigPrice, userCoins) {
     showBuyMenu(true);
     setLastPreviewedPig(pigName);
     setLastPreviewedPigPrice(pigPrice);
@@ -127,6 +127,7 @@ export default function Shop() {
                 pigTitle={model}
                 owned={true}
                 openBuyMenu={openBuyMenu}
+                userCoins={userCoins}
               />
             ))}
           {unownedFilter &&
@@ -138,6 +139,7 @@ export default function Shop() {
                 pigPrice={model.price}
                 owned={false}
                 openBuyMenu={openBuyMenu}
+                userCoins={userCoins}
               />
             ))}
         </ShopBody>
@@ -150,7 +152,7 @@ function PigCard(props) {
   const pigimg = `images/${props.pigname}.png`;
 
   return (
-    <CardDiv>
+    <CardDiv owned={props.owned}>
       <PigImage srcSet={pigimg} />
       <CardInfo>
         <CardTitle>{props.pigTitle}</CardTitle>
@@ -158,7 +160,7 @@ function PigCard(props) {
           <OwnedOption>Owned</OwnedOption>
         ) : (
           <BuyOption
-            onClick={() => props.openBuyMenu(props.pigname, props.pigPrice)}
+            onClick={() => props.openBuyMenu(props.pigname, props.pigPrice, props.userCoins)}
           >
             <BuyText>Buy</BuyText>
             <SmallCoin srcSet="icons/coin.png" />
@@ -246,6 +248,10 @@ const CardDiv = styled.div`
   justify-content: space-between;
   border: 1px solid #ececec;
   border-radius: 16px;
+  &:hover {
+    box-shadow: 0px 0px 10px #a6a6a6;
+    transition: 0.2s;
+  }
 `;
 
 const PigImage = styled.img`

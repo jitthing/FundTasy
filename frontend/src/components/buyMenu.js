@@ -2,7 +2,7 @@ import styled from "styled-components";
 import getUser from "../utils/getUser";
 import axios from "axios";
 
-export default function BuyMenu({ closeBuyMenu, pigName, pigPrice }) {
+export default function BuyMenu({ closeBuyMenu, pigName, pigPrice, userCoins }) {
   const handleBuyPig = async (pigName, pigPrice) => {
     try {
       const userObj = await getUser();
@@ -20,6 +20,9 @@ export default function BuyMenu({ closeBuyMenu, pigName, pigPrice }) {
       alert(error.response.data.message);
     }
   };
+
+  const affordable = userCoins >= pigPrice;
+
   return (
     <BuyMenuBackdrop onclick={closeBuyMenu}>
       <BuyMenuModal onClick={(e) => e.stopPropagation()}>
@@ -27,16 +30,22 @@ export default function BuyMenu({ closeBuyMenu, pigName, pigPrice }) {
           <CloseIcon srcSet="icons/close.png" onClick={closeBuyMenu} />
           <BuyMenuTitle>Confirm Purchase</BuyMenuTitle>
         </BuyMenuHead>
-        <BuyMenuBody>
-          <PigCard pigname={pigName} />
-          {/* <BuyMenuLabel>Are you sure you want to buy this pig?</BuyMenuLabel> */}
+        <BuyMenuBody>   
+          <PigCard pigname={pigName} pigTitle={pigName} />
+          {/* <BuyMenuLabel>Are you sure you want to buy {pigName} Pig?</BuyMenuLabel> */}
         </BuyMenuBody>
-        <BuyMenuBottom>
-          <BuyOption onClick={() => handleBuyPig(pigName, pigPrice)}>
-            <BuyText>Confirm</BuyText>
-            <SmallCoin srcSet="icons/coin.png" />
-            <CardPrice>{pigPrice}</CardPrice>
-          </BuyOption>
+        <BalanceLabel>Final Balance {userCoins-pigPrice}</BalanceLabel>
+        <BuyMenuBottom> 
+            {affordable ? (
+            <BuyOption onClick={() => handleBuyPig(pigName, pigPrice)}>
+                <BuyText>Confirm</BuyText>
+                <SmallCoin srcSet="icons/coin.png" />
+                <CardPrice>{pigPrice}</CardPrice>
+            </BuyOption>
+          ) : (
+            <InsufficientLabel>Insufficient Funds!</InsufficientLabel>
+          )
+        }
         </BuyMenuBottom>
       </BuyMenuModal>
     </BuyMenuBackdrop>
@@ -97,7 +106,7 @@ const BuyMenuHead = styled.div`
 
 const BuyMenuTitle = styled.div`
   width: calc(100% - 20px);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
 `;
 
@@ -106,6 +115,8 @@ const BuyMenuBody = styled.div`
   justify-content: center;
   align-items: center;
   padding: 20px 0px;
+//   border-width: 2px;
+//   border-color: red;
 `;
 const BuyMenuBottom = styled.div`
   display: flex;
@@ -149,11 +160,26 @@ const CardPrice = styled.div`
   margin-left: 5px;
 `;
 
-// const BuyMenuLabel = styled.div`
-//   text-align: center;
-//   font-weight: bold;
-//   font-size: 14px;
-// `;
+const BuyMenuLabel = styled.div`
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+`;
+
+const InsufficientLabel = styled.div`
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: red;
+`;
+
+const BalanceLabel = styled.div`
+  vertical-align: middle;
+  text-align: center;
+  font-size: 12px;
+  color: #b3b3b3;
+`;
+
 
 const PigImage = styled.img`
   height: 80%;
@@ -174,19 +200,22 @@ const CardDiv = styled.div`
   border-radius: 16px;
 `;
 
+
 const CardInfo = styled.div`
   height: 20%;
   display: flex;
   font-size: 20px;
   align-items: center;
   vertical-align: middle;
+//   border: 1px solid red;
 `;
 
 const CardTitle = styled.div`
-  width: 60%;
+  width: 100%;
   font-weight: bold;
   margin-right: auto;
-  text-align: left;
+  text-align: middle;
   vertical-align: middle;
   padding: 0px 10px;
+//   border: 1px solid red;
 `;
