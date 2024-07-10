@@ -9,37 +9,40 @@ export default function Navbar(props) {
 
   return (
     <Div>
-      <AppName onClick={() => navigate("/")} >FundTasy</AppName>
+      <AppName onClick={() => navigate("/")}>FundTasy</AppName>
       <Menu>
-        <MenuItem onClick={() => navigate("/")} >
+        <MenuItem onClick={() => navigate("/")}>
           <MenuImg srcSet="icons/home.png" active={page === "home"} />
-          <MenuText active={page === "home"} >Home</MenuText>
+          <MenuText active={page === "home"}>Home</MenuText>
         </MenuItem>
-        <MenuItem onClick={() => navigate("/my-pigs")} >
+        {/* <MenuItem onClick={() => navigate("/my-pigs")} >
           <MenuImg srcSet="icons/mypigs.png" active={page === "mypigs"} />
           <MenuText active={page === "mypigs"} >My Pigs</MenuText>
-        </MenuItem>
-        <MenuItem onClick={() => navigate("/wishlist")} >
+        </MenuItem> */}
+        <MenuItem onClick={() => navigate("/wishlist")}>
           <MenuImg srcSet="icons/wishlist.png" active={page === "wishlist"} />
-          <MenuText active={page === "wishlist"} >Wishlist</MenuText>
+          <MenuText active={page === "wishlist"}>Wishlist</MenuText>
         </MenuItem>
-        <MenuItem onClick={() => navigate("/shop")} >
+        <MenuItem onClick={() => navigate("/shop")}>
           <MenuImg srcSet="icons/shop.png" active={page === "shop"} />
-          <MenuText active={page === "shop"} >Shop</MenuText>
+          <MenuText active={page === "shop"}>Pig Shop</MenuText>
         </MenuItem>
-        <MenuItem onClick={() => navigate("/transactions")} >
-          <MenuImg srcSet="icons/transaction.png" active={page === "transactions"} />
-          <MenuText active={page === "transactions"} >Transactions</MenuText>
+        <MenuItem onClick={() => navigate("/transactions")}>
+          <MenuImg
+            srcSet="icons/transaction.png"
+            active={page === "transactions"}
+          />
+          <MenuText active={page === "transactions"}>Transactions</MenuText>
         </MenuItem>
       </Menu>
       <Info>
-        <InfoItem onClick={() => navigate("/profile")} >
+        <InfoItem onClick={() => navigate("/profile")}>
           <InfoImg srcSet="icons/profile.png" active={page === "profile"} />
-          <InfoText active={page === "profile"} >Profile</InfoText>
+          <InfoText active={page === "profile"}>Profile</InfoText>
         </InfoItem>
-        <InfoItem onClick={() => navigate("/settings")} >
+        <InfoItem onClick={() => navigate("/settings")}>
           <InfoImg srcSet="icons/settings.png" active={page === "settings"} />
-          <InfoText active={page === "settings"} >Settings</InfoText>
+          <InfoText active={page === "settings"}>Settings</InfoText>
         </InfoItem>
       </Info>
     </Div>
@@ -91,9 +94,9 @@ const MenuImg = styled.img`
   height: 28px;
   width: 45px;
   ${MenuItem}:hover & {
-    opacity: ${(props) => props.active ? 1:0.7};
+    opacity: ${(props) => (props.active ? 1 : 0.7)};
   }
-  opacity: ${(props) => props.active ? 1:0.5}
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
 `;
 
 const MenuText = styled.div`
@@ -101,7 +104,7 @@ const MenuText = styled.div`
   flex-grow: 1;
   flex-basis: auto;
   margin: auto 0;
-  color: ${(props) => props.active ? "#000":"#7b7b7b"};
+  color: ${(props) => (props.active ? "#000" : "#7b7b7b")};
   ${MenuItem}:hover & {
     filter: brightness(0.7);
   }
@@ -130,9 +133,9 @@ const InfoImg = styled.img`
   height: 24px;
   width: 50px;
   ${InfoItem}:hover & {
-    opacity: ${(props) => props.active ? 1:0.7};
+    opacity: ${(props) => (props.active ? 1 : 0.7)};
   }
-  opacity: ${(props) => props.active ? 1:0.5}
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
 `;
 
 const InfoText = styled.div`
@@ -143,5 +146,5 @@ const InfoText = styled.div`
   ${InfoItem}:hover & {
     filter: brightness(0.7);
   }
-  color: ${(props) => props.active ? "#000":"#7b7b7b"}
+  color: ${(props) => (props.active ? "#000" : "#7b7b7b")};
 `;

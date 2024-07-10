@@ -26,6 +26,7 @@ export default function Shop() {
   const [lastPreviewedPig, setLastPreviewedPig] = useState(""); // For buy menu
   const [lastPreviewedPigPrice, setLastPreviewedPigPrice] = useState(0); // For buy menu
   const [userCoins, setUserCoins] = useState(0);
+  const [updatePigs, setUpdatePigs] = useState(false);
 
   useEffect(() => {
     async function fetchPigs() {
@@ -48,7 +49,7 @@ export default function Shop() {
       }
     }
     fetchPigs();
-  }, [userCoins]);
+  }, [updatePigs]);
 
   function toggleUnownedFilter() {
     setUnownedFilter(!unownedFilter);
@@ -58,7 +59,7 @@ export default function Shop() {
     setOwnedFilter(!ownedFilter);
   }
 
-  function openBuyMenu(pigName, pigPrice, userCoins) {
+  function openBuyMenu(pigName, pigPrice) {
     showBuyMenu(true);
     setLastPreviewedPig(pigName);
     setLastPreviewedPigPrice(pigPrice);
@@ -98,6 +99,8 @@ export default function Shop() {
           closeBuyMenu={closeBuyMenu}
           pigName={lastPreviewedPig}
           pigPrice={lastPreviewedPigPrice}
+          userCoins={userCoins}
+          updatePigs={setUpdatePigs}
         />
       )}
       <ShopContainer>
@@ -127,7 +130,6 @@ export default function Shop() {
                 pigTitle={model}
                 owned={true}
                 openBuyMenu={openBuyMenu}
-                userCoins={userCoins}
               />
             ))}
           {unownedFilter &&
@@ -139,7 +141,6 @@ export default function Shop() {
                 pigPrice={model.price}
                 owned={false}
                 openBuyMenu={openBuyMenu}
-                userCoins={userCoins}
               />
             ))}
         </ShopBody>
@@ -160,7 +161,7 @@ function PigCard(props) {
           <OwnedOption>Owned</OwnedOption>
         ) : (
           <BuyOption
-            onClick={() => props.openBuyMenu(props.pigname, props.pigPrice, props.userCoins)}
+            onClick={() => props.openBuyMenu(props.pigname, props.pigPrice)}
           >
             <BuyText>Buy</BuyText>
             <SmallCoin srcSet="icons/coin.png" />
