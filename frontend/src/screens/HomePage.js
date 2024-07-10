@@ -23,6 +23,7 @@ export default function HomePage() {
   const [activeGoals, setActiveGoals] = useState([]);
   const [updateGoals, setUpdateGoals] = useState(false);
   const [userId, setUserId] = useState("");
+  const [userInfo, setUserInfo] = useState({});
   const [saveTriggered, setSaveTriggered] = useState(false);
   const [contributeFormActive, showContributeForm] = useState(false);
   const [bankBalance, setBankBalance] = useState(0);
@@ -33,6 +34,7 @@ export default function HomePage() {
   useEffect(() => {
     async function getUserId() {
       const userObj = await getUser();
+      setUserInfo(userObj.user);
       setUserId(userObj.user.username);
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
@@ -165,7 +167,7 @@ export default function HomePage() {
           activeGoals={activeGoals}
           updateBankBalance={setBankBalance}
         />
-        <Social />
+        <Social userInfo={userInfo} />
       </Div>
     </PageContainer>
   );

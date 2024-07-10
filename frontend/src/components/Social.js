@@ -1,17 +1,18 @@
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import truncateText from "../utils/truncateText";
 
-export default function Social() {
+export default function Social({ userInfo }) {
     return (        
         <SocialContainer>
             <SocialTitle>Friends</SocialTitle>
             <SearchBar placeholder="Find a friend" />
-            <FriendList />
+            <FriendList currentUser={userInfo} />
         </SocialContainer>
     )
 }
 
-function FriendList() {
+function FriendList({ currentUser }) {
     return (
         <Leaderboard>
             <LeaderboardHead>Leaderboard</LeaderboardHead>
@@ -62,6 +63,12 @@ function FriendList() {
                 <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Fu Qiang</LeaderboardCell>
                 <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >66</LeaderboardCell>
                 <LeaderboardCell style={{ width:"15%" }} >1472</LeaderboardCell>
+            </LeaderboardRow>
+            <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} >
+                <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
+                <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{truncateText(currentUser.firstName+" "+currentUser.lastName+" (me)", 17)}</LeaderboardCell>
+                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{currentUser.coinBalance}</LeaderboardCell>
+                <LeaderboardCell style={{ width:"15%" }} >{currentUser.bankBalance}</LeaderboardCell>
             </LeaderboardRow>
             <LeaderboardEnd>View More</LeaderboardEnd>
         </Leaderboard>
@@ -132,7 +139,7 @@ const LeaderboardRow = styled.div`
     width: 100%;
     height: 40px;
     font-size: 14px;
-    color: #000;
+    color: ${(props) => props.isCurrentUser ? "#645df2":"#000"};
 `
 
 const LeaderboardStat = styled.div`

@@ -18,6 +18,8 @@ export default function Wishlist() {
 
   const [username, setUsername] = useState("");
 
+  const [displayResults, setDisplayResults] = useState(false);
+
   useEffect(() => {
     async function fetchWishlist() {
       try {
@@ -37,13 +39,18 @@ export default function Wishlist() {
     setUpdate(!wishlistUpdate);
   };
 
+  const closeResults = () => {
+    setDisplayResults(false);
+  }
+
   return (
     <PageContainer>
       <Navbar page="wishlist" />
-      <SearchAndItemsWrapper>
+      <SearchAndItemsWrapper onClick={closeResults}>
+        <WishlistHead>My Wishlist</WishlistHead>
         <SearchWrapper>
-          <SearchBar setResults={setResults} />
-          {results && (
+          <SearchBar setResults={setResults} setDisplayResults={setDisplayResults} />
+          {results && displayResults && (
             <SearchResults
               results={results}
               updateWishlist={handleWishlistUpdate}
@@ -51,7 +58,6 @@ export default function Wishlist() {
             />
           )}
         </SearchWrapper>
-        <WishlistItemHeader>Wishlist Items</WishlistItemHeader>
         <AddedItems items={items} updateWishlist={handleWishlistUpdate} />
       </SearchAndItemsWrapper>
     </PageContainer>
@@ -65,28 +71,39 @@ const PageContainer = styled.div`
   padding: 0px;
 `;
 
+const WishlistHead = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 24px;
+  height: 10%;
+  padding: 20px 0px;
+`
+
 const SearchWrapper = styled.div`
-  padding-top: 7vh;
-  padding-left: 7vh;
-  min-width: 80%;
+  width: 80%;
   max-width: 85%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   min-width: 200px;
 `;
 
 const WishlistItemHeader = styled.div`
-  padding-top: 6vh;
-  padding-bottom: 4vh;
+  height: 10%;
   font-size: 20px;
 `;
 
 const SearchAndItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: start;
+  align-items: center;
   overflow-y: scroll;
   height: 100vh;
   font-family: Inter, sans-serif;
-  width: 100%;
+  width: 80vw;
   overflow: hidden;
 `;

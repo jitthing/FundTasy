@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 
-export const SearchBar = ({ setResults }) => {
+export const SearchBar = ({ setResults, setDisplayResults }) => {
   const [input, setInput] = useState("");
 
   const fetchAmazonData = async (value) => {
@@ -15,6 +15,7 @@ export const SearchBar = ({ setResults }) => {
       const data = await response.data;
       console.log(data);
       setResults(data);
+      setDisplayResults(true);
     } else {
       setResults([]);
     }

@@ -1,6 +1,7 @@
 import axios from "axios";
 import styled from "styled-components";
 import { IoClose } from "react-icons/io5";
+import formatCurrency from "../../utils/formatCurrency";
 
 export const AddedItem = ({ item, updateWishlist }) => {
   const handleDeleteItem = async (id) => {
@@ -27,7 +28,7 @@ export const AddedItem = ({ item, updateWishlist }) => {
       </button>
       <WishlistImage src={item.image} />
       <DesctiptionWrap>
-        <div className="font-extrabold text-xl">${item.price}</div>
+        <div className="font-extrabold text-xl">{formatCurrency(item.price)}</div>
         <div>
           {item.name.length > 40 ? `${item.name.slice(0, 34)}...` : item.name}
         </div>

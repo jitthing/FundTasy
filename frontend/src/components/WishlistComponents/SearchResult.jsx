@@ -1,5 +1,6 @@
 import axios from "axios";
 import styled from "styled-components";
+import formatCurrency from "../../utils/formatCurrency";
 
 export const SearchResult = ({ result, updateWishlist, username }) => {
   const handleClick = async (result) => {
@@ -22,7 +23,7 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
       <InfoWrapper>
         {result.title}
         <br></br>
-        <b>${result.price}</b>
+        <b>{formatCurrency(result.price)}</b>
       </InfoWrapper>
     </SearchResultWrapper>
   );

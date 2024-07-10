@@ -23,5 +23,7 @@ const ItemsWrapper = styled.div`
   overflow-x: auto; // Allow horizontal scrolling
   width: 100%; // Full width of the parent
   height: auto; // Adjust height as needed
-  padding: 10px; // Padding around the container
+  padding: 20px 50px; // Padding around the container
+  justify-content: start;
+  margin-top: 20px;
 `;

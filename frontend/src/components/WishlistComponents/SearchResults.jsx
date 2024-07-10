@@ -19,7 +19,7 @@ export const SearchResults = ({ results, updateWishlist, username }) => {
 };
 
 const SearchResultsWrapper = styled.div`
-  width: 100%;
+  width: 64%;
   background-color: white;
   font-color: black;
   display: flex;
@@ -28,4 +28,6 @@ const SearchResultsWrapper = styled.div`
   margin-top: 1rem;
   max-height: 300px;
   overflow-y: scroll;
+  position: absolute;
+  top: 110px;
 `;
