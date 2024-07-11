@@ -47,12 +47,33 @@ export default function Transactions() {
 
   const deleteTransaction = async (id) => {
     try {
+      const deletedTransaction = await axios.get(
+        `http://localhost:8000/fetch_transaction/${id}`
+      );    
       const response = await axios.delete(
         `http://localhost:8000/delete_transaction/${id}`
       );
+      const deletedTransactionAmount = deletedTransaction.data.foundTransaction.amount;
+      const formData = {
+        amount: -deletedTransactionAmount,
+      };
+      try {
+        const response2 = await axios.post(
+            "http://localhost:8000/update_bankbalance",
+            formData,
+            {
+                headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            }
+            );
+      } catch (error) {
+        console.error("Unable to update bank balance")
+      }
       if (response.status === 200) {
         alert("Transaction successfully deleted");
         setUpdateTransactions((prev) => !prev);
+
       } else {
         alert(
           "Failed to delete transaction: Server responded with status " +
