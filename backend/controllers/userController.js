@@ -2,6 +2,7 @@ require("dotenv").config();
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
+let firstIncomeUpdate = true;
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -116,6 +117,10 @@ const updateUserInfo = async (req, res) => {
         } else {
           return res.status(400).json({ message: "Invalid email address" });
         }
+      }
+      if (firstIncomeUpdate && income !== 0 && user.income === 0) {
+        fieldsToUpdate.bankBalance = income / 30;
+        firstIncomeUpdate = false;
       }
       const updateUser = await Users.updateOne(
         { _id: user._id },
