@@ -3,6 +3,17 @@ import styled from "styled-components";
 import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
 
+
+function formatGoalTitle(title, maxLength = 40) {
+  if (title.length <= maxLength) {
+    return title;
+  }
+  const start = title.slice(0, maxLength / 2 - 1);
+  const end = title.slice(-maxLength / 2 + 1);
+  return `${start}...${end}`;
+}
+
+
 export default function ContributeForm({
   closeContributeForm,
   activeGoals,
@@ -126,9 +137,9 @@ export default function ContributeForm({
                         parseFloat(parseFloat(goal.saved).toFixed(2))
                       }
                     />
-                    <GoalInfo>
+                  <GoalInfo>
                       <GoalTitle>
-                        {goal.title} [{formatCurrency(goal.price)}]{" "}
+                        {formatGoalTitle(goal.title)} [{formatCurrency(goal.price)}]{" "}
                         <GoalProgress>
                           ({getPercentage(goal.saved, goal.price)}% completed)
                         </GoalProgress>
@@ -284,6 +295,9 @@ const GoalTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   text-align: left;
+  max-width: 1000px; 
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const GoalProgress = styled.div`
