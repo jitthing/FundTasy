@@ -8,6 +8,7 @@ import getAllGoals from "../utils/getAllGoals";
 import getCoinTransactions from "../utils/getCoinTransactions";
 import axios from "axios";
 import { IoClose } from "react-icons/io5";
+import formatTitle from "../utils/formatTitle";
 const moment = require("moment");
 
 export default function Transactions() {
@@ -194,7 +195,7 @@ const SpendingTable = ({
               .reverse()
               .map((transaction) => (
                 <TransactionDiv key={transaction.id}>
-                  <TransactionTitle>{transaction.title}</TransactionTitle>
+                  <TransactionTitle>{formatTitle(transaction.title)}</TransactionTitle>
                   <TransactionCategory>
                     <CategoryButton>{transaction.category}</CategoryButton>
                   </TransactionCategory>
@@ -234,7 +235,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
     if (ct.goal != null && findGoal(ct.goal).status === "Completed") {
       const g = findGoal(ct.goal);
       ct.status = g.status;
-      ct.title = g.title;
+      ct.title = formatTitle(g.title);
       ct.price = "Save " + formatCurrency(g.price);
     } else {
       ct.title = "-";

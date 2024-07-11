@@ -2,16 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
+import formatTitle from "../utils/formatTitle";
 
-
-function formatGoalTitle(title, maxLength = 40) {
-  if (title.length <= maxLength) {
-    return title;
-  }
-  const start = title.slice(0, maxLength / 2 - 1);
-  const end = title.slice(-maxLength / 2 + 1);
-  return `${start}...${end}`;
-}
 
 
 export default function ContributeForm({
@@ -139,7 +131,7 @@ export default function ContributeForm({
                     />
                   <GoalInfo>
                       <GoalTitle>
-                        {formatGoalTitle(goal.title)} [{formatCurrency(goal.price)}]{" "}
+                        {formatTitle(goal.title)} [{formatCurrency(goal.price)}]{" "}
                         <GoalProgress>
                           ({getPercentage(goal.saved, goal.price)}% completed)
                         </GoalProgress>
