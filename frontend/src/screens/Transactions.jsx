@@ -279,7 +279,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
                   </CoinDateTime>
                   <CoinAmount isSpending={ct.type === "Purchase"}>
                     {ct.type === "Purchase" ? "-" : "+"}
-                    {ct.amount}
+                    {parseFloat(ct.amount).toFixed(0)}
                     <OinkCoin srcSet="icons/coin.png" />
                   </CoinAmount>
                 </TransactionDiv>

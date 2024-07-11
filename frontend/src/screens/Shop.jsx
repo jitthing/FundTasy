@@ -113,7 +113,7 @@ export default function Shop() {
           <div style={{ width: "200px" }}>
             <Moneybar>
               <BigCoin srcSet="icons/coin.png" />
-              <MoneybarText>{userCoins}</MoneybarText>
+              <MoneybarText>{parseFloat(userCoins).toFixed(0)}</MoneybarText>
             </Moneybar>
           </div>
         </ShopHead>
