@@ -31,6 +31,7 @@ const {
   allTransactions,
   deleteTransaction,
   editTransaction,
+  fetchTransaction,
 } = require("../controllers/transactionController");
 
 const {
@@ -92,6 +93,7 @@ router.post("/new_transaction", newTransaction);
 router.get("/all_transactions", allTransactions);
 router.delete("/delete_transaction/:id", deleteTransaction);
 router.put("/edit_transaction/:id", editTransaction);
+router.get("/fetch_transaction/:id", fetchTransaction);
 
 // Coin Transaction Router
 router.get("/all_coin_transactions", getCoinTransactions);
