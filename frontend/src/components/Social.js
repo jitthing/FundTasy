@@ -67,8 +67,8 @@ function FriendList({ currentUser }) {
             <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} >
                 <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
                 <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{truncateText(currentUser.firstName+" "+currentUser.lastName+" (me)", 17)}</LeaderboardCell>
-                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{currentUser.coinBalance}</LeaderboardCell>
-                <LeaderboardCell style={{ width:"15%" }} >{currentUser.bankBalance}</LeaderboardCell>
+                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(currentUser.coinBalance).toFixed(0)}</LeaderboardCell>
+                <LeaderboardCell style={{ width:"15%" }} >{parseFloat(currentUser.bankBalance).toFixed(2)}</LeaderboardCell>
             </LeaderboardRow>
             <LeaderboardEnd>View More</LeaderboardEnd>
         </Leaderboard>
