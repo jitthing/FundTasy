@@ -7,6 +7,8 @@ const activeGoalsSchema = new mongoose.Schema({
   startDate: { type: String, required: true },
   saved: { type: Number, required: true },
   status: { type: String, default: "In Progress" },
+  lastUpdatedAmount: { type: Number, required: true, default: -1 },
+  lastUpdatedDate: { type: Date, default: Date.now }
 });
 
 // to write one to update amount saved per goal

@@ -100,7 +100,11 @@ const updateSavedValue = async (req, res) => {
   const currentCoins = userObj.coinBalance;
   const updated = await ActiveGoals.findOneAndUpdate(
     { _id: req.body.goalId },
-    { saved: newSaved },
+    { 
+      saved: newSaved,
+      lastUpdatedAmount: parseFloat(parseFloat(amount).toFixed(2)),
+      lastUpdatedDate: Date.now()
+    },
     { new: true }
   );
   if (updated) {

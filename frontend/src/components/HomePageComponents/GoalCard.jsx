@@ -6,6 +6,7 @@ import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
+const moment = require("moment");
 
 export default function GoalCard({ goals, updateGoals }) {
   // console.log(goals);
@@ -25,8 +26,8 @@ export default function GoalCard({ goals, updateGoals }) {
               startDate={goal.startDate}
               currentSaved={goal.saved}
               rate="20"
-              lastTopUpAmt="9"
-              lastTopUpDate="19/6/24"
+              lastTopUpAmt={goal.lastUpdatedAmount}
+              lastTopUpDate={goal.lastUpdatedDate}
               daysLeft="1"
               updateGoals={updateGoals}
             />
@@ -49,7 +50,7 @@ function GoalBox(props) {
   const currentSaved = props.currentSaved;
   const rate = props.rate;
   const lastTopUpAmt = props.lastTopUpAmt;
-  const lastTopUpDate = props.lastTopUpDate;
+  const lastTopUpDate = lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY"):"-";
   const daysLeft = props.daysLeft;
   const percentage =
     (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
@@ -109,7 +110,7 @@ function GoalBox(props) {
                   width: "55%",
                 }}
               >
-                {truncateText(title, 27)}
+                {truncateText(title, 25)}
               </div>
               <div
                 style={{
@@ -148,7 +149,7 @@ function GoalBox(props) {
           </Saved>
           <Details>
             <LastAdded>
-              +${lastTopUpAmt} on {lastTopUpDate}
+              {lastTopUpAmt > 0 ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`:"No funds allocated yet"}
             </LastAdded>
             <Rate>${rate}/day</Rate>
           </Details>

@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls, useGLTF, Stage, Html } from "@react-three/drei";
 import mypigs from "../modelinfo";
-import zIndex from "@mui/material/styles/zIndex";
 
 function Model(props) {
     const { scene } = useGLTF(props.modelPath);

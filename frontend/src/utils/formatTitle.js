@@ -1,4 +1,4 @@
-export default function formatTitle(title, maxLength = 40) {
+export default function formatTitle(title, maxLength = 35) {
     if (title.length <= maxLength) {
       return title;
     }
