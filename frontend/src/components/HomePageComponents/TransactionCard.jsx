@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import formatCurrency from "../../utils/formatCurrency";
+import formatTitle from "../../utils/formatTitle";
 const moment = require("moment");
 
 
@@ -15,7 +16,7 @@ export default function TransactionCard({ transactions }) {
       {transactions.map((transaction, index) => (
         <TransactionBody key={index}>
           <TransactionInfo>
-            <div>{transaction.title}</div>
+            <div>{formatTitle(transaction.title)}</div>
             <div style={{ color: "grey" }}>{moment(transaction.date).format("DD MMM YYYY HH:mm")}</div>
           </TransactionInfo>
           <TransactionAmount>{formatCurrency(transaction.amount)}</TransactionAmount>
