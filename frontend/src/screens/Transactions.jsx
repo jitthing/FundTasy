@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
 import NewRecordForm from "../components/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
@@ -72,7 +73,30 @@ export default function Transactions() {
         console.error("Unable to update bank balance")
       }
       if (response.status === 200) {
-        alert("Transaction successfully deleted");
+        Toastify({
+          text: "Transaction successfully deleted!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "300px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100"
+          }
+        }).showToast();
         setUpdateTransactions((prev) => !prev);
 
       } else {

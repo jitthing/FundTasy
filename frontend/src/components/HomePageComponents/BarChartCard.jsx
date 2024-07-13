@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import getTransactions from "../../utils/getTransactions";
 
 export default function BarChartCard({ income }) {
@@ -12,7 +13,30 @@ export default function BarChartCard({ income }) {
         const transactionResponse = await getTransactions();
         setTransactions(transactionResponse.transactions);
       } catch (error) {
-        alert("Failed to fetch transactions", error);
+        Toastify({
+          text: `Failed to fetch transactions: ${error}`,
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "red",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "450px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100"
+          }
+        }).showToast();
       }
     };
     fetchTransactions();

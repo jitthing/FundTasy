@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import getUser from "../utils/getUser";
 import axios from "axios";
 // import truncateText from "../utils/truncateText";
@@ -56,11 +57,57 @@ export default function NewRecordForm({
       // console.log(response.data);
       if (transactionResponse && updateBalanceResponse) {
         updateTransactions((prev) => !prev);
-        alert("Transaction created!");
+        Toastify({
+          text: "Transaction created!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "200px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100"
+          }
+        }).showToast();
       }
     } catch (error) {
       console.log("Error creating transaction: ", error);
-      alert("Error creating transaction!");
+      Toastify({
+        text: "Error creating transaction!",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10 
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "250px",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px",
+          textAlign: "center",
+          zIndex: "100"
+        }
+      }).showToast();
     }
   };
 
@@ -74,11 +121,57 @@ export default function NewRecordForm({
       );
       if (response) {
         updateTransactions((prev) => !prev);
-        alert("Transaction updated!");
+        Toastify({
+          text: "Transaction updated!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "200px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100"
+          }
+        }).showToast();
       }
     } catch (error) {
       console.log("Error updating transaction: ", error);
-      alert("Error updating transaction!");
+      Toastify({
+        text: "Error updating transaction!",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10 
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "250px",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px",
+          textAlign: "center",
+          zIndex: "100"
+        }
+      }).showToast();
     }
   };
 
@@ -100,7 +193,30 @@ export default function NewRecordForm({
       closeForm();
     } catch (error) {
       console.log("Error creating transaction: ", error);
-      alert("Error creating transaction!");
+      Toastify({
+        text: "Error creating transaction!",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10 
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "250px",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px",
+          textAlign: "center",
+          zIndex: "100"
+        }
+      }).showToast();
     }
   };
   return (

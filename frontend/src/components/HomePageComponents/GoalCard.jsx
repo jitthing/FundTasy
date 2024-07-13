@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Toastify from 'toastify-js'
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
@@ -89,7 +90,30 @@ function GoalBox(props) {
       );
       if (response) {
         props.updateGoals((prev) => !prev);
-        alert("Item deleted!");
+        Toastify({
+          text: "Item deleted!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "150px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100"
+          }
+        }).showToast();
       }
     } catch (error) {
       alert(`${error.response.data.message}`);

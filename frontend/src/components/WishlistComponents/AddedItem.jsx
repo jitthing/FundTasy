@@ -1,5 +1,6 @@
 import axios from "axios";
 import styled from "styled-components";
+import Toastify from "toastify-js"
 import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
 
@@ -12,7 +13,29 @@ export const AddedItem = ({ item, updateWishlist }) => {
       );
       if (response) {
         updateWishlist();
-        alert("Item deleted!");
+        Toastify({
+          text: "Item removed!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10 
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "150px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center"
+          }
+        }).showToast();
       }
     } catch (error) {
       alert(`${error.response.data.id}`);

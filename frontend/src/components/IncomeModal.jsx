@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Toastify from 'toastify-js';
 
 export default function IncomeModal({ closeModal, setUserIncome }) {
     const handleSave = async (e) => {
@@ -18,6 +19,30 @@ export default function IncomeModal({ closeModal, setUserIncome }) {
             console.log(response);
             setUserIncome(income.value);
             closeModal();
+            Toastify({
+                text: "Income updated!",
+                duration: 3000,
+                gravity: "bottom",
+                position: "center",
+                offset: {
+                    y: 10 
+                },
+                style: {
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    backgroundColor: "#4bb543",
+                    color: "#fff",
+                    boxShadow: "0px 0px 4px #888888",
+                    width: "200px",
+                    height: "48px",
+                    position: "absolute",
+                    left: "calc(50vw - 50px)",
+                    borderRadius: "6px",
+                    padding: "10px",
+                    textAlign: "center",
+                    zIndex: "100"
+                }
+              }).showToast();
         } catch(error) {
             console.error(error);
         }
