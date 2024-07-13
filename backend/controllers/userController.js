@@ -2,7 +2,6 @@ require("dotenv").config();
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
-let firstIncomeUpdate = true;
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -118,10 +117,6 @@ const updateUserInfo = async (req, res) => {
           return res.status(400).json({ message: "Invalid email address" });
         }
       }
-      if (firstIncomeUpdate && income !== 0 && user.income === 0) {
-        fieldsToUpdate.bankBalance = income / 30;
-        firstIncomeUpdate = false;
-      }
       const updateUser = await Users.updateOne(
         { _id: user._id },
         { $set: fieldsToUpdate }
@@ -135,25 +130,46 @@ const updateUserInfo = async (req, res) => {
   }
 };
 
-const updateIncome = async(req, res) => {
+const updateIncome = async (req, res) => {
   try {
     const { user, error } = await getUserFromToken(req);
     const newIncome = req.body.income;
-    const updateUser = await Users.findOneAndUpdate(
-      { _id: user._id },
-      {
-        income: newIncome,
-        isFirstTime: false
-      },
-      { new: true }
-    );
-    if (updateUser) {
-      return res.status(200).json({ message:"successfully updated income", updateUser });
+    const firstTime = user.isFirstTime;
+    if (firstTime) {
+      const updateUser = await Users.findOneAndUpdate(
+        { _id: user._id },
+        {
+          income: newIncome,
+          bankBalance: newIncome / 30,
+          isFirstTime: false,
+        },
+        { new: true }
+      );
+      if (updateUser) {
+        return res
+          .status(200)
+          .json({ message: "successfully updated income", updateUser });
+      }
+    } else {
+      const updateUser = await Users.findOneAndUpdate(
+        { _id: user._id },
+        {
+          income: newIncome,
+        },
+        { new: true }
+      );
+      if (updateUser) {
+        return res
+          .status(200)
+          .json({ message: "successfully updated income", updateUser });
+      }
     }
-  } catch(error) {
-    return res.status(500).json({ message: "Unable to update income: "+error });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Unable to update income: " + error });
   }
-}
+};
 
 const create_account = async (req, res) => {
   if (!validateEmail(req.body.email)) {
@@ -417,5 +433,5 @@ module.exports = {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
-  updateIncome
+  updateIncome,
 };

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Social from "../components/Social";
 import ModelDisplay from "../components/ModelDisplay";
-import mypigs from "../modelinfo";
 import SkinSection from "../components/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
@@ -152,6 +151,7 @@ export default function HomePage() {
         <IncomeModal
           closeModal={closeIncomeModal}
           setUserIncome={setUserIncome}
+          update={setUpdateGoals}
         />
       )}
       <Navbar page="home" />
