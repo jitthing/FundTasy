@@ -135,6 +135,26 @@ const updateUserInfo = async (req, res) => {
   }
 };
 
+const updateIncome = async(req, res) => {
+  try {
+    const { user, error } = await getUserFromToken(req);
+    const newIncome = req.body.income;
+    const updateUser = await Users.findOneAndUpdate(
+      { _id: user._id },
+      {
+        income: newIncome,
+        isFirstTime: false
+      },
+      { new: true }
+    );
+    if (updateUser) {
+      return res.status(200).json({ message:"successfully updated income", updateUser });
+    }
+  } catch(error) {
+    return res.status(500).json({ message: "Unable to update income: "+error });
+  }
+}
+
 const create_account = async (req, res) => {
   if (!validateEmail(req.body.email)) {
     return res.status(400).json({ message: "Invalid email address" });
@@ -397,4 +417,5 @@ module.exports = {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
+  updateIncome
 };

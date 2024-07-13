@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
 const moment = require("moment");
 
-export default function GoalCard({ goals, updateGoals }) {
+export default function GoalCard({ goals, updateGoals, userIncome }) {
   // console.log(goals);
   const numActiveGoals = goals.length;
   const numEmptyGoals = 3 - numActiveGoals;
@@ -25,7 +25,7 @@ export default function GoalCard({ goals, updateGoals }) {
               toSave={goal.price}
               startDate={goal.startDate}
               currentSaved={goal.saved}
-              rate="20"
+              rate={userIncome/30}
               lastTopUpAmt={goal.lastUpdatedAmount}
               lastTopUpDate={goal.lastUpdatedDate}
               daysLeft="1"
@@ -44,7 +44,6 @@ export default function GoalCard({ goals, updateGoals }) {
 function GoalBox(props) {
   const title = props.title;
   const isActive = props.active;
-  const danger = props.danger;
   const toSave = props.toSave;
   const startDate = props.startDate;
   const currentSaved = props.currentSaved;
@@ -54,7 +53,7 @@ function GoalBox(props) {
   const daysLeft = props.daysLeft;
   const percentage =
     (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
-
+  const danger = (parseFloat(currentSaved) / parseFloat(toSave)) < 0.5;
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [wishlistItems, setItems] = React.useState([]);
 
@@ -156,7 +155,7 @@ function GoalBox(props) {
         </GoalInfo>
         <ProgressDiv>
           <ProgressBar percentage={percentage} />
-          <TimeLeft danger={danger}>{daysLeft}d</TimeLeft>
+          <TimeLeft danger={danger}>{percentage}</TimeLeft>
         </ProgressDiv>
       </ActiveGoal>
     );

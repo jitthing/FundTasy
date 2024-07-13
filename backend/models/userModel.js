@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   income: { type: Number, default: 0 },
   displayPig: { type: String, default: "basic" },
   bankBalance : {type: Number, default: 0},
+  isFirstTime : { type: Boolean, required: true, default: true },
+  dateCreated: { type: Date, required: true, default: Date.now }
 });
 
 module.exports = mongoose.model("Users", userSchema);

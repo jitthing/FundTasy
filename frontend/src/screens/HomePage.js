@@ -14,6 +14,7 @@ import getUser from "../utils/getUser";
 import ContributeForm from "../components/ContributeForm";
 import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
 import getTransactions from "../utils/getTransactions";
+import IncomeModal from "../components/IncomeModal";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -30,11 +31,13 @@ export default function HomePage() {
   const [transactions, setTransactions] = useState([]);
   const currentTime = new Date().toLocaleString();
   const [userIncome, setUserIncome] = useState(0);
+  const [showIncomeModal, setIncomeModal] = useState(userInfo.isFirstTime);
 
   useEffect(() => {
     async function getUserId() {
       const userObj = await getUser();
       setUserInfo(userObj.user);
+      setIncomeModal(userObj.user.isFirstTime);
       setUserId(userObj.user.username);
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
@@ -126,6 +129,10 @@ export default function HomePage() {
     showContributeForm(false);
   };
 
+  const closeIncomeModal = () => {
+    setIncomeModal(false);
+  }
+
   return (
     <PageContainer>
       {contributeFormActive && (
@@ -137,9 +144,10 @@ export default function HomePage() {
           updateBankBalance={setBankBalance}
         />
       )}
+      {showIncomeModal && <IncomeModal closeModal={closeIncomeModal} setUserIncome={setUserIncome} />}
       <Navbar page="home" />
       <Display>
-        <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
+        <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} userIncome={userIncome} />
         <PigDisplay>
           <ModelDisplay modelUrl={modelUrl} show={show} />
           <SkinSection

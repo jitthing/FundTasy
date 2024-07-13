@@ -5,7 +5,6 @@ import './styles/App.css';
 import HomePage from './screens/HomePage';
 import LoginPage from './screens/LoginPage';
 import MyPigs from './screens/MyPigs';
-import NewRecord from './screens/NewRecord';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import Shop from './screens/Shop';
