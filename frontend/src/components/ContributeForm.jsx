@@ -3,8 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import formatCurrency from "../utils/formatCurrency";
 import formatTitle from "../utils/formatTitle";
-
-
+import Toastify from "toastify-js";
 
 export default function ContributeForm({
   closeContributeForm,
@@ -21,7 +20,30 @@ export default function ContributeForm({
       parseFloat(parseFloat(amount.value).toFixed(2)) >
       parseFloat(parseFloat(selectedGoalAmount).toFixed(2))
     ) {
-      alert("Contribution exceeds remaining amount");
+      Toastify({
+        text: "Contribution exceeds remaining amount!",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10,
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "250px",
+          height: "80px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px",
+          textAlign: "center",
+          zIndex: "400",
+        },
+      }).showToast();
     } else {
       const formData = {
         goalId: goal.value,
@@ -51,7 +73,32 @@ export default function ContributeForm({
             },
           }
         );
-        console.log(response);
+        if (response) {
+          Toastify({
+            text: "Funds allocated!",
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            offset: {
+              y: 10,
+            },
+            style: {
+              fontSize: "18px",
+              fontWeight: "bold",
+              backgroundColor: "#4bb543",
+              color: "#fff",
+              boxShadow: "0px 0px 4px #888888",
+              width: "200px",
+              height: "48px",
+              position: "absolute",
+              left: "calc(50vw - 50px)",
+              borderRadius: "6px",
+              padding: "10px",
+              textAlign: "center",
+              zIndex: "100",
+            },
+          }).showToast();
+        }
       } catch (error) {
         console.error(`${error.response.data.message}`);
       }
@@ -129,7 +176,7 @@ export default function ContributeForm({
                         parseFloat(parseFloat(goal.saved).toFixed(2))
                       }
                     />
-                  <GoalInfo>
+                    <GoalInfo>
                       <GoalTitle>
                         {formatTitle(goal.title)} [{formatCurrency(goal.price)}]{" "}
                         <GoalProgress>
@@ -287,7 +334,7 @@ const GoalTitle = styled.div`
   font-size: 20px;
   font-weight: bold;
   text-align: left;
-  max-width: 1000px; 
+  max-width: 1000px;
   white-space: nowrap;
   overflow: hidden;
 `;

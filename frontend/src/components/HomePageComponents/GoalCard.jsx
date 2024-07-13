@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import Toastify from 'toastify-js'
+import Toastify from "toastify-js";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
 import truncateText from "../../utils/truncateText";
@@ -26,7 +26,7 @@ export default function GoalCard({ goals, updateGoals, userIncome }) {
               toSave={goal.price}
               startDate={goal.startDate}
               currentSaved={goal.saved}
-              rate={userIncome/30}
+              rate={(userIncome / 30).toFixed(2)}
               lastTopUpAmt={goal.lastUpdatedAmount}
               lastTopUpDate={goal.lastUpdatedDate}
               daysLeft="1"
@@ -48,13 +48,13 @@ function GoalBox(props) {
   const toSave = props.toSave;
   const startDate = props.startDate;
   const currentSaved = props.currentSaved;
-  const rate = props.rate;
+  const rate = "Daily $" + props.rate;
   const lastTopUpAmt = props.lastTopUpAmt;
-  const lastTopUpDate = lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY"):"-";
-  const daysLeft = props.daysLeft;
+  const lastTopUpDate =
+    lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY") : "-";
   const percentage =
-    (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
-  const danger = (parseFloat(currentSaved) / parseFloat(toSave)) < 0.5;
+    ((parseFloat(currentSaved) / parseFloat(toSave)) * 100).toFixed(2) + "%";
+  const danger = parseFloat(currentSaved) / parseFloat(toSave) < 0.5;
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [wishlistItems, setItems] = React.useState([]);
 
@@ -96,12 +96,12 @@ function GoalBox(props) {
           gravity: "top",
           position: "center",
           offset: {
-            y: 10 
+            y: 10,
           },
           style: {
             fontSize: "18px",
             fontWeight: "bold",
-            backgroundColor: "#4bb543",
+            backgroundColor: "#efc576",
             color: "#fff",
             boxShadow: "0px 0px 4px #888888",
             width: "150px",
@@ -111,8 +111,8 @@ function GoalBox(props) {
             borderRadius: "6px",
             padding: "10px",
             textAlign: "center",
-            zIndex: "100"
-          }
+            zIndex: "100",
+          },
         }).showToast();
       }
     } catch (error) {
@@ -172,9 +172,11 @@ function GoalBox(props) {
           </Saved>
           <Details>
             <LastAdded>
-              {lastTopUpAmt > 0 ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`:"No funds allocated yet"}
+              {lastTopUpAmt > 0
+                ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`
+                : "No funds allocated yet"}
             </LastAdded>
-            <Rate>${rate}/day</Rate>
+            <Rate>{rate}/day</Rate>
           </Details>
         </GoalInfo>
         <ProgressDiv>
@@ -242,10 +244,57 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
       );
       if (response.status === 200) {
         onClose();
+        Toastify({
+          text: "Goal created!",
+          duration: 1000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "180px",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
         updateGoals((prev) => !prev);
       }
     } catch (error) {
-      alert(`${error.response.data.message}`);
+      Toastify({
+        text: `${error.response.data.message}`,
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10,
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "200px",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px",
+          textAlign: "center",
+          zIndex: "100",
+        },
+      }).showToast();
     }
   };
   return (
@@ -464,12 +513,12 @@ const ProgressFill = styled.div`
 
 const TimeLeft = styled.div`
   height: 16px;
-  width: 15%;
+  width: 18%;
   border-radius: 8px;
   background-color: ${(props) => (props.danger ? "#ffbaba" : "#a5cda5")};
   color: ${(props) => (props.danger ? "#c23434" : "#138513")};
   font-weight: bold;
-  font-size: 12px;
+  font-size: 11px;
 `;
 
 const ModalBackdrop = styled.div`

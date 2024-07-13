@@ -51,26 +51,27 @@ export default function Transactions() {
     try {
       const deletedTransaction = await axios.get(
         `http://localhost:8000/fetch_transaction/${id}`
-      );    
+      );
       const response = await axios.delete(
         `http://localhost:8000/delete_transaction/${id}`
       );
-      const deletedTransactionAmount = deletedTransaction.data.foundTransaction.amount;
+      const deletedTransactionAmount =
+        deletedTransaction.data.foundTransaction.amount;
       const formData = {
         amount: -deletedTransactionAmount,
       };
       try {
         const response2 = await axios.post(
-            "http://localhost:8000/update_bankbalance",
-            formData,
-            {
-                headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                },
-            }
-            );
+          "http://localhost:8000/update_bankbalance",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
       } catch (error) {
-        console.error("Unable to update bank balance")
+        console.error("Unable to update bank balance");
       }
       if (response.status === 200) {
         Toastify({
@@ -79,7 +80,7 @@ export default function Transactions() {
           gravity: "top",
           position: "center",
           offset: {
-            y: 10 
+            y: 10,
           },
           style: {
             fontSize: "18px",
@@ -88,17 +89,16 @@ export default function Transactions() {
             color: "#fff",
             boxShadow: "0px 0px 4px #888888",
             width: "300px",
-            height: "48px",
+            height: "70px",
             position: "absolute",
             left: "calc(50vw - 50px)",
             borderRadius: "6px",
             padding: "10px",
             textAlign: "center",
-            zIndex: "100"
-          }
+            zIndex: "100",
+          },
         }).showToast();
         setUpdateTransactions((prev) => !prev);
-
       } else {
         alert(
           "Failed to delete transaction: Server responded with status " +
@@ -219,7 +219,9 @@ const SpendingTable = ({
               .reverse()
               .map((transaction) => (
                 <TransactionDiv key={transaction.id}>
-                  <TransactionTitle>{formatTitle(transaction.title)}</TransactionTitle>
+                  <TransactionTitle>
+                    {formatTitle(transaction.title)}
+                  </TransactionTitle>
                   <TransactionCategory>
                     <CategoryButton>{transaction.category}</CategoryButton>
                   </TransactionCategory>
