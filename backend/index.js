@@ -6,7 +6,9 @@ const Users = require("./models/userModel");
 // Server settings
 const PORT = 8000;
 const app = express();
-const DB_URL = "mongodb://127.0.0.1:27017/fundtasy";
+// const DB_URL = "mongodb://127.0.0.1:27017/fundtasy";
+const DB_URL = process.env.DB_URL;
+
 app.use(express.json()); // Tells our server to read and understand JSON objects
 app.use(cors()); // Tells the server to allow communication across origins
 
