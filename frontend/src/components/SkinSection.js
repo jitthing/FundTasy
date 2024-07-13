@@ -1,35 +1,49 @@
 import React from "react";
 import styled from "styled-components";
 
-export default function SkinSection({ getModelName, getImagePath, mypigs, selectModel, show, toggle, cancel, save }) {
+export default function SkinSection({
+  getModelName,
+  getImagePath,
+  mypigs,
+  selectModel,
+  show,
+  toggle,
+  cancel,
+  save,
+}) {
   if (show) {
     return (
-        <SkinContainer>
-          <SkinInfo>
-            <div>{getModelName()}</div>
-            <div style={{ fontSize:"14px" }}>
-              Earned on:
-              <div style={{ fontWeight:"normal", textAlign:"right" }}>27/5/23</div>
+      <SkinContainer>
+        <SkinInfo>
+          <div>{getModelName()}</div>
+          <div style={{ fontSize: "14px" }}>
+            Earned on:
+            <div style={{ fontWeight: "normal", textAlign: "right" }}>
+              27/5/23
             </div>
-          </SkinInfo>
-          <SkinButtons>
-            {Object.keys(mypigs).map((modelname) => (
-              <SkinImg srcSet={getImagePath(modelname)} onClick={() => selectModel(modelname)}/>
-            ))}
-          </SkinButtons>
-          <SkinEnd>
-            <CancelSkin onClick={cancel}>Cancel</CancelSkin>
-            <SaveSkin onClick={save}>Save</SaveSkin>
-          </SkinEnd>
-        </SkinContainer>
-    )
+          </div>
+        </SkinInfo>
+        <SkinButtons>
+          {mypigs.map((modelname) => (
+            <SkinImg
+              srcSet={getImagePath(modelname)}
+              onClick={() => selectModel(modelname)}
+            />
+          ))}
+        </SkinButtons>
+        <SkinEnd>
+          <CancelSkin onClick={cancel}>Cancel</CancelSkin>
+          <SaveSkin onClick={save}>Save</SaveSkin>
+        </SkinEnd>
+      </SkinContainer>
+    );
   } else {
     return (
       <EditButton onClick={toggle}>
         Change
-        <EditIcon srcSet="icons/edit.png"/>
+        <EditIcon srcSet="icons/edit.png" />
       </EditButton>
-    )
+    );
   }
 }
 
@@ -39,7 +53,7 @@ const SkinContainer = styled.div`
   border-radius: 12px;
   box-shadow: 0px 0px 10px #cecece;
   overflow: hidden;
-`
+`;
 
 const SkinInfo = styled.div`
   display: flex;
@@ -48,7 +62,7 @@ const SkinInfo = styled.div`
   padding: 15px 15px;
   font-size: 20px;
   font-weight: bold;
-`
+`;
 
 const SkinButtons = styled.div`
   width: 300px;
@@ -67,13 +81,13 @@ const SkinImg = styled.img`
   height: 80px;
   object-fit: cover;
   background-color: #ececec;
-  cursor:pointer;
+  cursor: pointer;
   border-radius: 4px;
   &:hover {
     filter: brightness(1.05);
     transition: 0.1s;
   }
-`
+`;
 
 const SkinEnd = styled.div`
   display: flex;
@@ -81,14 +95,14 @@ const SkinEnd = styled.div`
   gap: 5px;
   height: 50px;
   padding: 10px 5px;
-`
+`;
 
 const SaveSkin = styled.div`
   width: 25%;
   height: 22px;
   border-radius: 15px;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   background-color: #645df2;
   color: #fff;
   cursor: pointer;
@@ -96,7 +110,7 @@ const SaveSkin = styled.div`
     filter: brightness(0.9);
     transition: 0.1s;
   }
-`
+`;
 
 const CancelSkin = styled.div`
   width: 25%;
@@ -104,7 +118,7 @@ const CancelSkin = styled.div`
   vertical-align: middle;
   border-radius: 15px;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
   background-color: grey;
   color: #fff;
   cursor: pointer;
@@ -112,7 +126,7 @@ const CancelSkin = styled.div`
     filter: brightness(0.9);
     transition: 0.1s;
   }
-`
+`;
 
 const EditButton = styled.div`
   min-width: 90px;
@@ -132,7 +146,7 @@ const EditButton = styled.div`
     color: #fff;
   }
   margin: 10px 0px auto 0px;
-`
+`;
 
 const EditIcon = styled.img`
   width: 16px;
@@ -141,4 +155,4 @@ const EditIcon = styled.img`
   ${EditButton}:hover & {
     filter: brightness(1);
   }
-`
+`;

@@ -14,6 +14,7 @@ import getUser from "../utils/getUser";
 import ContributeForm from "../components/ContributeForm";
 import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
 import getTransactions from "../utils/getTransactions";
+import getAllOwnedPigs from "../utils/getOwnedPigs";
 import IncomeModal from "../components/IncomeModal";
 
 export default function HomePage() {
@@ -29,6 +30,7 @@ export default function HomePage() {
   const [contributeFormActive, showContributeForm] = useState(false);
   const [bankBalance, setBankBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [myPigs, setMyPigs] = useState([]);
   const currentTime = new Date().toLocaleString();
   const [userIncome, setUserIncome] = useState(0);
   const [showIncomeModal, setIncomeModal] = useState(userInfo.isFirstTime);
@@ -65,6 +67,8 @@ export default function HomePage() {
     async function fetchTransactions() {
       try {
         const transactionResponse = await getTransactions();
+        const myPigsResponse = await getAllOwnedPigs();
+        setMyPigs(myPigsResponse.want);
         setTransactions(transactionResponse.transactions.reverse().slice(0, 2));
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
@@ -75,8 +79,8 @@ export default function HomePage() {
   }, []);
 
   const selectModel = (model) => {
-    setModelUrl("models/" + model + ".glb");
-    setModelName(mypigs[model]);
+    setModelUrl("models/" + model.toLowerCase() + ".glb");
+    setModelName(model);
   };
 
   const getImagePath = (model) => {
@@ -131,7 +135,7 @@ export default function HomePage() {
 
   const closeIncomeModal = () => {
     setIncomeModal(false);
-  }
+  };
 
   return (
     <PageContainer>
@@ -144,16 +148,25 @@ export default function HomePage() {
           updateBankBalance={setBankBalance}
         />
       )}
-      {showIncomeModal && <IncomeModal closeModal={closeIncomeModal} setUserIncome={setUserIncome} />}
+      {showIncomeModal && (
+        <IncomeModal
+          closeModal={closeIncomeModal}
+          setUserIncome={setUserIncome}
+        />
+      )}
       <Navbar page="home" />
       <Display>
-        <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} userIncome={userIncome} />
+        <GoalCard
+          goals={activeGoals}
+          updateGoals={setUpdateGoals}
+          userIncome={userIncome}
+        />
         <PigDisplay>
           <ModelDisplay modelUrl={modelUrl} show={show} />
           <SkinSection
             getModelName={getModelName}
             getImagePath={getImagePath}
-            mypigs={mypigs}
+            mypigs={myPigs}
             selectModel={selectModel}
             show={show}
             toggle={toggleShow}
