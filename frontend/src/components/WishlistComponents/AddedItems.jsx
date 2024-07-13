@@ -16,7 +16,7 @@ export const AddedItems = ({ items, updateWishlist }) => {
 
 const ItemsWrapper = styled.div`
   display: flex;
-
+  z-index: 0;
   flex-wrap: wrap;
   gap: 10px; // Maintain space between items
   align-items: stretch; // Align items to stretch to fill the container height
