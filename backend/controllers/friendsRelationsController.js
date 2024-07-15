@@ -2,6 +2,13 @@ const FriendsRelations = require("../models/friendsRelationsModel");
 const Users = require("../models/userModel");
 const { getUserFromToken, checkIfUserExists } = require("./userController");
 
+// TODO: 
+// - Add a check to see if the user is already friends with the friend they are trying to add
+// - Add a check to see if the user is trying to add themselves as a friend: DONE
+// - Add a check to see if the friend request already exists: DONE
+// - Add a check to see if the friend requested exists: DONE
+// - Add a check to see if the friend requested has also requested the user
+
 // Create a friend request
 const newFriendRequest = async (req, res) => {
     const user = await Users.findOne({ username: req.body.username });

@@ -5,6 +5,10 @@ import getUser from "../utils/getUser";
 import axios from "axios";
 import Toastify from "toastify-js"; 
 
+// TODO: 
+// 1. Change leaderboard to show a user's friends
+// 2. Show friend requests. Allow user to accept or reject friend requests
+
 export default function Social({ userInfo }) {
 
     const { friendField, setFriendField } = useState("");
