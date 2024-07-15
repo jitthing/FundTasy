@@ -53,6 +53,14 @@ const {
   getCoinTransactions,
 } = require("../controllers/coinTransactionController");
 
+const {
+    newFriendRequest,
+    fetchFriendRequests,
+    acceptFriendRequest,
+    fetchFriends, 
+    deleteFriendRequest
+} = require("../controllers/friendsRelationsController");
+
 const router = express.Router();
 
 // User Routers
@@ -101,6 +109,14 @@ router.get("/fetch_transaction/:id", fetchTransaction);
 router.get("/all_coin_transactions", getCoinTransactions);
 router.post("/new_coin_transaction", newCoinTransaction);
 
+// Friends Relations Router
+router.post("/new_friend_request", newFriendRequest);
+router.get("/fetch_friend_requests", fetchFriendRequests);
+router.post("/accept_friend_request", acceptFriendRequest);
+router.get("/fetch_friends", fetchFriends);
+router.delete("/delete_friend_request", deleteFriendRequest);
+
+// Protected Route
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });
 });

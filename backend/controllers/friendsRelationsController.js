@@ -1,0 +1,78 @@
+const friendsRelations = require("../models/friendsRelationsModel");
+const Users = require("../models/userModel");
+const { getUserFromToken, checkIfUserExists } = require("./userController");
+
+// Create a friend request
+const newFriendRequest = async (req, res) => {
+    const { user } = await getUserFromToken(req);
+    const { friendData } = req.body;
+
+    // Check if the friend requested exists
+    const {friendExists } = await checkIfUserExists(friendData.friendName);
+    if (!friendExists) {
+        return res.status(400).json({ message: "User does not exist!" });
+    }
+
+    // Create a new friend relation as a request
+    try {
+        const createFriendsRelation = await FriendsRelations.create({
+            user1: user.username,
+            user2: friendData.friendName,
+            pending: true,
+            date_requested: new Date()
+        })
+        return res.status(200).json({ message: "Friend request sent!", friendsRelation: createFriendsRelation });
+    } catch (error) {
+        console.error("Unable to send friend request: " + error);
+    }
+}
+
+// Get friend requests for a specific user
+const fetchFriendRequests = async (req, res) => {
+    const { user } = await getUserFromToken(req);
+    try {
+        const friendRequests = await FriendsRelations.find({ user2: user.username, pending: true });
+        return res.status(200).json({ message: "Friend requests fetched!", friendRequests });
+    } catch (error) {
+        console.error("Unable to fetch friend requests: " + error);
+    }
+}
+
+// Accept a friend request
+const acceptFriendRequest = async (req, res) => {
+    const { user } = await getUserFromToken(req);
+    const { friendData } = req.body;
+    try {
+        const acceptFriendRequest = await FriendsRelations.findOneAndUpdate(
+                { user1: friendData.friendName, user2: user.username, pending: true },
+                { pending: false, date_accepted: new Date() });
+        return res.status(200).json({ message: "Friend request accepted!", acceptFriendRequest });
+    } catch (error) {
+        console.error("Unable to accept friend request: " + error);
+    }
+}
+
+// Fetch friends for a specific user
+const fetchFriends = async (req, res) => {
+    const { user } = await getUserFromToken(req);
+    try {
+        const friends = await FriendsRelations.find({ $or: [{ user1: user.username }, { user2: user.username }], pending: false });
+        return res.status(200).json({ message: "Friends fetched!", friends });
+    } catch (error) {
+        console.error("Unable to fetch friends: " + error);
+    }
+}
+
+// Delete friend request
+const deleteFriendRequest = async(req, res) => {
+    const { user } = await getUserFromToken(req);
+    const { friendData } = req.body;
+    try {
+        const deleteFriendRequest = await FriendsRelations.findOneAndDelete({ user1: friendData.friendName, user2: user.username, pending: true });
+        return res.status(200).json({ message: "Friend request rejected!", deleteFriendRequest });
+    } catch (error) {
+        console.error("Unable to delete friend request: " + error);
+    }
+}
+
+module.exports = { newFriendRequest, fetchFriendRequests, acceptFriendRequest, fetchFriends, deleteFriendRequest };

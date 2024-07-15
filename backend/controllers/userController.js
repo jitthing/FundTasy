@@ -427,6 +427,10 @@ const updateCoinBalance = async (req, res) => {
   }
 };
 
+const checkIfUserExists = async (username) => {
+  return await Users.exists({ username: username });
+}
+
 module.exports = {
   authenticateUser,
   create_account,
@@ -442,4 +446,5 @@ module.exports = {
   updateCoinBalance,
   updateBankBalance,
   updateIncome,
+  checkIfUserExists,
 };
