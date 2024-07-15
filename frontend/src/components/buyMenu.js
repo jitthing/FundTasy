@@ -21,7 +21,7 @@ export default function BuyMenu({
       });
       if (response) {
         Toastify({
-          text: "Pig Bought!",
+          text: response.data.message,
           duration: 2000,
           gravity: "top",
           position: "center",

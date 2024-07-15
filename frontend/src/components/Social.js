@@ -112,6 +112,10 @@ const SearchBar = styled.input`
     font-size: 16px;
     padding: 0px 15px;
     margin-top: 10px;
+    &::placeholder {
+       color: grey;
+    }
+    color: #000;
 `
 
 const Leaderboard = styled.div`

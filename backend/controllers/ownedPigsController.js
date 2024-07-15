@@ -52,7 +52,7 @@ const buyPig = async (req, res) => {
         amount: pigPrice,
       });
       if (newPig && userToUpdate && deduction) {
-        return res.status(200).json({ message: "Pig bought!" });
+        return res.status(200).json({ message: `${pigName} bought!` });
       }
     }
   } catch (error) {
