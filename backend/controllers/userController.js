@@ -2,6 +2,7 @@ require("dotenv").config();
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
+const ownedPigs = require("../models/ownedPigsModel");
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -145,10 +146,16 @@ const updateIncome = async (req, res) => {
         },
         { new: true }
       );
+
+      const assignedPig = await ownedPigs.create({
+        username: user.username,
+        modelName: "Basic"
+      });
+
       if (updateUser) {
         return res
           .status(200)
-          .json({ message: "successfully updated income", updateUser });
+          .json({ message: "successfully updated income", updateUser, assignedPig });
       }
     } else {
       const updateUser = await Users.findOneAndUpdate(
@@ -214,6 +221,7 @@ const create_account = async (req, res) => {
     JWT_SECRET,
     { expiresIn: "1hr" }
   );
+
   return res
     .status(200)
     .json({ message: "Account created succesfully", authToken });

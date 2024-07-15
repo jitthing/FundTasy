@@ -74,6 +74,7 @@ export default function ContributeForm({
           }
         );
         if (response) {
+          console.log(response);
           Toastify({
             text: "Funds allocated!",
             duration: 2000,
@@ -98,6 +99,32 @@ export default function ContributeForm({
               zIndex: "100",
             },
           }).showToast();
+          if (response.data.goalComplete) {
+            Toastify({
+              text: `Goal Completed! ${response.data.coinsAwarded} OinkCoins have been added to your balance`,
+              duration: 2000,
+              gravity: "top",
+              position: "center",
+              offset: {
+                y: 10,
+              },
+              style: {
+                fontSize: "18px",
+                fontWeight: "bold",
+                backgroundColor: "#4bb543",
+                color: "#fff",
+                boxShadow: "0px 0px 4px #888888",
+                width: "600px",
+                height: "48px",
+                position: "absolute",
+                left: "calc(50vw - 250px)",
+                borderRadius: "6px",
+                padding: "10px",
+                textAlign: "center",
+                zIndex: "100",
+              },
+            }).showToast();
+          }
         }
       } catch (error) {
         console.error(`${error.response.data.message}`);

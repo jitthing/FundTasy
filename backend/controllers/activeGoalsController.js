@@ -127,14 +127,14 @@ const updateSavedValue = async (req, res) => {
         { new: true }
       )
       if (completed && awarded && updatedCoins) {
-        return res.status(200).json({ message: "Saved value updated and coins awarded" });
+        return res.status(200).json({ message: "Saved value updated and coins awarded", goalComplete: true, coinsAwarded: updated.price*100 });
       } else {
         return res
           .status(500)
-          .json({ message: "Unable to update saved value" });
+          .json({ message: "Unable to update saved value", goalComplete: false });
       }
     } else {
-      return res.status(200).json({ message: "updated saved value is ok" })
+      return res.status(200).json({ message: "updated saved value is ok", goalComplete: false })
     }
   } else {
     return res.status(404).json({ message: "Something went wrong" });

@@ -26,7 +26,7 @@ function Profile() {
   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
   const [statusMessage, setStatusMessage] = React.useState(null);
   const [hasEdited, setHasEdited] = React.useState(false);
-  const [displayPig, setdisplayPig] = useState(undefined);
+  const [displayPig, setdisplayPig] = useState("Basic");
 
   function handleShowBanner() {
     setShowBanner(true);
@@ -111,58 +111,68 @@ function Profile() {
           <Navbar page="profile" />
         </NavbarContainer>
         <ProfileContainer>
-          <ProfilePicture>
-            <img src={`images/${displayPig || 'basic'}.png`} alt="No Pig Selected" />
-            <EditIcon src="icons/edit-black.png" alt="Edit" />
-          </ProfilePicture>
-          <ProfileInfo>
-          <InfoRow>
-              <Label>Username:</Label>
-              <Value>{username}</Value>
-            </InfoRow>
+          <Head>My Profile</Head>
+          <ProfileBody>
+            <ProfilePicture>
+              <img src={`images/${displayPig || 'basic'}.png`} alt="No Pig Selected" />
+            </ProfilePicture>
+            <ProfileInfo>
+            <InfoRow>
+                <Label>Username:</Label>
+                <Value>{username}</Value>
+                <Space />
+              </InfoRow>
 
-          <InfoRow>
-              <Label>Email:</Label>
-              <Value>{email}</Value>
-              {password &&
+            <InfoRow>
+                <Label>Email:</Label>
+                <Value>{email}</Value>
+                {password &&
+                  <EditIcon
+                    src="icons/edit-black.png"
+                    alt="Edit"
+                    onClick={() => handleEdit("email", prompt("Edit Email", email))}
+                  />
+                }
+                <Space />
+              </InfoRow>
+              <InfoRow>
+                <Label>First name:</Label>
+                <Value>{firstName}</Value>
                 <EditIcon
                   src="icons/edit-black.png"
                   alt="Edit"
-                  onClick={() => handleEdit("email", prompt("Edit Email", email))}
+                  onClick={() => handleEdit("fistname", prompt("Edit First name", firstName))}
                 />
-              }
-            </InfoRow>
-            <InfoRow>
-              <Label>First name:</Label>
-              <Value>{firstName}</Value>
-              <EditIcon
-                src="icons/edit-black.png"
-                alt="Edit"
-                onClick={() => handleEdit("fistname", prompt("Edit First name", firstName))}
-              />
-            </InfoRow>
+              </InfoRow>
 
-            <InfoRow>
-              <Label>Last name:</Label>
-              <Value>{lastName}</Value>
-              <EditIcon
-                src="icons/edit-black.png"
-                alt="Edit"
-                onClick={() => handleEdit("lastname", prompt("Edit Last name", lastName))}
-              />
-            </InfoRow>
+              <InfoRow>
+                <Label>Last name:</Label>
+                <Value>{lastName}</Value>
+                <EditIcon
+                  src="icons/edit-black.png"
+                  alt="Edit"
+                  onClick={() => handleEdit("lastname", prompt("Edit Last name", lastName))}
+                />
+              </InfoRow>
 
-            <InfoRow>
-              <Label>Monthly Income:</Label>
-              <Value>{formatCurrency(income)}</Value>
-              <EditIcon
-                src="icons/edit-black.png"
-                alt="Edit"
-                onClick={() => handleEdit("income", prompt("Edit Income: Please enter number", income))}
-              />
-            </InfoRow>
-          </ProfileInfo>
-          <button onClick={handleShowBanner}>Show Banner</button>
+              <InfoRow>
+                <Label>Monthly Income:</Label>
+                <Value>{formatCurrency(income)}</Value>
+                <EditIcon
+                  src="icons/edit-black.png"
+                  alt="Edit"
+                  onClick={() => handleEdit("income", prompt("Edit Income: Please enter number", income))}
+                />
+              </InfoRow>
+
+              <InfoRow>
+                <Label>Display Pig:</Label>
+                <Value>{displayPig.charAt(0).toUpperCase() + displayPig.slice(1)}</Value>
+                <Space />
+              </InfoRow>
+            </ProfileInfo>
+            {/* <button onClick={handleShowBanner}>Show Banner</button> */}
+          </ProfileBody>
         </ProfileContainer>
       </Content>
     </PageContainer>
@@ -188,19 +198,38 @@ const NavbarContainer = styled.div`
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 60%;
-  margin-left: 20px; /* Add space between navbar and profile details */
+  width: 80vw;
+  height: 100vh;
+  padding: 30px; 
 `;
+
+const Head = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 24px;
+  height: 10%;
+  padding: 20px 0px;
+`
+
+const ProfileBody = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  width: 100%;
+  height: 90%;
+  padding: 30px;
+`
 
 const ProfilePicture = styled.div`
   position: relative;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+  width: 500px;
+  height: 400px;
+  border-radius: 30px;
   overflow: hidden;
   background-color: #ececec;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   img {
     width: 100%;
@@ -208,14 +237,14 @@ const ProfilePicture = styled.div`
     object-fit: cover;
   }
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    filter: brightness(0.9);
+    transition: 0.2s;
     cursor: pointer;
   }
 `;
 
 const EditIcon = styled.img`
-  width: 20px;
+  width: 20%;
   height: 20px;
   opacity: 1;
   object-fit: contain;
@@ -226,13 +255,13 @@ const EditIcon = styled.img`
 const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 50%;
   margin-top: 20px;
 `;
 
 const InfoRow = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
   padding: 10px;
@@ -240,15 +269,23 @@ const InfoRow = styled.div`
 `;
 
 const Label = styled.span`
+  width: 20%;
   font-weight: bold;
   font-size: 18px;
   margin-right: 10px;
+  text-align: left;
 `;
 
 const Value = styled.span`
+  width: 60%;
   font-size: 18px;
   flex-grow: 1;
 `;
+
+const Space = styled.div`
+  width: 20%;
+  height: 100%;
+`
 
 const VisibilityToggle = styled.button`
   border: none;

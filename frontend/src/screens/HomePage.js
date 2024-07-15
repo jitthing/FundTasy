@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
 import Social from "../components/Social";
 import ModelDisplay from "../components/ModelDisplay";
@@ -43,6 +44,7 @@ export default function HomePage() {
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
       updateModel(`models/${userObj.user.displayPig}.glb`);
+      setModelName(userObj.user.displayPig.charAt(0).toUpperCase() + userObj.user.displayPig.slice(1));
       setUserIncome(userObj.user.income);
     }
     getUserId();
@@ -106,6 +108,30 @@ export default function HomePage() {
           const response = await updatePig(userId, modelUrl, currentModel);
           console.log(response);
           updateModel(`models/${response.displayPig}.glb`);
+          Toastify({
+            text: "Display pig updated!",
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            offset: {
+              y: 10,
+            },
+            style: {
+              fontSize: "18px",
+              fontWeight: "bold",
+              backgroundColor: "#4bb543",
+              color: "#fff",
+              boxShadow: "0px 0px 4px #888888",
+              width: "250px",
+              height: "50px",
+              position: "absolute",
+              left: "calc(50vw - 50px)",
+              borderRadius: "6px",
+              padding: "10px",
+              textAlign: "center",
+              zIndex: "100",
+            },
+          }).showToast();
         } catch (error) {
           console.log("Failed to update pig: " + error);
           alert("Failed to update pig: " + error);

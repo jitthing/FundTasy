@@ -20,6 +20,8 @@ export default function Transactions() {
   const [allGoals, setAllGoals] = useState([]);
   const [editTransaction, setEditTransaction] = useState(null);
   const [coinTransactions, setCoinTransactions] = useState([]);
+  const [transFilterList, setTransFilter] = useState([]);
+  const [coinFilterList, setCoinFilter] = useState([]);
 
   useEffect(() => {
     const fetchCoinTransactions = async () => {
@@ -88,8 +90,8 @@ export default function Transactions() {
             backgroundColor: "#4bb543",
             color: "#fff",
             boxShadow: "0px 0px 4px #888888",
-            width: "300px",
-            height: "70px",
+            width: "310px",
+            height: "50px",
             position: "absolute",
             left: "calc(50vw - 50px)",
             borderRadius: "6px",
@@ -119,8 +121,10 @@ export default function Transactions() {
   const toggleType = (type) => {
     if (type === "spending") {
       changeType("coins");
+      setCoinFilter([]);
     } else {
       changeType("spending");
+      setTransFilter([]);
     }
   };
 
@@ -135,6 +139,20 @@ export default function Transactions() {
 
   function findGoal(goalId) {
     return allGoals.find((goal) => goal._id === goalId);
+  }
+
+  function removeFilter(filterName) {
+    const idx = transFilterList.indexOf(filterName);
+    if (idx > -1) {
+      transFilterList.splice(idx, 1);
+    }
+  }
+
+  function removeCoinFilter(coinFilter) {
+    const idx = coinFilterList.indexOf(coinFilter);
+    if (idx > -1) {
+      coinFilterList.splice(idx, 1);
+    }
   }
 
   return (
@@ -171,10 +189,22 @@ export default function Transactions() {
               Oink Coins
             </ToggleButton>
           </ToggleBar>
-          <FilterButton>
-            <FilterIcon srcSet="icons/filter.png" />
-            <FilterText>Filter</FilterText>
-          </FilterButton>
+          {type === "spending" && (<FilterBar>
+            {transFilterList.map((filterName) => (
+              <FilterButton>
+                {filterName}
+                <IoClose onClick={() => removeFilter(filterName)} className="h-5 w-6 text-white cursor-pointer hover:brightness-90" />
+              </FilterButton>
+            ))}
+          </FilterBar>)}
+          {type === "coins" && (<FilterBar>
+            {coinFilterList.map((filterName) => (
+              <FilterButton>
+                {filterName}
+                <IoClose onClick={() => removeCoinFilter(filterName)} className="h-5 w-6 text-white cursor-pointer hover:brightness-90" />
+              </FilterButton>
+            ))}
+          </FilterBar>)}
         </TransactionNeck>
 
         {type === "spending" && (
@@ -182,12 +212,14 @@ export default function Transactions() {
             transactions={transactions}
             deleteTransaction={deleteTransaction}
             toggleEditModal={toggleEditModal}
+            transFilterList={transFilterList}
           />
         )}
         {type === "coins" && (
           <CoinsTable
             allCoinTransactions={coinTransactions}
             findGoal={findGoal}
+            coinFilterList={coinFilterList}
           />
         )}
       </TransactionContainer>
@@ -199,7 +231,20 @@ const SpendingTable = ({
   transactions,
   deleteTransaction,
   toggleEditModal,
+  transFilterList
 }) => {
+
+  const containsCategory = (t) => {
+    if (transFilterList.length == 0) return true;
+    return transFilterList.includes(t.category);
+  }
+
+  const handleFilterClick = (cat) => {
+    if (!transFilterList.includes(cat)) {
+      transFilterList.push(cat);
+    }
+  }
+
   return (
     <>
       <TransactionBody>
@@ -215,6 +260,7 @@ const SpendingTable = ({
         {transactions.length > 0 && (
           <TransactionListWrapper>
             {transactions
+              .filter(containsCategory)
               .slice()
               .reverse()
               .map((transaction) => (
@@ -223,7 +269,7 @@ const SpendingTable = ({
                     {formatTitle(transaction.title)}
                   </TransactionTitle>
                   <TransactionCategory>
-                    <CategoryButton>{transaction.category}</CategoryButton>
+                    <CategoryButton onClick={() => handleFilterClick(transaction.category)}>{transaction.category}</CategoryButton>
                   </TransactionCategory>
                   <TransactionDateTime>
                     {moment(transaction.date).format("DD MMM YYYY HH:mm")}
@@ -255,7 +301,7 @@ const SpendingTable = ({
   );
 };
 
-const CoinsTable = ({ allCoinTransactions, findGoal }) => {
+const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
   const coinTransactions = allCoinTransactions;
   coinTransactions.map((ct) => {
     if (ct.goal != null && findGoal(ct.goal).status === "Completed") {
@@ -269,6 +315,18 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
       ct.status = "-";
     }
   });
+
+  const containsType = (ct) => {
+    if (coinFilterList.length == 0) return true;
+    return coinFilterList.includes(ct.type);
+  }
+
+  const handleTypeClick = (type) => {
+    if (!coinFilterList.includes(type)) {
+      coinFilterList.push(type);
+    }
+  }
+
   return (
     <>
       <TransactionBody>
@@ -285,6 +343,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
         {coinTransactions.length > 0 && (
           <>
             {coinTransactions
+              .filter(containsType)
               .slice()
               .reverse()
               .map((ct) => (
@@ -295,7 +354,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
                       : `Completed "${ct.title}"`}
                   </CoinTitle>
                   <CoinType>
-                    <CoinTypeButton>{ct.type}</CoinTypeButton>
+                    <CoinTypeButton onClick={() => handleTypeClick(ct.type)} >{ct.type}</CoinTypeButton>
                   </CoinType>
                   <CoinGoal>
                     <CoinGoalName>{ct.price}</CoinGoalName>
@@ -389,7 +448,7 @@ const AddIcon = styled.img`
 `;
 const TransactionNeck = styled.div`
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 90%;
   height: 10vh;
@@ -439,22 +498,29 @@ const ToggleButton = styled.div`
 //   padding: 0px 15px;
 // `;
 
+const FilterBar = styled.div`
+  width: calc(100% - 200px);
+  height: 100%;
+  padding: 10px 30px;
+  display: flex; 
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  background-color: #fff;
+`
+
 const FilterButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: 36px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 0px 3px #adadad;
-  padding: 0px 5px;
-  margin: 0px 0px 0px auto;
-  cursor: pointer;
-  &:hover {
-    background-color: #f2f2f2;
-    transition: 0.1s;
-  }
+  height: 34px;
+  color: #fff;
+  background-color: #645df2;
+  border-radius: 20px;
+  text-align: right;
+  padding: 5px 10px 5px 15px;
+  font-weight: 600;
+  font-size: 14px;
 `;
 
 const FilterIcon = styled.img`

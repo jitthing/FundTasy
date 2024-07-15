@@ -48,7 +48,7 @@ function GoalBox(props) {
   const toSave = props.toSave;
   const startDate = props.startDate;
   const currentSaved = props.currentSaved;
-  const rate = "Earn $" + props.rate;
+  const rate = formatCurrency(props.rate);
   const lastTopUpAmt = props.lastTopUpAmt;
   const lastTopUpDate =
     lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY") : "-";
@@ -176,7 +176,7 @@ function GoalBox(props) {
                 ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`
                 : "No funds allocated yet"}
             </LastAdded>
-            <Rate>{rate}/day</Rate>
+            <Rate>Earn {rate}/day</Rate>
           </Details>
         </GoalInfo>
         <ProgressDiv>
