@@ -1,12 +1,88 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import truncateText from "../utils/truncateText";
+import getUser from "../utils/getUser";
+import axios from "axios";
+import Toastify from "toastify-js"; 
 
 export default function Social({ userInfo }) {
+
+    const { friendField, setFriendField } = useState("");
+
+    // Handle sending of friend request
+    const handleSendFriendRequest = async(friendName) => {
+
+        const userObj = await getUser();
+        const userId = userObj.user.username;
+        try {
+            console.log("Attempting to send friend request to " + friendName);
+            const response = await axios.post("http://localhost:8000/new_friend_request", {
+                username: userId,
+                friendName: friendName
+            });
+            if (response) {
+                Toastify({
+                    text: response.data.message,
+                    duration: 2000,
+                    gravity: "top",
+                    position: "center",
+                    offset: {
+                      y: 10,
+                    },
+                    style: {
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      backgroundColor: "#4bb543",
+                      color: "#fff",
+                      boxShadow: "0px 0px 4px #888888",
+                      width: "200px",
+                      height: "48px",
+                      position: "absolute",
+                      left: "calc(50vw - 50px)",
+                      borderRadius: "6px",
+                      padding: "10px",
+                      textAlign: "center",
+                      zIndex: "100",
+                    },
+                  }).showToast();
+            }
+        } catch (error) {
+            Toastify({
+                text: `${error.response.data.message}`,
+                duration: 2000,
+                gravity: "top",
+                position: "center",
+                offset: {
+                  y: 10,
+                },
+                style: {
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  backgroundColor: "red",
+                  color: "#fff",
+                  boxShadow: "0px 0px 4px #888888",
+                  width: "250px",
+                  height: "70px",
+                  position: "absolute",
+                  left: "calc(50vw - 50px)",
+                  borderRadius: "6px",
+                  padding: "10px",
+                  textAlign: "center",
+                  zIndex: "100",
+                },
+              }).showToast();
+        }
+    };
+
     return (        
         <SocialContainer>
             <SocialTitle>Friends</SocialTitle>
-            <SearchBar placeholder="Find a friend" />
+            <SearchBar 
+                onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                        handleSendFriendRequest(e.target.value);
+                    }}
+                placeholder="Find a friend" />
             <FriendList currentUser={userInfo} />
         </SocialContainer>
     )

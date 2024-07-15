@@ -1,23 +1,32 @@
-const friendsRelations = require("../models/friendsRelationsModel");
+const FriendsRelations = require("../models/friendsRelationsModel");
 const Users = require("../models/userModel");
 const { getUserFromToken, checkIfUserExists } = require("./userController");
 
 // Create a friend request
 const newFriendRequest = async (req, res) => {
-    const { user } = await getUserFromToken(req);
-    const { friendData } = req.body;
-
+    const user = await Users.findOne({ username: req.body.username });
     // Check if the friend requested exists
-    const {friendExists } = await checkIfUserExists(friendData.friendName);
+    const friendExists = await checkIfUserExists(req.body.friendName);
     if (!friendExists) {
         return res.status(400).json({ message: "User does not exist!" });
+    }
+
+    // Check if friend relation already exists
+    const friendRelationExists = await FriendsRelations.findOne({
+        user1: user.username, user2: req.body.friendName });
+    
+    if (req.body.username === req.body.friendName) {
+        return res.status(400).json({ message: "You cannot send a friend request to yourself!" });
+    }
+    if (friendRelationExists) {
+        return res.status(400).json({ message: "Friend request already exists!" });
     }
 
     // Create a new friend relation as a request
     try {
         const createFriendsRelation = await FriendsRelations.create({
             user1: user.username,
-            user2: friendData.friendName,
+            user2: req.body.friendName,
             pending: true,
             date_requested: new Date()
         })
