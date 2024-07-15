@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
 import axios from "axios";
 /* global confetti */
 import { X } from "lucide-react";
@@ -289,12 +290,13 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
   }, []);
 
   const handleSignInClick = () => {
+    console.log("google clicked")
     window.google.accounts.id.prompt();
   };
 
   return (
     <button
-      className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
+      className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100 z-100"
       onClick={handleSignInClick}
     >
       <div className="relative flex items-center space-x-4 justify-center">
@@ -470,8 +472,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <Logo />
+    <>
+    <BackgroundDisplay srcSet="piggies-small.png" />
+    <Body className="flex min-h-full flex-1 flex-col justify-end px-6 py-12 lg:px-8 w-1/2 bg-white">
+      {/* <Logo /> */}
+      <Title>Welcome to Fundtasy</Title>
+      <Instruction className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</Instruction>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleLogin}>
           <EmailInput isInvalid={isLoginInputInvalid} />
@@ -521,6 +527,30 @@ export default function LoginPage() {
           loading={loading}
         />
       )}
-    </div>
+    </Body>
+    </>
   );
 }
+
+const BackgroundDisplay = styled.img`
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.9;
+  filter: brightness(0.9);
+  background-color: #fcfcfc;
+`
+
+const Body = styled.div`
+  position: absolute;
+  top: 0px;
+  left: 50%;
+`
+
+const Instruction = styled.div`
+  text-align: center;
+`
+
+const Title = styled.div`
+  font-size: 40px;
+  font-weight: bold;
+`
