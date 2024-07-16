@@ -27,12 +27,12 @@ export const AddedItem = ({ item, updateWishlist }) => {
             backgroundColor: "#4bb543",
             color: "#fff",
             boxShadow: "0px 0px 4px #888888",
-            width: "150px",
+            width: "fit-content",
             height: "48px",
             position: "absolute",
             left: "calc(50vw - 50px)",
             borderRadius: "6px",
-            padding: "10px",
+            padding: "10px 15px",
             textAlign: "center"
           }
         }).showToast();

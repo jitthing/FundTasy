@@ -27,12 +27,12 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
           backgroundColor: "#4bb543",
           color: "#fff",
           boxShadow: "0px 0px 4px #888888",
-          width: "360px",
+          width: "fit-content",
           height: "48px",
           position: "absolute",
           left: "calc(50vw - 50px)",
           borderRadius: "6px",
-          padding: "10px",
+          padding: "10px 15px",
           textAlign: "center",
           zIndex: "100"
         }
@@ -52,12 +52,12 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
           backgroundColor: "red",
           color: "#fff",
           boxShadow: "0px 0px 4px #888888",
-          width: "250px",
+          width: "fit-content",
           height: "48px",
           position: "absolute",
           left: "calc(50vw - 50px)",
           borderRadius: "6px",
-          padding: "10px",
+          padding: "10px 15px",
           textAlign: "center",
           zIndex: "100"
         }
