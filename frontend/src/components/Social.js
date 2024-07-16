@@ -163,14 +163,14 @@ function FriendList({ currentUser, friends }) {
                     .map((friend) => (
                         <LeaderboardRow>
                             <LeaderboardCell style={{ width:"15%" }} >7</LeaderboardCell>
-                            <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Friend name</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >friend name</LeaderboardCell>
                             <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >66</LeaderboardCell>
                             <LeaderboardCell style={{ width:"15%" }} >1472</LeaderboardCell>
                         </LeaderboardRow>
                     ))
             )}
             {friends.length === 0 && (
-                <EmptyList>You have no friends :(</EmptyList>
+                <EmptyList>You have no friends :</EmptyList>
             )}
             <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} style={{ marginTop:"auto" }} >
                 <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
@@ -184,6 +184,72 @@ function FriendList({ currentUser, friends }) {
 }
 
 function RequestList({ requests }) {
+
+    // Handle accepting friend request
+    const handleAcceptFriendRequest = async(friendName) => {
+        const userObj = await getUser();
+        const userId = userObj.user.username;
+        try {
+            // console.log("Attempting to accept friend request from " + friendName);
+            // alert("accepting friend request");
+            const response = await axios.post("http://localhost:8000/accept_friend_request", {
+                username: userId,
+                friendName: friendName
+            });
+            if (response) {
+                Toastify({
+                    text: response.data.message,
+                    duration: 2000,
+                    gravity: "top",
+                    position: "center",
+                    offset: {
+                      y: 10,
+                    },
+                    style: {
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      backgroundColor: "#4bb543",
+                      color: "#fff",
+                      boxShadow: "0px 0px 4px #888888",
+                      width: "fit-content",
+                      height: "48px",
+                      position: "absolute",
+                      left: "calc(50vw - 50px)",
+                      borderRadius: "6px",
+                      padding: "10px 15px",
+                      textAlign: "center",
+                      zIndex: "100",
+                    },
+                  }).showToast();
+            }
+        } catch (error) {
+            Toastify({
+                text: `${error.response.data.message}`,
+                duration: 2000,
+                gravity: "top",
+                position: "center",
+                offset: {
+                  y: 10,
+                },
+                style: {
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  backgroundColor: "red",
+                  color: "#fff",
+                  boxShadow: "0px 0px 4px #888888",
+                  width: "fit-content",
+                  height: "48px",
+                  position: "absolute",
+                  left: "calc(50vw - 50px)",
+                  borderRadius: "6px",
+                  padding: "10px 15px",
+                  textAlign: "center",
+                  zIndex: "100",
+                },
+              }).showToast();
+        }
+    };
+
     return (
         <Leaderboard>
             <LeaderboardRow style={{ height:"30px" }}>
@@ -191,14 +257,14 @@ function RequestList({ requests }) {
                 <LeaderboardStat style={{ width:"25%" }} >Date</LeaderboardStat>
                 <LeaderboardStat style={{ width:"30%" }} >Request</LeaderboardStat>
             </LeaderboardRow>
-            <LeaderboardRow>
+            {/* <LeaderboardRow>
                 <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Sample User</LeaderboardCell>
                 <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >16/7/2024</LeaderboardCell>
                 <RequestCell style={{ width:"30%" }} >
                     <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-90" />
                     <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-90" />
                 </RequestCell>
-            </LeaderboardRow>
+            </LeaderboardRow> */}
             {requests
                 .slice()
                 .reverse()
@@ -207,8 +273,12 @@ function RequestList({ requests }) {
                         <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{request.user1}</LeaderboardCell>
                         <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{moment(request.date_requested).format("DD/MM/YYYY")}</LeaderboardCell>
                         <RequestCell style={{ width:"30%" }} >
-                            <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-90" />
-                            <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-90" />
+                            <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-50" />
+                            {/* <Checkmark size={20} color="green" onClick={() => handleAcceptFriendRequest(request.user1) } /> */}
+                            <div onClick={() => handleAcceptFriendRequest(request.user1)}>
+                                <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-200 on" />
+                            </div>
+                            
                         </RequestCell>
                     </LeaderboardRow>
                 ))}

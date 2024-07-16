@@ -56,11 +56,11 @@ const fetchFriendRequests = async (req, res) => {
 
 // Accept a friend request
 const acceptFriendRequest = async (req, res) => {
-    const { user } = await getUserFromToken(req);
-    const { friendData } = req.body;
+    const user = await Users.findOne({ username: req.body.username });
+    const friendName = req.body.friendName;
     try {
         const acceptFriendRequest = await FriendsRelations.findOneAndUpdate(
-                { user1: friendData.friendName, user2: user.username, pending: true },
+                { user1: friendName, user2: user.username, pending: true },
                 { pending: false, date_accepted: new Date() });
         return res.status(200).json({ message: "Friend request accepted!", acceptFriendRequest });
     } catch (error) {
