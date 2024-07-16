@@ -1,7 +1,7 @@
 import axios from "axios";
-export default async function getTransactions() {
+export default async function getFriendRequests() {
   try {
-    const response = await axios.get("http://localhost:8000/all_transactions", {
+    const response = await axios.get("http://localhost:8000/fetch_friend_requests", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },

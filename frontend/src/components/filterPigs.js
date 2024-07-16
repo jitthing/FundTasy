@@ -12,16 +12,16 @@ export default function FilterPigs({ closeForm, toggleUnownedFilter, toggleOwned
         </FilterPigsHead>
         <FilterPigsBody>
             <FilterPigsBlock width="100%">
-            <label>
+            <Label>
                 <input type="checkbox" className="ownedCheckbox" defaultChecked={ownedFilter}
                 onClick={toggleOwnedFilter}/>
                 Owned
-            </label>
-            <label>
+            </Label>
+            <Label>
                 <input type="checkbox" className="unownedCheckBox" defaultChecked={unownedFilter}
                 onClick={toggleUnownedFilter}/>
                 Unowned
-            </label>
+            </Label>
             </FilterPigsBlock>
       </FilterPigsBody>
         </FilterPigsModal>
@@ -91,5 +91,16 @@ const FilterPigsBlock = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  align-items: center;
   gap: 10x;
 `;
+
+const Label = styled.label`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 25%;
+  gap: 10px;
+  font-size: 16px;
+  text-align: left;
+`

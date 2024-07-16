@@ -82,7 +82,7 @@ function Profile() {
         setPassword(response.user.password); // use to check if user is a google user
         setdisplayPig(response.user.displayPig);
         setStatusMessage(response.message);
-        handleShowBanner();
+        // handleShowBanner();
       }
       catch (error) {
         setStatusMessage(error.message);

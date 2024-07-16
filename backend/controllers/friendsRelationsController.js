@@ -73,6 +73,16 @@ const fetchFriends = async (req, res) => {
     const { user } = await getUserFromToken(req);
     try {
         const friends = await FriendsRelations.find({ $or: [{ user1: user.username }, { user2: user.username }], pending: false });
+        const usernames = [];
+        friends.forEach((friend) => {
+            if (friend.user1 === user.username && !usernames.includes(friend.user2)) {
+                usernames.push(friend.user2);
+            } else if (friend.user2 === user.username && !usernames.includes(friend.user1)) {
+                usernames.push(friend.user1);
+            }
+        })
+        // console.log(usernames);
+        // const allFriends = Users.find({ username: {$in: usernames} }).sort({bankBalance: -1});
         return res.status(200).json({ message: "Friends fetched!", friends });
     } catch (error) {
         console.error("Unable to fetch friends: " + error);
