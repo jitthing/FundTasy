@@ -3,11 +3,11 @@ const Users = require("../models/userModel");
 const { getUserFromToken, checkIfUserExists } = require("./userController");
 
 // TODO: 
-// - Add a check to see if the user is already friends with the friend they are trying to add
-// - Add a check to see if the user is trying to add themselves as a friend: DONE
-// - Add a check to see if the friend request already exists: DONE
-// - Add a check to see if the friend requested exists: DONE
-// - Add a check to see if the friend requested has also requested the user
+// 1 Add a check to see if the user is already friends with the friend they are trying to add: kinda DONE with 3
+// 2 Add a check to see if the user is trying to add themselves as a friend: DONE
+// 3 Add a check to see if the friend request already exists: DONE
+// 4 Add a check to see if the friend requested exists: DONE
+// 5 Add a check to see if the friend requested has also requested the user: DONE
 
 // Create a friend request
 const newFriendRequest = async (req, res) => {
@@ -20,13 +20,34 @@ const newFriendRequest = async (req, res) => {
 
     // Check if friend relation already exists
     const friendRelationExists = await FriendsRelations.findOne({
-        user1: user.username, user2: req.body.friendName });
+        user1: user.username, user2: req.body.friendName }
+    );
     
+    // Check if the user is trying to add themselves as a friend
     if (req.body.username === req.body.friendName) {
         return res.status(400).json({ message: "You cannot send a friend request to yourself!" });
     }
+
+    // if the friend request already exists
     if (friendRelationExists) {
         return res.status(400).json({ message: "Friend request already exists!" });
+    }
+
+    // Check if the friend has already sent a friend request to the user
+    const bidirectionalFriendRelationExists = await FriendsRelations.findOne({
+        user1: req.body.friendName, user2: user.username }
+    );
+
+    // If the friend has already sent a friend request to the user, accept the request
+    if (bidirectionalFriendRelationExists) {
+        try {
+            const acceptFriendRequest = await FriendsRelations.findOneAndUpdate(
+                    { user1: req.body.friendName, user2: req.body.username, pending: true },
+                    { pending: false, date_accepted: new Date() });
+            return res.status(200).json({ message: "Friend request accepted!", acceptFriendRequest });
+        } catch (error) {
+            console.error("Unable to accept friend request: " + error);
+        }
     }
 
     // Create a new friend relation as a request
@@ -91,13 +112,14 @@ const fetchFriends = async (req, res) => {
 
 // Delete friend request
 const deleteFriendRequest = async(req, res) => {
-    const { user } = await getUserFromToken(req);
-    const { friendData } = req.body;
+    const userID = req.body.username;
+    const friendName = req.body.friendName;
     try {
-        const deleteFriendRequest = await FriendsRelations.findOneAndDelete({ user1: friendData.friendName, user2: user.username, pending: true });
+        const deleteFriendRequest = await FriendsRelations.findOneAndDelete({ user1: friendName, user2: userID, pending: true });
         return res.status(200).json({ message: "Friend request rejected!", deleteFriendRequest });
     } catch (error) {
         console.error("Unable to delete friend request: " + error);
+        return res.status(400).json({ message: "Error!" });
     }
 }
 

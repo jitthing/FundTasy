@@ -54,7 +54,6 @@ export default function Social({ userInfo }) {
         const userObj = await getUser();
         const userId = userObj.user.username;
         try {
-            console.log("Attempting to send friend request to " + friendName);
             const response = await axios.post("http://localhost:8000/new_friend_request", {
                 username: userId,
                 friendName: friendName
@@ -196,7 +195,72 @@ function FriendList({ currentUser, friends }) {
 }
 
 function RequestList({ requests }) {
-
+        // Handle deleting of friend request
+        const handleDeleteFriendRequest = async(friendName) => {
+            const userObj = await getUser();
+            const userId = userObj.user.username;
+            try {
+                const response = await axios.delete("http://localhost:8000/delete_friend_request", 
+                    {data: 
+                        {
+                        username: userId,
+                        friendName: friendName,
+                        }
+                    });
+                if (response) {
+                    Toastify({
+                        text: response.data.message,
+                        duration: 2000,
+                        gravity: "top",
+                        position: "center",
+                        offset: {
+                          y: 10,
+                        },
+                        style: {
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                          backgroundColor: "#4bb543",
+                          color: "#fff",
+                          boxShadow: "0px 0px 4px #888888",
+                          width: "fit-content",
+                          height: "48px",
+                          position: "absolute",
+                          left: "calc(50vw - 50px)",
+                          borderRadius: "6px",
+                          padding: "10px 15px",
+                          textAlign: "center",
+                          zIndex: "100",
+                        },
+                      }).showToast();
+                }
+            } catch (error) {
+                Toastify({
+                    text: `${error.response.data.message}`,
+                    duration: 2000,
+                    gravity: "top",
+                    position: "center",
+                    offset: {
+                      y: 10,
+                    },
+                    style: {
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      backgroundColor: "red",
+                      color: "#fff",
+                      boxShadow: "0px 0px 4px #888888",
+                      width: "fit-content",
+                      height: "48px",
+                      position: "absolute",
+                      left: "calc(50vw - 50px)",
+                      borderRadius: "6px",
+                      padding: "10px 15px",
+                      textAlign: "center",
+                      zIndex: "100",
+                    },
+                  }).showToast();
+            }
+        };
+        
     // Handle accepting friend request
     const handleAcceptFriendRequest = async(friendName) => {
         const userObj = await getUser();
@@ -285,8 +349,9 @@ function RequestList({ requests }) {
                         <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{request.user1}</LeaderboardCell>
                         <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{moment(request.date_requested).format("DD/MM/YYYY")}</LeaderboardCell>
                         <RequestCell style={{ width:"30%" }} >
-                            <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-50" />
-                            {/* <Checkmark size={20} color="green" onClick={() => handleAcceptFriendRequest(request.user1) } /> */}
+                            <div onClick={() => handleDeleteFriendRequest(request.user1)}>
+                                <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-50 on" />
+                            </div>
                             <div onClick={() => handleAcceptFriendRequest(request.user1)}>
                                 <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-200 on" />
                             </div>
