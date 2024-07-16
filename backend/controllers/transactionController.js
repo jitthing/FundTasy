@@ -1,5 +1,7 @@
 const transaction = require("../models/transactionModel");
 const { getUserFromToken } = require("./userController");
+const User = require("../models/userModel"); // Adjust the path as needed
+
 const newTransaction = async (req, res) => {
     // console.log(req.body);
     const { formData, username } = req.body;
@@ -50,8 +52,18 @@ const deleteTransaction = async (req, res) => {
 
   const editTransaction = async (req, res) => {
     const { id } = req.params;
-    const { formData } = req.body;
+    const { formData, username } = req.body;
     try {
+        // Fetch the original transaction
+        const originalTransaction = await transaction.findById(id);
+        if (!originalTransaction) {
+            return res.status(404).json({ message: "Transaction not found" });
+        }
+
+        // Calculate the difference in amount
+        const amountDifference = originalTransaction.amount - formData.amount;
+
+        // Update the transaction
         const updatedTransaction = await transaction.findByIdAndUpdate(
             id,
             {
@@ -61,8 +73,21 @@ const deleteTransaction = async (req, res) => {
             },
             { new: true }
         );
+
         if (updatedTransaction) {
-            return res.status(200).json({ message: "Transaction updated!", transaction: updatedTransaction });
+            // Update bank balance
+            const user = await User.findOne({ username });
+            if (!user) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            user.bankBalance += amountDifference;
+            await user.save();
+
+            return res.status(200).json({ 
+                message: "Transaction updated!", 
+                transaction: updatedTransaction,
+                bankBalanceChange: amountDifference
+            });
         } else {
             return res.status(404).json({ message: "Transaction not found" });
         }

@@ -119,8 +119,13 @@ export default function NewRecordForm({
         `http://localhost:8000/edit_transaction/${id}`,
         { formData, username }
       );
-      if (response) {
+      if (response.data) {
         updateTransactions((prev) => !prev);
+        // Update bank balance in local storage
+        const currentBalance = parseFloat(localStorage.getItem("bankBalance") || "0");
+        const newBalance = currentBalance - response.data.bankBalanceChange;
+        localStorage.setItem("bankBalance", newBalance.toString());
+        
         Toastify({
           text: "Transaction updated!",
           duration: 2000,
