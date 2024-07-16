@@ -235,7 +235,7 @@ const SpendingTable = ({
 }) => {
 
   const containsCategory = (t) => {
-    if (transFilterList.length == 0) return true;
+    if (transFilterList.length === 0) return true;
     return transFilterList.includes(t.category);
   }
 
@@ -303,7 +303,7 @@ const SpendingTable = ({
 
 const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
   const coinTransactions = allCoinTransactions;
-  coinTransactions.map((ct) => {
+  coinTransactions.forEach((ct) => {
     if (ct.goal != null && findGoal(ct.goal).status === "Completed") {
       const g = findGoal(ct.goal);
       ct.status = g.status;
@@ -317,7 +317,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
   });
 
   const containsType = (ct) => {
-    if (coinFilterList.length == 0) return true;
+    if (coinFilterList.length === 0) return true;
     return coinFilterList.includes(ct.type);
   }
 
@@ -480,24 +480,6 @@ const ToggleButton = styled.div`
   transition: 0.1s;
 `;
 
-// const ToolBar = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   width: 60vw;
-//   height: 36px;
-//   align-items: center;
-// `;
-
-// const SearchBar = styled.input`
-//   margin: 0px 0px 0px auto;
-//   width: 20%;
-//   height: 36px;
-//   box-shadow: 0px 0px 3px #adadad;
-//   border-radius: 8px;
-//   font-size: 16px;
-//   padding: 0px 15px;
-// `;
-
 const FilterBar = styled.div`
   width: calc(100% - 200px);
   height: 100%;
@@ -521,17 +503,6 @@ const FilterButton = styled.div`
   padding: 5px 10px 5px 15px;
   font-weight: 600;
   font-size: 14px;
-`;
-
-const FilterIcon = styled.img`
-  height: 14px;
-  width: 14px;
-`;
-
-const FilterText = styled.div`
-  font-size: 14px;
-  width: 60%;
-  text-align: right;
 `;
 
 const TransactionBody = styled.div`

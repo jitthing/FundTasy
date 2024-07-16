@@ -34,62 +34,62 @@ function Profile() {
       setShowBanner(false);
     }, 2000); // Hide the banner after 2s
   }
-  const UpdateUserInfo = async () => {
-    console.log("updating user data");
-    try {
-      const response = await axios.post('http://localhost:8000/update_user_info', {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        income: income,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${getToken()}`
+  
+  useEffect(() => {
+    async function UpdateUserInfo() {
+      console.log("updating user data");
+      try {
+        const response = await axios.post('http://localhost:8000/update_user_info', {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          income: income,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${getToken()}`
+          }
+        });
+        if (response.status === 200) {
+          setStatusMessage(response.data.message);
+          setBannerType("success");
+          handleShowBanner();
         }
-      });
-      if (response.status === 200) {
-        setStatusMessage(response.data.message);
-        setBannerType("success");
+      }
+      catch (error) {
+        console.log("Error updating user data: ", error);
+        setStatusMessage(error.response.data.message);
+        if (error.response.status === 400) setBannerType("warning");
+        else setBannerType("danger");
         handleShowBanner();
       }
     }
-    catch (error) {
-      console.log("Error updating user data: ", error);
-      setStatusMessage(error.response.data.message);
-      if (error.response.status === 400) setBannerType("warning");
-      else setBannerType("danger");
-      handleShowBanner();
-    }
-  }
-
-  const fetchUserData = async () => {
-    try {
-      const response = await getUser();
-      console.log(response.user);
-      setEmail(response.user.email);
-      setFirstName(response.user.firstName);
-      setLastName(response.user.lastName);
-      setUsername(response.user.username);
-      response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
-      setIncome(response.user.income);
-      setPassword(response.user.password); // use to check if user is a google user
-      setdisplayPig(response.user.displayPig);
-      setStatusMessage(response.message);
-      handleShowBanner();
-    }
-    catch (error) {
-      setStatusMessage(error.message);
-      setBannerType("danger");
-      handleShowBanner();
-    }
-  };
-  useEffect(() => {
     if (hasEdited) {
       UpdateUserInfo();
     }
-  }, [firstName, lastName, email, income]);
+  }, [firstName, lastName, email, income, hasEdited]);
 
   useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const response = await getUser();
+        console.log(response.user);
+        setEmail(response.user.email);
+        setFirstName(response.user.firstName);
+        setLastName(response.user.lastName);
+        setUsername(response.user.username);
+        response.user.lastName ? setLastName(response.user.lastName) : setLastName(undefined);
+        setIncome(response.user.income);
+        setPassword(response.user.password); // use to check if user is a google user
+        setdisplayPig(response.user.displayPig);
+        setStatusMessage(response.message);
+        handleShowBanner();
+      }
+      catch (error) {
+        setStatusMessage(error.message);
+        setBannerType("danger");
+        handleShowBanner();
+      }
+    }
     fetchUserData();
   }, []);
 
@@ -201,6 +201,8 @@ const ProfileContainer = styled.div`
   width: 80vw;
   height: 100vh;
   padding: 30px; 
+  align-items: start;
+  justify-content: start;
 `;
 
 const Head = styled.div`
@@ -249,7 +251,7 @@ const EditIcon = styled.img`
   opacity: 1;
   object-fit: contain;
   cursor: pointer;
-  margin-left: 10px; /* Add space between value and icon */
+  margin-left: auto; /* Add space between value and icon */
 `;
 
 const ProfileInfo = styled.div`
@@ -286,14 +288,5 @@ const Space = styled.div`
   width: 20%;
   height: 100%;
 `
-
-const VisibilityToggle = styled.button`
-  border: none;
-  background: none;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 10px;
-  color: #007bff;
-`;
 
 export default Profile;

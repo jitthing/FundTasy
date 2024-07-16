@@ -6,7 +6,7 @@ import styled from "styled-components";
 import axios from "axios";
 /* global confetti */
 import { X } from "lucide-react";
-import confetti from "canvas-confetti";
+// import confetti from "canvas-confetti";
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 /* TODO
   - Fix login error after resetting password (ChangPassword.jsx Line 35)
@@ -16,18 +16,18 @@ const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
  */
 
 // Form handling function
-function formSubmission(e) {
-  e.preventDefault();
-  // The data can be taken directly from the form submission or from the state variables 'email' and 'password'
-  const formElements = e.target.elements;
-  const formName = e.target.name;
-  const email = formElements.email.value;
-  const password = formElements.password.value;
-  console.log(email, password);
-  if (formName === "signup") {
-    confetti();
-  }
-}
+// function formSubmission(e) {
+//   e.preventDefault();
+//   // The data can be taken directly from the form submission or from the state variables 'email' and 'password'
+//   const formElements = e.target.elements;
+//   const formName = e.target.name;
+//   const email = formElements.email.value;
+//   const password = formElements.password.value;
+//   console.log(email, password);
+//   if (formName === "signup") {
+//     confetti();
+//   }
+// }
 
 const Modal = ({
   closeModal,
@@ -79,18 +79,18 @@ const Modal = ({
 );
 
 // Logo component
-const Logo = () => (
-  <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img
-      className="mx-auto h-40 w-auto"
-      src="https://logowik.com/content/uploads/images/piggy-bank9847.jpg"
-      alt="fundtasty logo"
-    />
-    <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-      Sign in to your account
-    </h2>
-  </div>
-);
+// const Logo = () => (
+//   <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+//     <img
+//       className="mx-auto h-40 w-auto"
+//       src="https://logowik.com/content/uploads/images/piggy-bank9847.jpg"
+//       alt="fundtasty logo"
+//     />
+//     <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+//       Sign in to your account
+//     </h2>
+//   </div>
+// );
 
 const NameInput = () => {
   return (
@@ -476,7 +476,7 @@ export default function LoginPage() {
     <BackgroundDisplay srcSet="piggies-small.png" />
     <Body className="flex min-h-full flex-1 flex-col justify-end px-6 py-12 lg:px-8 w-1/2 bg-white">
       {/* <Logo /> */}
-      <Title>Welcome to Fundtasy</Title>
+      <Title>Welcome to FundTasy</Title>
       <Instruction className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</Instruction>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleLogin}>

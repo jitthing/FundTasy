@@ -15,10 +15,6 @@ export default function Navbar(props) {
           <MenuImg srcSet="icons/home.png" active={page === "home"} />
           <MenuText active={page === "home"}>Home</MenuText>
         </MenuItem>
-        {/* <MenuItem onClick={() => navigate("/my-pigs")} >
-          <MenuImg srcSet="icons/mypigs.png" active={page === "mypigs"} />
-          <MenuText active={page === "mypigs"} >My Pigs</MenuText>
-        </MenuItem> */}
         <MenuItem onClick={() => navigate("/wishlist")}>
           <MenuImg srcSet="icons/wishlist.png" active={page === "wishlist"} />
           <MenuText active={page === "wishlist"}>Wishlist</MenuText>

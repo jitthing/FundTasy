@@ -213,11 +213,11 @@ const CardPrice = styled.div`
   margin-left: 5px;
 `;
 
-const BuyMenuLabel = styled.div`
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-`;
+// const BuyMenuLabel = styled.div`
+//   text-align: center;
+//   font-weight: 600;
+//   font-size: 14px;
+// `;
 
 const InsufficientLabel = styled.div`
   text-align: center;
