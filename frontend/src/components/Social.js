@@ -38,9 +38,8 @@ export default function Social({ userInfo }) {
         async function fetchFriends() {
             try {
                 const friends = await getFriends();
-                console.log(friends.fetchFriendsriends);
                 if (friends) {
-                    setFriends(friends.friends);
+                    setFriends(friends.allFriends);
                 }
             } catch (error) {
                 console.log("Unable to get friends: " + error);
@@ -142,42 +141,55 @@ export default function Social({ userInfo }) {
 }
 
 function FriendList({ currentUser, friends }) {
+    function getName(first, last, iscurrentuser) {
+        var name = first + " " + last;
+        if (iscurrentuser) {
+            name += " (me)";
+        }
+        return truncateText(name, 17);
+    }
+
+    let size = Math.min(friends.length, 7);
+    const currentUserIndex = friends.findIndex(friend => friend.username === currentUser.username);
+    let displayedFriends;
+    if (currentUserIndex < size) {
+        displayedFriends = friends.slice(0, size);
+    } else {
+        displayedFriends = [...friends.slice(0, 6), friends[currentUserIndex]];
+    }
+
     return (
         <Leaderboard>
-            {/* <LeaderboardHead>Leaderboard</LeaderboardHead> */}
-            {/* Only show max 7 rows including user */}
             <LeaderboardRow style={{ height:"30px" }}>
                 <LeaderboardStat style={{ width:"15%" }} >Rank</LeaderboardStat>
                 <LeaderboardStat style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Fund</LeaderboardStat>
                 <LeaderboardStat style={{ width:"25%" }} >Last 30d</LeaderboardStat>
                 <LeaderboardStat style={{ width:"15%" }} >Total</LeaderboardStat>
             </LeaderboardRow>
-            {/* <LeaderboardRow>
-                <LeaderboardCell style={{ width:"15%" }} >1</LeaderboardCell>
-                <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Sample User</LeaderboardCell>
-                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >37</LeaderboardCell>
-                <LeaderboardCell style={{ width:"15%" }} >2160</LeaderboardCell>
-            </LeaderboardRow> */}
             {friends.length > 0 && (
-                friends
-                    .map((friend) => (
-                        <LeaderboardRow>
-                            <LeaderboardCell style={{ width:"15%" }} >7</LeaderboardCell>
-                            <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >friend name</LeaderboardCell>
-                            <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >66</LeaderboardCell>
-                            <LeaderboardCell style={{ width:"15%" }} >1472</LeaderboardCell>
+                displayedFriends
+                    .map((friend, index) => (
+                        <LeaderboardRow isCurrentUser={friend.username === currentUser.username}>
+                            <LeaderboardCell style={{ width:"15%" }} >{index + 1}</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >
+                                {getName(friend.firstName, friend.lastName, friend.username === currentUser.username)}
+                            </LeaderboardCell>
+                            <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{friend.coinBalance}</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"15%" }} >{friend.bankBalance}</LeaderboardCell>
                         </LeaderboardRow>
                     ))
             )}
             {friends.length === 0 && (
-                <EmptyList>You have no friends :</EmptyList>
+                <>
+                    <EmptyList>You have no friends :</EmptyList>            
+                    <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} style={{ marginTop:"auto" }} >
+                        <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{truncateText(currentUser.firstName+" "+currentUser.lastName+" (me)", 17)}</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(currentUser.coinBalance).toFixed(0)}</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"15%" }} >{parseFloat(currentUser.bankBalance).toFixed(2)}</LeaderboardCell>
+                    </LeaderboardRow>
+                </>
             )}
-            <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} style={{ marginTop:"auto" }} >
-                <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
-                <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{truncateText(currentUser.firstName+" "+currentUser.lastName+" (me)", 17)}</LeaderboardCell>
-                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(currentUser.coinBalance).toFixed(0)}</LeaderboardCell>
-                <LeaderboardCell style={{ width:"15%" }} >{parseFloat(currentUser.bankBalance).toFixed(2)}</LeaderboardCell>
-            </LeaderboardRow>
             <LeaderboardEnd>View More</LeaderboardEnd>
         </Leaderboard>
     )
@@ -283,7 +295,7 @@ function RequestList({ requests }) {
                     </LeaderboardRow>
                 ))}
             {requests.length === 0 && (
-                <EmptyList>No outstanding friend requests</EmptyList>
+                <EmptyList style={{ height: "85%" }}>No outstanding friend requests</EmptyList>
             )}
             <LeaderboardEnd>All Requests</LeaderboardEnd>
         </Leaderboard>

@@ -81,9 +81,9 @@ const fetchFriends = async (req, res) => {
                 usernames.push(friend.user1);
             }
         })
-        // console.log(usernames);
-        // const allFriends = Users.find({ username: {$in: usernames} }).sort({bankBalance: -1});
-        return res.status(200).json({ message: "Friends fetched!", friends });
+        usernames.push(user.username);
+        const allFriends = await Users.find({ username: {$in: usernames} }).sort({bankBalance: -1});
+        return res.status(200).json({ message: "Friends fetched!", friends, allFriends });
     } catch (error) {
         console.error("Unable to fetch friends: " + error);
     }
