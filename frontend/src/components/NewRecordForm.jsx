@@ -121,7 +121,6 @@ export default function NewRecordForm({
       );
       if (response.data) {
         updateTransactions((prev) => !prev);
-        // Update bank balance in local storage
         const currentBalance = parseFloat(localStorage.getItem("bankBalance") || "0");
         const newBalance = currentBalance - response.data.bankBalanceChange;
         localStorage.setItem("bankBalance", newBalance.toString());
@@ -186,7 +185,6 @@ export default function NewRecordForm({
     const formData = {
       title: title.value,
       category: category.value,
-      // goal: goal.value,
       amount: amount.value,
     };
     try {

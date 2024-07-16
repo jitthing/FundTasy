@@ -1,6 +1,6 @@
 const transaction = require("../models/transactionModel");
 const { getUserFromToken } = require("./userController");
-const User = require("../models/userModel"); // Adjust the path as needed
+const User = require("../models/userModel");
 
 const newTransaction = async (req, res) => {
     // console.log(req.body);
