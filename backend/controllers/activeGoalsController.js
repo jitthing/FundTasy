@@ -49,6 +49,7 @@ const addActiveItem = async (req, res) => {
   const response = await ActiveGoals.findOne({
     username: username,
     title: req.body.title,
+    status: "In Progress"
   });
 
   if (response !== null) {
@@ -61,6 +62,7 @@ const addActiveItem = async (req, res) => {
     price: req.body.price,
     startDate: new Date().toISOString().slice(0, 10),
     saved: 0,
+    status: "In Progress"
   });
 
   return res.status(200).json({ message: "Goal added succesfully!" });
