@@ -106,6 +106,7 @@ const CloseIcon = styled.img`
 const ModalTitle = styled.h2`
   font-size: 20px;
   font-weight: bold;
+  padding-right: 170px;
 `;
 
 const ModalBody = styled.div`
