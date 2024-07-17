@@ -29,7 +29,7 @@ TODO
    const [hasEdited, setHasEdited] = React.useState(false);
    const [displayPig, setdisplayPig] = useState("Basic");
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-   const [editField, setEditField] = useState(null);
+  //  const [editField, setEditField] = useState(null);
  
    
  
@@ -241,14 +241,6 @@ TODO
    }
  `;
  
- const EditIcon = styled.img`
-   width: 20%;
-   height: 20px;
-   opacity: 1;
-   object-fit: contain;
-   cursor: pointer;
-   margin-left: auto; /* Add space between value and icon */
- `;
  
  const ProfileInfo = styled.div`
    display: flex;
@@ -285,22 +277,25 @@ TODO
    height: 100%;
  `
  const EditButton = styled.button`
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-radius: 8px;
-   height: 30px;
-   width: 120px;
-   background-color: #645df2;
-   color: #fff;
-   cursor: pointer;
-   font-weight: bold;
-   font-size: 14px;
-   border: none;
-   &:hover {
-     filter: brightness(0.9);
-   }
- `;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ border-radius: 8px;
+ height: 30px;
+ width: 120px;
+ background-color: #645df2;
+ color: #fff;
+ cursor: pointer;
+ font-weight: bold;
+ font-size: 14px;
+ border: none;
+ position: absolute;
+ right: 200px;
+ top: 100px; 
+ &:hover {
+   filter: brightness(0.9);
+ }
+`;
  
  export default Profile;
  
