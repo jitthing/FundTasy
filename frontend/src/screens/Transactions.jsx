@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
-import NewRecordForm from "../components/NewRecordForm";
+import NewRecordForm from "../components/TransactionsComponents/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
 import getAllGoals from "../utils/getAllGoals";
@@ -204,22 +204,32 @@ export default function Transactions() {
               Oink Coins
             </ToggleButton>
           </ToggleBar>
-          {type === "spending" && (<FilterBar>
-            {transFilterList.map((filterName) => (
-              <FilterButton>
-                {filterName}
-                <IoClose onClick={() => removeFilter(filterName)} className="h-5 w-6 text-white cursor-pointer hover:brightness-90" />
-              </FilterButton>
-            ))}
-          </FilterBar>)}
-          {type === "coins" && (<FilterBar>
-            {coinFilterList.map((filterName) => (
-              <FilterButton>
-                {filterName}
-                <IoClose onClick={() => removeCoinFilter(filterName)} className="h-5 w-6 text-white cursor-pointer hover:brightness-90" />
-              </FilterButton>
-            ))}
-          </FilterBar>)}
+          {type === "spending" && (
+            <FilterBar>
+              {transFilterList.map((filterName) => (
+                <FilterButton>
+                  {filterName}
+                  <IoClose
+                    onClick={() => removeFilter(filterName)}
+                    className="h-5 w-6 text-white cursor-pointer hover:brightness-90"
+                  />
+                </FilterButton>
+              ))}
+            </FilterBar>
+          )}
+          {type === "coins" && (
+            <FilterBar>
+              {coinFilterList.map((filterName) => (
+                <FilterButton>
+                  {filterName}
+                  <IoClose
+                    onClick={() => removeCoinFilter(filterName)}
+                    className="h-5 w-6 text-white cursor-pointer hover:brightness-90"
+                  />
+                </FilterButton>
+              ))}
+            </FilterBar>
+          )}
         </TransactionNeck>
 
         {type === "spending" && (
@@ -246,19 +256,18 @@ const SpendingTable = ({
   transactions,
   deleteTransaction,
   toggleEditModal,
-  transFilterList
+  transFilterList,
 }) => {
-
   const containsCategory = (t) => {
     if (transFilterList.length === 0) return true;
     return transFilterList.includes(t.category);
-  }
+  };
 
   const handleFilterClick = (cat) => {
     if (!transFilterList.includes(cat)) {
       transFilterList.push(cat);
     }
-  }
+  };
 
   return (
     <>
@@ -284,7 +293,11 @@ const SpendingTable = ({
                     {formatTitle(transaction.title)}
                   </TransactionTitle>
                   <TransactionCategory>
-                    <CategoryButton onClick={() => handleFilterClick(transaction.category)}>{transaction.category}</CategoryButton>
+                    <CategoryButton
+                      onClick={() => handleFilterClick(transaction.category)}
+                    >
+                      {transaction.category}
+                    </CategoryButton>
                   </TransactionCategory>
                   <TransactionDateTime>
                     {moment(transaction.date).format("DD MMM YYYY HH:mm")}
@@ -334,13 +347,13 @@ const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
   const containsType = (ct) => {
     if (coinFilterList.length === 0) return true;
     return coinFilterList.includes(ct.type);
-  }
+  };
 
   const handleTypeClick = (type) => {
     if (!coinFilterList.includes(type)) {
       coinFilterList.push(type);
     }
-  }
+  };
 
   return (
     <>
@@ -369,7 +382,9 @@ const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
                       : `Completed "${ct.title}"`}
                   </CoinTitle>
                   <CoinType>
-                    <CoinTypeButton onClick={() => handleTypeClick(ct.type)} >{ct.type}</CoinTypeButton>
+                    <CoinTypeButton onClick={() => handleTypeClick(ct.type)}>
+                      {ct.type}
+                    </CoinTypeButton>
                   </CoinType>
                   <CoinGoal>
                     <CoinGoalName>{ct.price}</CoinGoalName>
@@ -499,12 +514,12 @@ const FilterBar = styled.div`
   width: calc(100% - 200px);
   height: 100%;
   padding: 10px 30px;
-  display: flex; 
+  display: flex;
   align-items: center;
   justify-content: start;
   gap: 10px;
   background-color: #fff;
-`
+`;
 
 const FilterButton = styled.div`
   display: flex;

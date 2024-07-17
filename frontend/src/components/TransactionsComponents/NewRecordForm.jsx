@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Toastify from "toastify-js";
-import getUser from "../utils/getUser";
+import getUser from "../../utils/getUser";
 import axios from "axios";
 // import truncateText from "../utils/truncateText";
 
@@ -64,7 +64,11 @@ export default function NewRecordForm({
         }
       );
       // console.log(response.data);
-      if (transactionResponse && updateBalanceResponse && updateSavingResponse) {
+      if (
+        transactionResponse &&
+        updateBalanceResponse &&
+        updateSavingResponse
+      ) {
         updateTransactions((prev) => !prev);
         Toastify({
           text: "Transaction created!",
@@ -72,7 +76,7 @@ export default function NewRecordForm({
           gravity: "top",
           position: "center",
           offset: {
-            y: 10 
+            y: 10,
           },
           style: {
             fontSize: "18px",
@@ -87,8 +91,8 @@ export default function NewRecordForm({
             borderRadius: "6px",
             padding: "10px 15px",
             textAlign: "center",
-            zIndex: "100"
-          }
+            zIndex: "100",
+          },
         }).showToast();
       }
     } catch (error) {
@@ -99,7 +103,7 @@ export default function NewRecordForm({
         gravity: "top",
         position: "center",
         offset: {
-          y: 10 
+          y: 10,
         },
         style: {
           fontSize: "18px",
@@ -114,8 +118,8 @@ export default function NewRecordForm({
           borderRadius: "6px",
           padding: "10px 15px",
           textAlign: "center",
-          zIndex: "100"
-        }
+          zIndex: "100",
+        },
       }).showToast();
     }
   };
@@ -130,17 +134,19 @@ export default function NewRecordForm({
       );
       if (response.data) {
         updateTransactions((prev) => !prev);
-        const currentBalance = parseFloat(localStorage.getItem("bankBalance") || "0");
+        const currentBalance = parseFloat(
+          localStorage.getItem("bankBalance") || "0"
+        );
         const newBalance = currentBalance - response.data.bankBalanceChange;
         localStorage.setItem("bankBalance", newBalance.toString());
-        
+
         Toastify({
           text: "Transaction updated!",
           duration: 2000,
           gravity: "top",
           position: "center",
           offset: {
-            y: 10 
+            y: 10,
           },
           style: {
             fontSize: "18px",
@@ -155,8 +161,8 @@ export default function NewRecordForm({
             borderRadius: "6px",
             padding: "10px 15px",
             textAlign: "center",
-            zIndex: "100"
-          }
+            zIndex: "100",
+          },
         }).showToast();
       }
     } catch (error) {
@@ -167,7 +173,7 @@ export default function NewRecordForm({
         gravity: "top",
         position: "center",
         offset: {
-          y: 10 
+          y: 10,
         },
         style: {
           fontSize: "18px",
@@ -182,8 +188,8 @@ export default function NewRecordForm({
           borderRadius: "6px",
           padding: "10px 15px",
           textAlign: "center",
-          zIndex: "100"
-        }
+          zIndex: "100",
+        },
       }).showToast();
     }
   };
@@ -211,7 +217,7 @@ export default function NewRecordForm({
         gravity: "top",
         position: "center",
         offset: {
-          y: 10 
+          y: 10,
         },
         style: {
           fontSize: "18px",
@@ -226,8 +232,8 @@ export default function NewRecordForm({
           borderRadius: "6px",
           padding: "10px 15px",
           textAlign: "center",
-          zIndex: "100"
-        }
+          zIndex: "100",
+        },
       }).showToast();
     }
   };

@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import getOwnedPigs from "../utils/getOwnedPigs.js";
 // import { calcPosFromAngles } from "@react-three/drei";
 // import { flushGlobalEffects } from "@react-three/fiber";
-import FilterPigs from "../components/filterPigs.js";
-import BuyMenu from "../components/buyMenu.js";
+import FilterPigs from "../components/ShopComponents/filterPigs.js";
+import BuyMenu from "../components/ShopComponents/buyMenu.js";
 import getUser from "../utils/getUser.js";
 
 // TODO:
@@ -79,7 +79,8 @@ export default function Shop() {
   }
 
   const unownedPigs = models.filter(
-    (model) => !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
+    (model) =>
+      !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
   );
 
   return (

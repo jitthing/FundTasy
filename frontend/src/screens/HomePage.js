@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
-import Social from "../components/Social";
-import ModelDisplay from "../components/ModelDisplay";
-import SkinSection from "../components/SkinSection";
+import Social from "../components/HomePageComponents/Social";
+import ModelDisplay from "../components/HomePageComponents/ModelDisplay";
+import SkinSection from "../components/HomePageComponents/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
 import BarChartCard from "../components/HomePageComponents/BarChartCard";
 import getActiveGoals from "../utils/getActiveGoals";
 import updatePig from "../utils/updatePig";
 import getUser from "../utils/getUser";
-import ContributeForm from "../components/ContributeForm";
+import ContributeForm from "../components/HomePageComponents/ContributeForm";
 import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
 import getTransactions from "../utils/getTransactions";
 import getAllOwnedPigs from "../utils/getOwnedPigs";
-import IncomeModal from "../components/IncomeModal";
+import IncomeModal from "../components/HomePageComponents/IncomeModal";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -45,7 +45,10 @@ export default function HomePage() {
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
       updateModel(`models/${userObj.user.displayPig}.glb`);
-      setModelName(userObj.user.displayPig.charAt(0).toUpperCase() + userObj.user.displayPig.slice(1));
+      setModelName(
+        userObj.user.displayPig.charAt(0).toUpperCase() +
+          userObj.user.displayPig.slice(1)
+      );
       setUserIncome(userObj.user.income);
     }
     getUserId();

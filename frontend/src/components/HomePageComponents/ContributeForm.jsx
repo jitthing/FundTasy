@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import formatCurrency from "../utils/formatCurrency";
-import formatTitle from "../utils/formatTitle";
+import formatCurrency from "../../utils/formatCurrency";
+import formatTitle from "../../utils/formatTitle";
 import Toastify from "toastify-js";
 
 export default function ContributeForm({

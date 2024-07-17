@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import getUser from "../utils/getUser";
+import getUser from "../../utils/getUser";
 import axios from "axios";
 import Toastify from "toastify-js";
 
