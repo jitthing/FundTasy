@@ -75,6 +75,16 @@ const fetchFriendRequests = async (req, res) => {
     }
 }
 
+// Get friend requests that the user has sent
+const fetchSentRequests = async (username) => {
+    try {
+        const sentRequests = await FriendsRelations.find({ user1: username, pending: true });
+        return res.status(200).json({ message: "Sent requests fetched!", sentRequests });
+    } catch (error) {
+        console.error("Unable to fetch sent requests: " + error);
+    }
+}
+
 // Accept a friend request
 const acceptFriendRequest = async (req, res) => {
     const user = await Users.findOne({ username: req.body.username });
@@ -94,7 +104,7 @@ const fetchFriends = async (req, res) => {
     const { user } = await getUserFromToken(req);
     try {
         const friends = await FriendsRelations.find({ $or: [{ user1: user.username }, { user2: user.username }], pending: false });
-        const usernames = [];
+        let usernames = [];
         friends.forEach((friend) => {
             if (friend.user1 === user.username && !usernames.includes(friend.user2)) {
                 usernames.push(friend.user2);
@@ -103,7 +113,7 @@ const fetchFriends = async (req, res) => {
             }
         })
         usernames.push(user.username);
-        const allFriends = await Users.find({ username: {$in: usernames} }).sort({bankBalance: -1});
+        const allFriends = await Users.find({ username: {$in: usernames} }).sort({totalSaving: -1});
         return res.status(200).json({ message: "Friends fetched!", friends, allFriends });
     } catch (error) {
         console.error("Unable to fetch friends: " + error);
@@ -123,4 +133,4 @@ const deleteFriendRequest = async(req, res) => {
     }
 }
 
-module.exports = { newFriendRequest, fetchFriendRequests, acceptFriendRequest, fetchFriends, deleteFriendRequest };
+module.exports = { newFriendRequest, fetchFriendRequests, fetchSentRequests, acceptFriendRequest, fetchFriends, deleteFriendRequest };

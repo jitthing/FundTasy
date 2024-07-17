@@ -79,7 +79,7 @@ export default function Shop() {
   }
 
   const unownedPigs = models.filter(
-    (model) => !ownedPigs.includes(model.modelName)
+    (model) => !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
   );
 
   return (
@@ -126,8 +126,8 @@ export default function Shop() {
           {ownedFilter &&
             ownedPigs.map((model) => (
               <PigCard
-                pigname={model.toLowerCase()}
-                pigTitle={model}
+                pigname={model.modelName.toLowerCase()}
+                pigTitle={model.modelName}
                 owned={true}
                 openBuyMenu={openBuyMenu}
               />

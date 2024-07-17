@@ -49,8 +49,11 @@ cron.schedule(
               bankBalance: {
                 $add: ["$bankBalance", { $divide: ["$income", 30] }],
               },
+              totalSaving: {
+                $add: ["$totalSaving", { $divide: ["$income", 30] }],
+              },
             },
-          }, // add income/30 to bank balance
+          }, // add income/30 to bank balance and total saving
         ]
       );
     } catch (err) {

@@ -50,27 +50,28 @@ export const AddedItem = ({ item, updateWishlist }) => {
         <IoClose className="h-6 w-6" />
       </button>
       <WishlistImage src={item.image} />
-      <DesctiptionWrap>
+      <DescriptionWrap>
         <div className="font-extrabold text-xl">{formatCurrency(item.price)}</div>
         <div>
           {item.name.length > 40 ? `${item.name.slice(0, 34)}...` : item.name}
         </div>
-      </DesctiptionWrap>
+      </DescriptionWrap>
     </CardDiv>
   );
 };
 
-const DesctiptionWrap = styled.div`
+const DescriptionWrap = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 10px;
 `;
 
 const CardDiv = styled.div`
   width: calc((80vw - 140px) / 3);
-  height: calc((100vh - 100px) / 2);
+  height: calc((100vh) / 2);
   min-width: 240px;
-  min-height: 200px;
-  padding: 10px;
+  min-height: 240px;
+  padding: 20px 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;

@@ -72,6 +72,21 @@ export default function Transactions() {
             },
           }
         );
+        if (response2) console.log("updated bankbalance");
+      } catch (error) {
+        console.error("Unable to update bank balance");
+      }
+      try {
+        const response3 = await axios.post(
+          "http://localhost:8000/update_totalsaving",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        if (response3) console.log("updated totalsaving");
       } catch (error) {
         console.error("Unable to update bank balance");
       }

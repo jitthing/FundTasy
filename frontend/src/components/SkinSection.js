@@ -1,10 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+const moment = require("moment");
 
 export default function SkinSection({
   getModelName,
   getImagePath,
   mypigs,
+  earnedOn,
+  setEarnedOn,
   selectModel,
   show,
   toggle,
@@ -19,15 +22,15 @@ export default function SkinSection({
           <div style={{ fontSize: "14px" }}>
             Earned on:
             <div style={{ fontWeight: "normal", textAlign: "right" }}>
-              27/5/23
+              {moment(earnedOn).format("DD/MM/YYYY")}
             </div>
           </div>
         </SkinInfo>
         <SkinButtons>
-          {mypigs.map((modelname) => (
+          {mypigs.map((model) => (
             <SkinImg
-              srcSet={getImagePath(modelname)}
-              onClick={() => selectModel(modelname)}
+              srcSet={getImagePath(model.modelName)}
+              onClick={() => {selectModel(model.modelName); setEarnedOn(model.dateEarned)}}
             />
           ))}
         </SkinButtons>

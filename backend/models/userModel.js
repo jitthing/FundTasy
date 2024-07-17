@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   displayPig: { type: String, default: "basic" },
   bankBalance : {type: Number, default: 0},
   isFirstTime : { type: Boolean, required: true, default: true },
-  dateCreated: { type: Date, required: true, default: Date.now }
+  dateCreated: { type: Date, required: true, default: Date.now },
+  totalSaving: { type: Number, required: true, default: 0 }
 });
 
 module.exports = mongoose.model("Users", userSchema);

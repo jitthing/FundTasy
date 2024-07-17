@@ -3,6 +3,7 @@ require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
 const ownedPigs = require("../models/ownedPigsModel");
+const FriendsRelations = require("../models/friendsRelationsModel");
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -142,6 +143,7 @@ const updateIncome = async (req, res) => {
         {
           income: newIncome,
           bankBalance: newIncome / 30,
+          totalSaving: newIncome / 30,
           isFirstTime: false,
         },
         { new: true }
@@ -427,8 +429,42 @@ const updateCoinBalance = async (req, res) => {
   }
 };
 
+const updateTotalSaving = async(req, res) => {
+  const amount = req.body.amount;
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newSaving = userObj.totalSaving - amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { totalSaving: newSaving },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Total saving updated" });
+  } else {
+    return res.status(400).json({ message: "Unable to update total saving" });
+  }
+}
+
 const checkIfUserExists = async (username) => {
   return await Users.exists({ username: username });
+}
+
+const getAllUsernames = async(req, res) => {
+  const { user } = await getUserFromToken(req);
+  try {
+    const allUsernames = await Users.find({ username: { $ne: user.username } }, { username: 1, displayPig: 1 }).lean();
+    const sentRequests = await FriendsRelations.find({ user1: user.username, pending: true });
+    
+    const sentRequestUsernames = new Set(sentRequests.map((request) => request.user2));
+    allUsernames.forEach((user) => {
+      user.sentRequest = sentRequestUsernames.has(user.username);
+    })
+    //console.log(allUsernames[0]);
+    return res.status(200).json({ message: "Usernames retrieved", allUsernames });
+  } catch (error) {
+    return res.status(400).json({ message: "Unable to get usernames" })
+  }
 }
 
 module.exports = {
@@ -445,6 +481,8 @@ module.exports = {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
+  updateTotalSaving,
   updateIncome,
   checkIfUserExists,
+  getAllUsernames
 };

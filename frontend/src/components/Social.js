@@ -7,6 +7,7 @@ import Toastify from "toastify-js";
 import { IoCheckmark, IoClose } from "react-icons/io5";
 import getFriendRequests from "../utils/getFriendRequests";
 import getFriends from "../utils/getFriends";
+import getAllUsers from "../utils/getAllUsers";
 const moment = require("moment");
 
 // TODO: 
@@ -19,6 +20,9 @@ export default function Social({ userInfo }) {
     const [showList, setShowList] = useState("leaderboard");
     const [allRequests, setAllRequests] = useState([]);
     const [friends, setFriends] = useState([]); 
+    const [userQuery, setUserQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [usernames, setUsernames] = useState([]);
 
     useEffect(() => {
         async function fetchRequests() {
@@ -28,7 +32,7 @@ export default function Social({ userInfo }) {
                     setAllRequests(requests.friendRequests);
                 }
             } catch (error) {
-                console.log("Unable to fetch friend requests:" + error);
+                console.log("Unable to get friend requests:" + error);
             }
         }
         fetchRequests();
@@ -46,7 +50,45 @@ export default function Social({ userInfo }) {
             }
         }
         fetchFriends();
-    }, []);
+    }, [friends]);
+
+    useEffect(() => {
+        async function fetchUsers() {
+            try {
+                const users = await getAllUsers();
+                if (users) {
+                    const friendList = new Set(friends.map((friend) => friend.username));
+                    const allusers = users.allUsernames.filter((user) => !friendList.has(user.username));
+                    setUsernames(allusers);
+                }
+            } catch (error) {
+                console.log("Unable to fetch usernames: "+ error);
+            }
+        }
+        fetchUsers();
+    }, [usernames]);
+
+    
+    useEffect(() => {
+        function filterSearch() {
+            const results = usernames.filter((user) => user.username.includes(userQuery));
+            setSearchResults(results);
+        }
+        filterSearch();
+    }, [userQuery]);
+
+    const updateSentRequest = (username) => {
+        usernames.forEach((user) => {
+            if (user.username === username) {
+                user.sentRequest = true;
+            }
+        });
+        searchResults.forEach((result) => {
+            if (result.username === username) {
+                result.sentRequest = true;
+            }
+        })
+    };
 
     // Handle sending of friend request
     const handleSendFriendRequest = async(friendName) => {
@@ -59,6 +101,7 @@ export default function Social({ userInfo }) {
                 friendName: friendName
             });
             if (response) {
+                updateSentRequest(friendName);
                 Toastify({
                     text: response.data.message,
                     duration: 2000,
@@ -128,7 +171,33 @@ export default function Social({ userInfo }) {
                     if (e.key === "Enter")
                         handleSendFriendRequest(e.target.value);
                     }}
-                placeholder="Find a friend" />
+                placeholder="Find a friend"
+                value={userQuery}
+                onChange={(e) => setUserQuery(e.target.value)}
+             />
+             {userQuery.length > 0 && (
+                <SearchResultList>
+                    {
+                        searchResults.length > 0 &&
+                        searchResults
+                            .map((result) => (
+                                <SearchResult>
+                                    <UserInfoDiv>
+                                        <UserDP srcSet={`images/${result.displayPig}.png`} />
+                                        {result.username}
+                                    </UserInfoDiv>
+                                    {!result.sentRequest && (<SendRequestButton onClick={() => handleSendFriendRequest(result.username)} >Add Friend</SendRequestButton>)}
+                                    {result.sentRequest && (<SendRequestButton disabled >Request Sent</SendRequestButton>)}
+                                </SearchResult>
+                            ))
+                    }
+                    {
+                        searchResults.length === 0 && (
+                            <SearchResult style={{ height: "20%", fontStyle:"italic", color:"grey", fontSize:"16px", textAlign:"center" }}>No user found</SearchResult>
+                        )
+                    }
+                </SearchResultList>
+             )}
                 <ToggleBar>
                     <ToggleButton onClick={() => toggleList(showList)} active={showList === "leaderboard"}>Leaderboard</ToggleButton>
                     <ToggleButton onClick={() => toggleList(showList)} active={showList === "requests"}>Friend Requests</ToggleButton>
@@ -141,11 +210,11 @@ export default function Social({ userInfo }) {
 
 function FriendList({ currentUser, friends }) {
     function getName(first, last, iscurrentuser) {
-        var name = first + " " + last;
+        var name = iscurrentuser ? truncateText(first + " " + last, 11):truncateText(first+" "+last, 17);
         if (iscurrentuser) {
             name += " (me)";
         }
-        return truncateText(name, 17);
+        return name;
     }
 
     let size = Math.min(friends.length, 7);
@@ -154,7 +223,7 @@ function FriendList({ currentUser, friends }) {
     if (currentUserIndex < size) {
         displayedFriends = friends.slice(0, size);
     } else {
-        displayedFriends = [...friends.slice(0, 6), friends[currentUserIndex]];
+        displayedFriends = [...friends.slice(0, size - 1), friends[currentUserIndex]];
     }
 
     return (
@@ -165,27 +234,27 @@ function FriendList({ currentUser, friends }) {
                 <LeaderboardStat style={{ width:"25%" }} >Last 30d</LeaderboardStat>
                 <LeaderboardStat style={{ width:"15%" }} >Total</LeaderboardStat>
             </LeaderboardRow>
-            {friends.length > 0 && (
+            {friends.length > 1 && (
                 displayedFriends
                     .map((friend, index) => (
                         <LeaderboardRow isCurrentUser={friend.username === currentUser.username}>
-                            <LeaderboardCell style={{ width:"15%" }} >{index + 1}</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"15%" }} >{friend.username === currentUser.username ? currentUserIndex + 1:index + 1}</LeaderboardCell>
                             <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >
                                 {getName(friend.firstName, friend.lastName, friend.username === currentUser.username)}
                             </LeaderboardCell>
-                            <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{friend.coinBalance}</LeaderboardCell>
-                            <LeaderboardCell style={{ width:"15%" }} >{friend.bankBalance}</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(friend.bankBalance).toFixed(0)}</LeaderboardCell>
+                            <LeaderboardCell style={{ width:"15%" }} >{parseFloat(friend.totalSaving).toFixed(0)}</LeaderboardCell>
                         </LeaderboardRow>
                     ))
             )}
-            {friends.length === 0 && (
+            {friends.length === 1 && (
                 <>
-                    <EmptyList>You have no friends :</EmptyList>            
+                    <EmptyList>{`You have no friends :(`}</EmptyList>            
                     <LeaderboardRow isCurrentUser={currentUser.username === currentUser.username} style={{ marginTop:"auto" }} >
-                        <LeaderboardCell style={{ width:"15%" }} >?</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"15%" }} >-</LeaderboardCell>
                         <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >{truncateText(currentUser.firstName+" "+currentUser.lastName+" (me)", 17)}</LeaderboardCell>
-                        <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(currentUser.coinBalance).toFixed(0)}</LeaderboardCell>
-                        <LeaderboardCell style={{ width:"15%" }} >{parseFloat(currentUser.bankBalance).toFixed(2)}</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >{parseFloat(currentUser.bankBalance).toFixed(0)}</LeaderboardCell>
+                        <LeaderboardCell style={{ width:"15%" }} >{parseFloat(currentUser.totalSaving).toFixed(0)}</LeaderboardCell>
                     </LeaderboardRow>
                 </>
             )}
@@ -412,6 +481,68 @@ const SearchBar = styled.input`
     color: #000;
 `
 
+const SearchResultList = styled.div`
+    height: fit-content;
+    max-height: 40%;
+    overflow-y: scroll;
+    width: 20.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    position: absolute;
+    top: 40%;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #bbb;
+`
+const SearchResult = styled.div`
+    height: 33%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+`
+
+const UserInfoDiv = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #000;
+`
+
+const UserDP = styled.img`
+    height: 30px;
+    width: 30px;
+    object-fit: contain;
+    border-radius: 20px;
+    background-color: #ececec;
+`
+
+const SendRequestButton = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(props) => props.disabled ? "#f5f5f5":"#645df2"};
+    color: ${(props) => props.disabled ? "grey":"#fff"};
+    border-radius: 20px;
+    height: 28px;
+    width: fit-content;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0px 10px;
+    cursor: ${(props) => props.disabled ? "auto":"pointer"};
+    &:hover {
+        filter: ${(props) => props.disabled ? "brightness(1)":"brightness(0.95)"};
+    }
+`
+
 const ToggleBar = styled.div`
     width: 100%;
     margin: 10px auto 5px;
@@ -450,10 +581,12 @@ const Leaderboard = styled.div`
 const LeaderboardRow = styled.div`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
-    height: 40px;
+    height: 45px;
     font-size: 14px;
     color: ${(props) => props.isCurrentUser ? "#645df2":"#000"};
+    border-bottom: 1px solid #7b7b7b;
 `
 
 const LeaderboardStat = styled.div`
@@ -466,7 +599,6 @@ const LeaderboardStat = styled.div`
 const LeaderboardCell = styled.div`
     font-weight:bold;
     padding: 10px 0px;
-    border-bottom: 1px solid #7b7b7b;
 `
 
 const LeaderboardEnd = styled.div`
@@ -488,8 +620,7 @@ const RequestCell = styled.div`
     justify-content: end;
     align-items: center;
     gap: 10px;
-    padding-right: 5px;
-    border-bottom: 1px solid #7b7b7b;
+    padding: 8px 5px;
 `
 
 const EmptyList = styled.div`

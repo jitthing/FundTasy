@@ -11,7 +11,9 @@ const {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
+  updateTotalSaving,
   updateIncome,
+  getAllUsernames
 } = require("../controllers/userController");
 
 const {
@@ -70,10 +72,12 @@ router.post("/create_account", create_account);
 router.post("/update_user_info", updateUserInfo);
 router.post("/update_income", updateIncome);
 router.get("/user_info", userInfo);
+router.get("/get_usernames", getAllUsernames);
 
 router.post("/update_display_pig", updateDisplayPig);
 router.post("/update_coinbalance", updateCoinBalance);
 router.post("/update_bankbalance", updateBankBalance);
+router.post("/update_totalsaving", updateTotalSaving);
 
 // Model Router
 router.post("/all_models", getAllModels);

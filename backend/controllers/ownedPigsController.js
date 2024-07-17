@@ -13,7 +13,7 @@ const getAllOwnedPigs = async (req, res) => {
     const myPigs = await ownedPigs.find({ username });
     let want = [];
     for (item of myPigs) {
-      want.push(item.modelName);
+      want.push({modelName: item.modelName, dateEarned: item.dateEarned});
     }
     return res.status(200).json({ message: "testing123", want });
   } catch (error) {

@@ -34,6 +34,7 @@ export default function HomePage() {
   const currentTime = new Date().toLocaleString();
   const [userIncome, setUserIncome] = useState(0);
   const [showIncomeModal, setIncomeModal] = useState(userInfo.isFirstTime);
+  const [earnedOn, setEarnedOn] = useState(currentTime);
 
   useEffect(() => {
     async function getUserId() {
@@ -193,6 +194,8 @@ export default function HomePage() {
             getModelName={getModelName}
             getImagePath={getImagePath}
             mypigs={myPigs}
+            earnedOn={earnedOn}
+            setEarnedOn={setEarnedOn}
             selectModel={selectModel}
             show={show}
             toggle={toggleShow}

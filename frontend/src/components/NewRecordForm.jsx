@@ -54,8 +54,17 @@ export default function NewRecordForm({
           },
         }
       );
+      const updateSavingResponse = await axios.post(
+        "http://localhost:8000/update_totalsaving",
+        { amount },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
       // console.log(response.data);
-      if (transactionResponse && updateBalanceResponse) {
+      if (transactionResponse && updateBalanceResponse && updateSavingResponse) {
         updateTransactions((prev) => !prev);
         Toastify({
           text: "Transaction created!",

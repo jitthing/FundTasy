@@ -48,9 +48,9 @@ const deleteTransaction = async (req, res) => {
         .status(400)
         .json({ message: "Failed to delete transaction", id: req.body.id });
     }
-  };
+};
 
-  const editTransaction = async (req, res) => {
+const editTransaction = async (req, res) => {
     const { id } = req.params;
     const { formData, username } = req.body;
     try {
@@ -75,12 +75,13 @@ const deleteTransaction = async (req, res) => {
         );
 
         if (updatedTransaction) {
-            // Update bank balance
+            // Update bank balance and total saving
             const user = await User.findOne({ username });
             if (!user) {
                 return res.status(404).json({ message: "User not found" });
             }
             user.bankBalance += amountDifference;
+            user.totalSaving += amountDifference;
             await user.save();
 
             return res.status(200).json({ 
