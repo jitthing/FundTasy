@@ -172,7 +172,7 @@ export default function Social({ userInfo }) {
       <SocialTitle>Friends</SocialTitle>
       <SearchBar
         onKeyDown={(e) => {
-          if (e.key === "Enter") handleSendFriendRequest(e.target.value);
+            if (e.key === "Enter") handleSendFriendRequest(e.target.value);
         }}
         placeholder="Find a friend"
         value={userQuery}
@@ -551,6 +551,9 @@ const SocialTitle = styled.div`
 `;
 
 const SearchBar = styled.input`
+  spellCheck: false;
+  autoCapitalize: none;
+  autoCorrect: off;
   width: 100%;
   height: 30px;
   border: 1px solid #bdbdbd;

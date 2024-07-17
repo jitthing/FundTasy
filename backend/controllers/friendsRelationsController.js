@@ -19,9 +19,17 @@ const newFriendRequest = async (req, res) => {
     }
 
     // Check if friend relation already exists
-    const friendRelationExists = await FriendsRelations.findOne({
-        user1: user.username, user2: req.body.friendName }
+    const friendRequestExists = await FriendsRelations.findOne({
+        user1: user.username, user2: req.body.friendName, pending: true }
     );
+
+    const alreadyFriends = await FriendsRelations.findOne({
+        $or: 
+        [{ user1: user.username, user2: req.body.friendName }, 
+        { user1: req.body.friendName, user2: user.username }], 
+        pending: false
+    }
+);
     
     // Check if the user is trying to add themselves as a friend
     if (req.body.username === req.body.friendName) {
@@ -29,8 +37,12 @@ const newFriendRequest = async (req, res) => {
     }
 
     // if the friend request already exists
-    if (friendRelationExists) {
+    if (friendRequestExists) {
         return res.status(400).json({ message: "Friend request already exists!" });
+    }
+
+    if (alreadyFriends) {
+        return res.status(400).json({ message: "You are already friends!" });
     }
 
     // Check if the friend has already sent a friend request to the user
