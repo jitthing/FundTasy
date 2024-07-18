@@ -2,7 +2,7 @@
 TODO 
  - Fix text aligntment (not centered)
  */
- import React, { useState, useEffect } from "react";
+ import React, { useState, useEffect, useRef } from "react";
  import styled from "styled-components";
  import Navbar from "../components/Navbar";
  import Banner from "../components/Banner";
@@ -30,9 +30,28 @@ TODO
    const [displayPig, setdisplayPig] = useState("Basic");
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   //  const [editField, setEditField] = useState(null);
- 
-   
- 
+  const audioRef = useRef(null);
+  const audioObjectRef = useRef(null);
+
+  //for oink sound effect
+  useEffect(() => {
+    audioObjectRef.current = new Audio('audios/oink3.mp3');
+  }, []);
+    
+  const handleMouseEnter = () => {
+    if (audioObjectRef.current) {
+      audioObjectRef.current.play().catch(error => console.error("Audio play failed:", error));
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    if (audioObjectRef.current) {
+      audioObjectRef.current.pause();
+      audioObjectRef.current.currentTime = 0;
+    }
+  };
+
+  
    function handleShowBanner() {
      setShowBanner(true);
      setTimeout(() => {
@@ -110,6 +129,8 @@ TODO
      setEmail(updatedData.email);
      setIncome(updatedData.income);
    };
+
+
  
    return (
      <PageContainer>
@@ -124,7 +145,10 @@ TODO
              Edit Profile
            </EditButton>
            <ProfileBody>
-             <ProfilePicture>
+             <ProfilePicture
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+               >
                <img src={`images/${displayPig || 'basic'}.png`} alt="No Pig Selected" />
              </ProfilePicture>
              <ProfileInfo>
@@ -219,24 +243,24 @@ TODO
  `
  
  const ProfilePicture = styled.div`
-   position: relative;
-   width: 500px;
-   height: 400px;
-   border-radius: 30px;
-   overflow: hidden;
-   background-color: #ececec;
-   transition: transform 0.3s ease, box-shadow 0.3s ease;
-   img {
-     width: 100%;
-     height: 100%;
-     object-fit: cover;
-   }
-   &:hover {
-     filter: brightness(0.9);
-     transition: 0.2s;
-     cursor: pointer;
-   }
- `;
+  position: relative;
+  width: 500px;
+  height: 400px;
+  border-radius: 30px;
+  overflow: hidden;
+  background-color: #ececec;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &:hover {
+    filter: brightness(0.9);
+    transition: 0.2s;
+    cursor: pointer;
+  }
+`;
  
  
  const ProfileInfo = styled.div`
