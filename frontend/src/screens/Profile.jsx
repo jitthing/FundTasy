@@ -5,7 +5,6 @@ TODO
  import React, { useState, useEffect, useRef } from "react";
  import styled from "styled-components";
  import Navbar from "../components/Navbar";
- import Banner from "../components/Banner";
  import formatCurrency from "../utils/formatCurrency";
  import getUser from "../utils/getUser";
  import axios from "axios";
@@ -23,13 +22,10 @@ TODO
    const [income, setIncome] = useState(undefined);
    const [password, setPassword] = useState(undefined);
    const [username, setUsername] = useState(undefined);
-   const [showBanner, setShowBanner] = React.useState(false);
-   const [bannerType, setBannerType] = React.useState("success"); // ["danger", "success", "info", "warning"]
    const [statusMessage, setStatusMessage] = React.useState(null);
    const [hasEdited, setHasEdited] = React.useState(false);
    const [displayPig, setdisplayPig] = useState("Basic");
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  //  const [editField, setEditField] = useState(null);
   const audioRef = useRef(null);
   const audioObjectRef = useRef(null);
 
@@ -50,14 +46,6 @@ TODO
       audioObjectRef.current.currentTime = 0;
     }
   };
-
-  
-   function handleShowBanner() {
-     setShowBanner(true);
-     setTimeout(() => {
-       setShowBanner(false);
-     }, 2000); // Hide the banner after 2s
-   }
    
    useEffect(() => {
      async function UpdateUserInfo() {
@@ -75,16 +63,59 @@ TODO
          });
          if (response.status === 200) {
            setStatusMessage(response.data.message);
-           setBannerType("success");
-           handleShowBanner();
+           Toastify({
+            text: statusMessage,
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            offset: {
+              y: 10,
+            },
+            style: {
+              fontSize: "18px",
+              fontWeight: "bold",
+              backgroundColor: "#4bb543",
+              color: "#fff",
+              boxShadow: "0px 0px 4px #888888",
+              width: "fit-content",
+              height: "50px",
+              position: "absolute",
+              left: "calc(50vw - 50px)",
+              borderRadius: "6px",
+              padding: "10px 15px",
+              textAlign: "center",
+              zIndex: "100",
+            },
+          }).showToast();
          }
        }
        catch (error) {
          console.log("Error updating user data: ", error);
          setStatusMessage(error.response.data.message);
-         if (error.response.status === 400) setBannerType("warning");
-         else setBannerType("danger");
-         handleShowBanner();
+         Toastify({
+          text: statusMessage,
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "red",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "fit-content",
+            height: "50px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px 15px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
        }
      }
      if (hasEdited) {
@@ -106,12 +137,32 @@ TODO
          setPassword(response.user.password); // use to check if user is a google user
          setdisplayPig(response.user.displayPig);
          setStatusMessage(response.message);
-         // handleShowBanner();
        }
        catch (error) {
-         setStatusMessage(error.message);
-         setBannerType("danger");
-         handleShowBanner();
+         Toastify({
+          text: error.message,
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "red",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "fit-content",
+            height: "50px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px 15px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
        }
      }
      fetchUserData();
@@ -134,7 +185,6 @@ TODO
  
    return (
      <PageContainer>
-       {showBanner && <Banner type={bannerType}>{statusMessage}</Banner>}
        <Content>
          <NavbarContainer>
            <Navbar page="profile" />
@@ -181,7 +231,6 @@ TODO
                  <Value>{displayPig.charAt(0).toUpperCase() + displayPig.slice(1)}</Value>
                </InfoRow>
              </ProfileInfo>
-             {/* <button onClick={handleShowBanner}>Show Banner</button> */}
            </ProfileBody>
          </ProfileContainer>
        </Content>
