@@ -487,8 +487,8 @@ function RequestList({ requests }) {
   };
 
   return (
-    <Leaderboard>
-      <LeaderboardRow style={{ height: "30px" }}>
+    <>
+    <LeaderboardRow style={{ height: "30px" }}>
         <LeaderboardStat
           style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
         >
@@ -497,6 +497,8 @@ function RequestList({ requests }) {
         <LeaderboardStat style={{ width: "25%" }}>Date</LeaderboardStat>
         <LeaderboardStat style={{ width: "30%" }}>Request</LeaderboardStat>
       </LeaderboardRow>
+    <RequestBoard>
+      
       {/* <LeaderboardRow>
                 <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Sample User</LeaderboardCell>
                 <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >16/7/2024</LeaderboardCell>
@@ -529,12 +531,13 @@ function RequestList({ requests }) {
           </LeaderboardRow>
         ))}
       {requests.length === 0 && (
-        <EmptyList style={{ height: "85%" }}>
+        <EmptyList style={{ height: "305px" }}>
           No outstanding friend requests
         </EmptyList>
       )}
-      <LeaderboardEnd>All Requests</LeaderboardEnd>
-    </Leaderboard>
+    </RequestBoard>
+    <LeaderboardEnd style={{ marginTop:"0px" }}>All Requests</LeaderboardEnd>
+    </>
   );
 }
 
@@ -681,6 +684,16 @@ const Leaderboard = styled.div`
   width: 100%;
   min-height: calc(80% - 30px);
   max-height: calc(80% - 30px);
+  margin: 0px auto;
+`;
+
+const RequestBoard = styled.div`
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 305px;
+  max-height: 305px;
   margin: 0px auto;
 `;
 
