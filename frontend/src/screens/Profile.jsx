@@ -131,13 +131,11 @@ TODO
              <InfoRow>
                  <Label>Username:</Label>
                  <Value>{username}</Value>
-                 <Space />
                </InfoRow>
  
              <InfoRow>
                  <Label>Email:</Label>
                  <Value>{email}</Value>
-                 <Space />
                </InfoRow>
                <InfoRow>
                  <Label>First name:</Label>
@@ -157,7 +155,6 @@ TODO
                <InfoRow>
                  <Label>Display Pig:</Label>
                  <Value>{displayPig.charAt(0).toUpperCase() + displayPig.slice(1)}</Value>
-                 <Space />
                </InfoRow>
              </ProfileInfo>
              {/* <button onClick={handleShowBanner}>Show Banner</button> */}
@@ -282,7 +279,8 @@ TODO
  align-items: center;
  border-radius: 8px;
  height: 30px;
- width: 120px;
+ width: fit-content;
+ padding: 0px 10px;
  background-color: #645df2;
  color: #fff;
  cursor: pointer;

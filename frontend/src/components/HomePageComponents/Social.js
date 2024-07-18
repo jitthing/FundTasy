@@ -8,6 +8,7 @@ import { IoCheckmark, IoClose } from "react-icons/io5";
 import getFriendRequests from "../../utils/getFriendRequests";
 import getFriends from "../../utils/getFriends";
 import getAllUsers from "../../utils/getAllUsers";
+import UserModal from "./UserModal";
 const moment = require("moment");
 
 // TODO:
@@ -22,6 +23,8 @@ export default function Social({ userInfo }) {
   const [userQuery, setUserQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [usernames, setUsernames] = useState([]);
+  const [showFriendModal, setFriendModal] = useState(false);
+  const [currentFriendInfo, setCurrentFriendInfo] = useState(userInfo);
 
   useEffect(() => {
     async function fetchRequests() {
@@ -229,14 +232,21 @@ export default function Social({ userInfo }) {
         </ToggleButton>
       </ToggleBar>
       {showList === "leaderboard" && (
-        <FriendList friends={friends} currentUser={userInfo} />
+        <FriendList 
+          friends={friends} 
+          currentUser={userInfo} 
+          setFriendModal={setFriendModal} 
+          showFriendModal={showFriendModal} 
+          currentFriendInfo={currentFriendInfo} 
+          setCurrentFriendInfo={setCurrentFriendInfo} 
+        />
       )}
       {showList === "requests" && <RequestList requests={allRequests} />}
     </SocialContainer>
   );
 }
 
-function FriendList({ currentUser, friends }) {
+function FriendList({ currentUser, friends, setFriendModal, showFriendModal, currentFriendInfo, setCurrentFriendInfo }) {
   function getName(first, last, iscurrentuser) {
     var name = iscurrentuser
       ? truncateText(first + " " + last, 11)
@@ -261,7 +271,13 @@ function FriendList({ currentUser, friends }) {
     ];
   }
 
+  const closeModal = () => {
+    setFriendModal(false);
+  }
+
   return (
+    <>
+    {showFriendModal && (<UserModal closeModal={closeModal} info={currentFriendInfo} />)}
     <Leaderboard>
       <LeaderboardRow style={{ height: "30px" }}>
         <LeaderboardStat style={{ width: "15%" }}>Rank</LeaderboardStat>
@@ -284,7 +300,8 @@ function FriendList({ currentUser, friends }) {
                 : index + 1}
             </LeaderboardCell>
             <LeaderboardCell
-              style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
+              style={{ width: "45%", textAlign: "left", paddingLeft: "5px", cursor:"pointer" }}
+              onClick={() => {setFriendModal(true);setCurrentFriendInfo(friend)}}
             >
               {getName(
                 friend.firstName,
@@ -309,7 +326,8 @@ function FriendList({ currentUser, friends }) {
           >
             <LeaderboardCell style={{ width: "15%" }}>-</LeaderboardCell>
             <LeaderboardCell
-              style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
+              style={{ width: "45%", textAlign: "left", paddingLeft: "5px", cursor:"pointer" }}
+              onClick={() => setFriendModal(true)}
             >
               {truncateText(
                 currentUser.firstName + " " + currentUser.lastName + " (me)",
@@ -327,6 +345,7 @@ function FriendList({ currentUser, friends }) {
       )}
       <LeaderboardEnd>View More</LeaderboardEnd>
     </Leaderboard>
+    </>
   );
 }
 

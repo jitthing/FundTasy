@@ -145,11 +145,12 @@ const FormBottom = styled.div`
 `;
 
 const FormSubmit = styled.button`
-  width: 120px;
+  width: fit-content;
   height: 40px;
   background-color: #645df2;
   color: #fff;
   border-radius: 8px;
+  padding: 0px 10px;
   font-size: 16px;
   font-weight: bold;
   display: flex;
