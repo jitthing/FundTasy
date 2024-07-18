@@ -27,6 +27,7 @@ const {
   getAllItems,
   addItem,
   deleteItem,
+  getInProgressItems,
 } = require("../controllers/wishlistController");
 
 const {
@@ -94,6 +95,7 @@ router.post("/scrape_amazon", scrapeAmazon);
 router.get("/all_wishlist_items", getAllItems);
 router.post("/add_wishlist_item", addItem);
 router.delete("/delete_wishlist_item/:id", deleteItem);
+router.get("/all_in_progress_items", getInProgressItems);
 
 // Active Goals Router
 router.get("/all_active_items", getActiveItems);

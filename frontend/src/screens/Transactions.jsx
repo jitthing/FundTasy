@@ -33,7 +33,7 @@ export default function Transactions() {
       }
     };
     fetchCoinTransactions();
-  });
+  }, []);
 
   useEffect(() => {
     const fetchTransactions = async () => {

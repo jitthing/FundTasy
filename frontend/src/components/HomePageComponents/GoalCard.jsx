@@ -4,6 +4,7 @@ import axios from "axios";
 import Toastify from "toastify-js";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
+import getInProgressItems from "../../utils/getInProgressWishlistItem";
 import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
@@ -61,7 +62,7 @@ function GoalBox(props) {
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const wishlistData = await getWishlist();
+        const wishlistData = await getInProgressItems();
         setItems(wishlistData.items);
       } catch (error) {
         console.error("Failed to fetch data", error);

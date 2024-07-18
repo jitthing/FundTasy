@@ -1,4 +1,5 @@
 const ActiveGoals = require("../models/activeGoalsModel.js");
+const WishlistItems = require("../models/wishlistModel.js");
 const Users = require("../models/userModel.js");
 const CoinTransactions = require("../models/coinTransactionModel.js");
 const { getUserFromToken, updateCoinBalance } = require("./userController.js");
@@ -111,6 +112,10 @@ const updateSavedValue = async (req, res) => {
   );
   if (updated) {
     if (parseFloat(updated.price).toFixed(2) === parseFloat(updated.saved).toFixed(2)) {
+      await WishlistItems.findOneAndUpdate(
+        { username: user.username, name: updated.title },
+        { status: "Completed" },
+      );
       const completed = await ActiveGoals.findOneAndUpdate(
         { _id: req.body.goalId },
         { status: "Completed" },
@@ -129,7 +134,7 @@ const updateSavedValue = async (req, res) => {
         { new: true }
       )
       if (completed && awarded && updatedCoins) {
-        return res.status(200).json({ message: "Saved value updated and coins awarded", goalComplete: true, coinsAwarded: updated.price*100 });
+        return res.status(200).json({ message: "Saved value updated and coins awarded", goalComplete: true, coinsAwarded: (updated.price*100).toFixed(0) });
       } else {
         return res
           .status(500)

@@ -5,7 +5,8 @@ const wishlistSchema = new mongoose.Schema({
   name: String,
   price: { type: Number },
   image: String,
-  dateCreated: { type: Date, required: true, default: Date.now }
+  dateCreated: { type: Date, required: true, default: Date.now },
+  status: { type: String, default: "In Progress" },
 });
 
 module.exports = mongoose.model("WishlistItems", wishlistSchema);

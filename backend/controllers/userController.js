@@ -142,8 +142,8 @@ const updateIncome = async (req, res) => {
         { _id: user._id },
         {
           income: newIncome,
-          bankBalance: newIncome / 30,
-          totalSaving: newIncome / 30,
+          bankBalance: (newIncome / 30).toFixed(2),
+          totalSaving: (newIncome / 30).toFixed(2),
           isFirstTime: false,
         },
         { new: true }

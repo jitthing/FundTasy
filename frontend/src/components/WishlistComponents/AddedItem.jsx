@@ -5,6 +5,7 @@ import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
 
 export const AddedItem = ({ item, updateWishlist }) => {
+  console.log(item.status);
   const handleDeleteItem = async (id) => {
     // console.log(id);
     try {
@@ -42,21 +43,25 @@ export const AddedItem = ({ item, updateWishlist }) => {
     }
   };
   return (
-    <CardDiv>
+    <CardDiv isCompleted={item.status === 'Completed'}>
+    
+    {item.status === 'Completed' && <CompletedOverlay>Completed</CompletedOverlay>}
+    {item.status !== 'Completed' && (
       <button
         onClick={() => handleDeleteItem(item._id)}
         className="z-10 text-gray-600 hover:text-gray-800"
       >
         <IoClose className="h-6 w-6" />
       </button>
-      <WishlistImage src={item.image} />
-      <DescriptionWrap>
-        <div className="font-extrabold text-xl">{formatCurrency(item.price)}</div>
-        <div>
-          {item.name.length > 40 ? `${item.name.slice(0, 34)}...` : item.name}
-        </div>
-      </DescriptionWrap>
-    </CardDiv>
+    )}
+    <WishlistImage src={item.image} />
+    <DescriptionWrap>
+      <div className="font-extrabold text-xl">{formatCurrency(item.price)}</div>
+      <div>
+        {item.name.length > 40 ? `${item.name.slice(0, 34)}...` : item.name}
+      </div>
+    </DescriptionWrap>
+  </CardDiv>
   );
 };
 
@@ -78,6 +83,20 @@ const CardDiv = styled.div`
   justify-content: space-between;
   border: 1px solid #ececec;
   border-radius: 16px;
+  opacity: ${props => props.isCompleted ? 0.5 : 1};
+  position: relative;
+`;
+
+const CompletedOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 8px;
 `;
 
 const WishlistImage = styled.img`

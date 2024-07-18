@@ -52,4 +52,20 @@ const deleteItem = async (req, res) => {
   }
 };
 
-module.exports = { getAllItems, addItem, deleteItem };
+const getInProgressItems = async (req, res) => {
+  const { formData, username } = req.body;
+  try {
+    const { user, error } = await getUserFromToken(req);
+    if (error) {
+      return res.status(500).json({ message: error });
+    }
+    const username = user.username;
+    const items = await Wishlist.find({ username: username, status: "In Progress" });
+    return res.status(200).json({ items });
+  } catch (error) {
+    console.error("Error getting wishlist items:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { getAllItems, addItem, deleteItem, getInProgressItems };
