@@ -13,7 +13,7 @@ const {
   updateBankBalance,
   updateTotalSaving,
   updateIncome,
-  getAllUsernames
+  getAllUsernames,
 } = require("../controllers/userController");
 
 const {
@@ -22,7 +22,7 @@ const {
 } = require("../controllers/modelController");
 
 const { protect } = require("../middleware/authMiddleware");
-const { scrapeAmazon } = require("../webScraper");
+const { getAmazon } = require("../amazonItemGetter.js");
 const {
   getAllItems,
   addItem,
@@ -57,11 +57,11 @@ const {
 } = require("../controllers/coinTransactionController");
 
 const {
-    newFriendRequest,
-    fetchFriendRequests,
-    acceptFriendRequest,
-    fetchFriends, 
-    deleteFriendRequest
+  newFriendRequest,
+  fetchFriendRequests,
+  acceptFriendRequest,
+  fetchFriends,
+  deleteFriendRequest,
 } = require("../controllers/friendsRelationsController");
 
 const router = express.Router();
@@ -89,7 +89,7 @@ router.get("/get_owned_pigs", getAllOwnedPigs);
 router.post("/buy_pig", buyPig);
 
 // Amazon Scraper Router
-router.post("/scrape_amazon", scrapeAmazon);
+router.post("/scrape_amazon", getAmazon);
 
 // Wishlist Router
 router.get("/all_wishlist_items", getAllItems);

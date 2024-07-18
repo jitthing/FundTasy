@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-const scrapeAmazon = async (req, res) => {
+const getAmazon = async (req, res) => {
   const url = req.body.url;
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -46,4 +46,4 @@ const scrapeAmazon = async (req, res) => {
   return res.status(200).json(results.slice(0, 19));
 };
 
-module.exports = { scrapeAmazon };
+module.exports = { getAmazon };
