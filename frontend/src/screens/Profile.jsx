@@ -9,6 +9,7 @@ TODO
  import getUser from "../utils/getUser";
  import axios from "axios";
  import EditProfileModal from "../components/ProfileComponents/EditProfileForm";
+ import Toastify from "toastify-js";
  
  
  function getToken() {
