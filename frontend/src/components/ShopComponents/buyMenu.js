@@ -9,15 +9,31 @@ export default function BuyMenu({
   pigPrice,
   userCoins,
   updatePigs,
+  models,
+  ownedPigs
 }) {
+  const generateMysteryPig = () => {
+    const ownedNames = ownedPigs.map((pig) => pig.modelName);
+    const availablePigs = models.filter((model) => !ownedNames.includes(model.modelName));
+    const selectedPig = availablePigs[Math.floor(availablePigs.length * Math.random())];
+    return {name: selectedPig.modelName, price: 30000};
+  }
+
   const handleBuyPig = async (pigName, pigPrice) => {
     try {
+      let name = pigName;
+      let price = pigPrice;
+      if (name === "Mystery") {
+        const generatedPig = generateMysteryPig();
+        name = generatedPig.name;
+        price = generatedPig.price;
+      }
       const userObj = await getUser();
       const userId = userObj.user.username;
       const response = await axios.post("http://localhost:8000/buy_pig", {
         username: userId,
-        pigName: pigName,
-        pigPrice: pigPrice,
+        pigName: name,
+        pigPrice: price
       });
       if (response) {
         Toastify({
