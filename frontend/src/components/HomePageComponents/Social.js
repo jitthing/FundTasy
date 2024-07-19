@@ -9,6 +9,7 @@ import getFriendRequests from "../../utils/getFriendRequests";
 import getFriends from "../../utils/getFriends";
 import getAllUsers from "../../utils/getAllUsers";
 import UserModal from "./UserModal";
+import LeaderboardModal from "./FullLeaderBoard";
 const moment = require("moment");
 
 // TODO:
@@ -16,7 +17,6 @@ const moment = require("moment");
 // 2. Show friend requests. Allow user to accept or reject friend requests
 
 export default function Social({ userInfo }) {
-  const { friendField, setFriendField } = useState("");
   const [showList, setShowList] = useState("leaderboard");
   const [allRequests, setAllRequests] = useState([]);
   const [friends, setFriends] = useState([]);
@@ -25,6 +25,7 @@ export default function Social({ userInfo }) {
   const [usernames, setUsernames] = useState([]);
   const [showFriendModal, setFriendModal] = useState(false);
   const [currentFriendInfo, setCurrentFriendInfo] = useState(userInfo);
+  const [showFullLeaderBoard, setShowFullLeaderBoard] = useState(false);
 
   useEffect(() => {
     async function fetchRequests() {
@@ -239,6 +240,8 @@ export default function Social({ userInfo }) {
           showFriendModal={showFriendModal} 
           currentFriendInfo={currentFriendInfo} 
           setCurrentFriendInfo={setCurrentFriendInfo} 
+          showFullLeaderBoard={showFullLeaderBoard}
+          setShowFullLeaderBoard={setShowFullLeaderBoard}
         />
       )}
       {showList === "requests" && <RequestList requests={allRequests} />}
@@ -246,7 +249,7 @@ export default function Social({ userInfo }) {
   );
 }
 
-function FriendList({ currentUser, friends, setFriendModal, showFriendModal, currentFriendInfo, setCurrentFriendInfo }) {
+function FriendList({ currentUser, friends, setFriendModal, showFriendModal, currentFriendInfo, setCurrentFriendInfo, showFullLeaderBoard, setShowFullLeaderBoard }) {
   function getName(first, last, iscurrentuser) {
     var name = iscurrentuser
       ? truncateText(first + " " + last, 11)
@@ -271,13 +274,15 @@ function FriendList({ currentUser, friends, setFriendModal, showFriendModal, cur
     ];
   }
 
-  const closeModal = () => {
+  const closeUserModal = () => {
     setFriendModal(false);
   }
 
   return (
     <>
-    {showFriendModal && (<UserModal closeModal={closeModal} info={currentFriendInfo} />)}
+    {showFriendModal && (<UserModal closeModal={closeUserModal} info={currentFriendInfo} />)}
+    {showFullLeaderBoard && (<LeaderboardModal setShowFullLeaderBoard={setShowFullLeaderBoard} friends={friends} closeUserModal={closeUserModal} 
+      setFriendModal={setFriendModal} getName={getName} setCurrentFriendInfo={setCurrentFriendInfo} currentUser={currentUser} />)}
     <Leaderboard>
       <LeaderboardRow style={{ height: "30px" }}>
         <LeaderboardStat style={{ width: "15%" }}>Rank</LeaderboardStat>
@@ -286,7 +291,7 @@ function FriendList({ currentUser, friends, setFriendModal, showFriendModal, cur
         >
           Fund
         </LeaderboardStat>
-        <LeaderboardStat style={{ width: "25%" }}>Last 30d</LeaderboardStat>
+        <LeaderboardStat style={{ width: "25%" }}>PiggyBank</LeaderboardStat>
         <LeaderboardStat style={{ width: "15%" }}>Total</LeaderboardStat>
       </LeaderboardRow>
       {friends.length > 1 &&
@@ -321,7 +326,7 @@ function FriendList({ currentUser, friends, setFriendModal, showFriendModal, cur
         <>
           <EmptyList>{`You have no friends :(`}</EmptyList>
           <LeaderboardRow
-            isCurrentUser={currentUser.username === currentUser.username}
+            isCurrentUser
             style={{ marginTop: "auto" }}
           >
             <LeaderboardCell style={{ width: "15%" }}>-</LeaderboardCell>
@@ -343,7 +348,7 @@ function FriendList({ currentUser, friends, setFriendModal, showFriendModal, cur
           </LeaderboardRow>
         </>
       )}
-      <LeaderboardEnd>View More</LeaderboardEnd>
+      <LeaderboardEnd expandable={friends.length > 7} onClick={() => friends.length > 7 ? setShowFullLeaderBoard(true):null}>View Full</LeaderboardEnd>
     </Leaderboard>
     </>
   );
@@ -498,15 +503,6 @@ function RequestList({ requests }) {
         <LeaderboardStat style={{ width: "30%" }}>Request</LeaderboardStat>
       </LeaderboardRow>
     <RequestBoard>
-      
-      {/* <LeaderboardRow>
-                <LeaderboardCell style={{ width:"45%", textAlign:"left", paddingLeft:"5px" }} >Sample User</LeaderboardCell>
-                <LeaderboardCell style={{ width:"25%", fontWeight:"normal" }} >16/7/2024</LeaderboardCell>
-                <RequestCell style={{ width:"30%" }} >
-                    <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-90" />
-                    <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-90" />
-                </RequestCell>
-            </LeaderboardRow> */}
       {requests
         .slice()
         .reverse()
@@ -536,7 +532,7 @@ function RequestList({ requests }) {
         </EmptyList>
       )}
     </RequestBoard>
-    <LeaderboardEnd style={{ marginTop:"0px" }}>All Requests</LeaderboardEnd>
+    <RequestRowEnd style={{ marginTop:"0px" }}>All Requests</RequestRowEnd>
     </>
   );
 }
@@ -723,6 +719,34 @@ const LeaderboardCell = styled.div`
 const LeaderboardEnd = styled.div`
   width: 100%;
   height: 30px;
+  background-color: ${(props) => props.expandable ? "#1e293b":"#cecece"};
+  color: ${(props) => props.expandable ? "#fff":"#f1f1f1"};
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 0px 0px 20px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  cursor: ${(props) => props.expandable ? "pointer":"auto"};
+  &:hover {
+      color: ${(props) => props.expandable ? "#fff":"#f1f1f1"};
+      background-color: ${(props) => props.expandable ? "#645df2":"#1e293b"};
+      transition: 0.1s;
+  }
+`;
+
+const RequestCell = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 5px;
+`;
+
+const RequestRowEnd = styled.div`
+  width: 100%;
+  height: 30px;
   background-color: #1e293b;
   color: #fff;
   font-size: 14px;
@@ -732,14 +756,6 @@ const LeaderboardEnd = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: auto;
-`;
-
-const RequestCell = styled.div`
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 5px;
 `;
 
 const EmptyList = styled.div`

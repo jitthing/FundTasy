@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { IoClose } from "react-icons/io5";
-import axios from "axios";
 import formatCurrency from "../../utils/formatCurrency";
 const moment = require("moment");
 
