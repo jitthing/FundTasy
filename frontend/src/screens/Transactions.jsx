@@ -369,7 +369,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
           <EmptyList>No Oink Coins earned or spent yet</EmptyList>
         )}
         {coinTransactions.length > 0 && (
-          <>
+          <TransactionListWrapper>
             {coinTransactions
               .filter(containsType)
               .slice()
@@ -400,7 +400,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
                   </CoinAmount>
                 </TransactionDiv>
               ))}
-          </>
+          </TransactionListWrapper>
         )}
       </TransactionBody>
     </>
