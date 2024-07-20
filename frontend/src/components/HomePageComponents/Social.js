@@ -108,7 +108,7 @@ export default function Social({ userInfo }) {
     const userId = userObj.user.username;
     try {
       const response = await axios.post(
-        "http://localhost:8000/new_friend_request",
+        `${process.env.REACT_APP_API_BASE_URL}/new_friend_request`,
         {
           username: userId,
           friendName: friendName,
@@ -404,7 +404,7 @@ function RequestList({ requests }) {
     const userId = userObj.user.username;
     try {
       const response = await axios.delete(
-        "http://localhost:8000/delete_friend_request",
+        `${process.env.REACT_APP_API_BASE_URL}/delete_friend_request`,
         {
           data: {
             username: userId,
@@ -472,7 +472,7 @@ function RequestList({ requests }) {
     const userId = userObj.user.username;
     try {
       const response = await axios.post(
-        "http://localhost:8000/accept_friend_request",
+        `${process.env.REACT_APP_API_BASE_URL}/accept_friend_request`,
         {
           username: userId,
           friendName: friendName,

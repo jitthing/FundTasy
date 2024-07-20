@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default async function getUser() {
   try {
-    const response = await axios.get("http://localhost:8000/user_info", {
+    const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/user_info`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },

@@ -51,7 +51,7 @@ export default function ContributeForm({
       };
       try {
         const response = await axios.post(
-          "http://localhost:8000/update_bankbalance",
+          `${process.env.REACT_APP_API_BASE_URL}/update_bankbalance`,
           formData,
           {
             headers: {
@@ -65,7 +65,7 @@ export default function ContributeForm({
       }
       try {
         const response = await axios.post(
-          "http://localhost:8000/update_saved_amount",
+          `${process.env.REACT_APP_API_BASE_URL}/update_saved_amount`,
           formData,
           {
             headers: {

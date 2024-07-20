@@ -15,7 +15,7 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
-        const response = await axios.get('http://localhost:8000/protected', { 
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/protected`, { 
           headers: {
             'Authorization': `Bearer ${token}`
           }

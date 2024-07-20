@@ -33,12 +33,12 @@ export default function NewRecordForm({
       const username = userObj.user.username;
       console.log(formData);
       const transactionResponse = await axios.post(
-        "http://localhost:8000/new_transaction",
+        `${process.env.REACT_APP_API_BASE_URL}/new_transaction`,
         { formData, username }
       );
       const amount = formData.amount;
       const updateBalanceResponse = await axios.post(
-        "http://localhost:8000/update_bankbalance",
+        `${process.env.REACT_APP_API_BASE_URL}/update_bankbalance`,
         { amount },
         {
           headers: {
@@ -47,7 +47,7 @@ export default function NewRecordForm({
         }
       );
       const updateSavingResponse = await axios.post(
-        "http://localhost:8000/update_totalsaving",
+        `${process.env.REACT_APP_API_BASE_URL}/update_totalsaving`,
         { amount },
         {
           headers: {
@@ -120,7 +120,7 @@ export default function NewRecordForm({
       const userObj = await getUser();
       const username = userObj.user.username;
       const response = await axios.put(
-        `http://localhost:8000/edit_transaction/${id}`,
+        `${process.env.REACT_APP_API_BASE_URL}/edit_transaction/${id}`,
         { formData, username }
       );
       if (response.data) {

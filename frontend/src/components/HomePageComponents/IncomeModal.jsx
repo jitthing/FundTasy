@@ -9,7 +9,7 @@ export default function IncomeModal({ closeModal, setUserIncome, update }) {
     const { income } = e.target.elements;
     try {
       const response = await axios.post(
-        "http://localhost:8000/update_income",
+        `${process.env.REACT_APP_API_BASE_URL}/update_income`,
         { income: income.value },
         {
           headers: {

@@ -8,7 +8,7 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
     try {
       const body = { ...result, username: username };
       const response = await axios.post(
-        "http://localhost:8000/add_wishlist_item",
+        `${process.env.REACT_APP_API_BASE_URL}/add_wishlist_item`,
         body
       );
       // console.log(body);

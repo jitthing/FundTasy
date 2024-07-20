@@ -9,7 +9,7 @@ export const AddedItem = ({ item, updateWishlist }) => {
   const handleDeleteItem = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8000/delete_wishlist_item/${id}`
+        `${process.env.REACT_APP_API_BASE_URL}/delete_wishlist_item/${id}`
       );
       if (response) {
         updateWishlist();

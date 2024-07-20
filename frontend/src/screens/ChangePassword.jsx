@@ -25,7 +25,7 @@ const ChangePasswordForm = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8000/updatepassword",
+        `${process.env.REACT_APP_API_BASE_URL}/updatepassword`,
         {
           userId: user._id,
           password: password,
@@ -48,7 +48,7 @@ const ChangePasswordForm = () => {
     try {
       console.log(userId, token);
       const response = await axios.get(
-        `http://localhost:8000/validate_reset_token/${userId}/${token}`
+        `${process.env.REACT_APP_API_BASE_URL}/validate_reset_token/${userId}/${token}`
       );
       if (response.status === 200) {
         console.log(response.data.user);

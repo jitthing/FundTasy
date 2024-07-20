@@ -80,7 +80,7 @@ function GoalBox(props) {
     console.log(id);
     try {
       const response = await axios.delete(
-        `http://localhost:8000/delete_active_goal/${id}/${amount}`,
+        `${process.env.REACT_APP_API_BASE_URL}/delete_active_goal/${id}/${amount}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
@@ -235,7 +235,7 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
     try {
       const body = { title: title, price: price, username: userId };
       const response = await axios.post(
-        "http://localhost:8000/add_active_goal",
+        `${process.env.REACT_APP_API_BASE_URL}/add_active_goal`,
         body
       );
       if (response.status === 200) {

@@ -34,7 +34,7 @@ export default function Shop() {
         console.error("Failed to fetch data", error);
       }
       try {
-        const response = await axios.post("http://localhost:8000/all_models");
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/all_models`);
         const data = await response.data;
         console.log(data);
         setModels(data);

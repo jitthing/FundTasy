@@ -1,7 +1,7 @@
 import axios from "axios";
 export default async function getFriends() {
   try {
-    const response = await axios.get("http://localhost:8000/fetch_friends", {
+    const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/fetch_friends`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },

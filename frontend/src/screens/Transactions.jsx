@@ -52,10 +52,10 @@ export default function Transactions() {
   const deleteTransaction = async (id) => {
     try {
       const deletedTransaction = await axios.get(
-        `http://localhost:8000/fetch_transaction/${id}`
+        `${process.env.REACT_APP_API_BASE_URL}/fetch_transaction/${id}`
       );
       const response = await axios.delete(
-        `http://localhost:8000/delete_transaction/${id}`
+        `${process.env.REACT_APP_API_BASE_URL}/delete_transaction/${id}`
       );
       const deletedTransactionAmount =
         deletedTransaction.data.foundTransaction.amount;
@@ -64,7 +64,7 @@ export default function Transactions() {
       };
       try {
         const response2 = await axios.post(
-          "http://localhost:8000/update_bankbalance",
+          `${process.env.REACT_APP_API_BASE_URL}/update_bankbalance`,
           formData,
           {
             headers: {
@@ -78,7 +78,7 @@ export default function Transactions() {
       }
       try {
         const response3 = await axios.post(
-          "http://localhost:8000/update_totalsaving",
+          "http://process.env.REACT_APP_API_BASE_URL/update_totalsaving",
           formData,
           {
             headers: {

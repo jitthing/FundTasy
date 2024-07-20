@@ -219,7 +219,7 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
     // Send the token to the backend
     try {
       const backendResponse = await axios.post(
-        "http://localhost:8000/google_login",
+        `${process.env.REACT_APP_API_BASE_URL}/google_login`,
         {
           token: response.credential,
         }
@@ -335,7 +335,7 @@ export default function LoginPage() {
     const userPassword = password.value;
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:8000/login", {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, {
         email: userEmail,
         password: userPassword,
       });
@@ -362,7 +362,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/forgot_password",
+        `${process.env.REACT_APP_API_BASE_URL}/forgot_password`,
         {
           email: email,
         }
@@ -401,7 +401,7 @@ export default function LoginPage() {
     );
     try {
       const response = await axios.post(
-        "http://localhost:8000/create_account",
+        `${process.env.REACT_APP_API_BASE_URL}/create_account`,
         {
           username: inputUsername,
           email: inputEmail,

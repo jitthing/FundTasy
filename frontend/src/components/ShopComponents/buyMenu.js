@@ -34,7 +34,7 @@ export default function BuyMenu({
       }
       const userObj = await getUser();
       const userId = userObj.user.username;
-      const response = await axios.post("http://localhost:8000/buy_pig", {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/buy_pig`, {
         username: userId,
         pigName: name,
         pigPrice: price

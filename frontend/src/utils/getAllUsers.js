@@ -1,7 +1,7 @@
 import axios from "axios";
 export default async function getAllUsers() {
   try {
-    const response = await axios.get("http://localhost:8000/get_usernames", {
+    const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/get_usernames`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
       },

@@ -50,7 +50,7 @@ function Profile() {
       console.log("updating user data");
       try {
         const response = await axios.post(
-          "http://localhost:8000/update_user_info",
+          `${process.env.REACT_APP_API_BASE_URL}/update_user_info`,
           {
             firstName: firstName,
             lastName: lastName,

@@ -9,7 +9,7 @@ export const SearchBar = ({ setResults, setDisplayResults }) => {
   const fetchAmazonData = async (value) => {
     if (value !== "") {
       const search = value.split(" ").join("+");
-      const response = await axios.post("http://localhost:8000/scrape_amazon", {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/scrape_amazon`, {
         url: `https://www.amazon.sg/s?k=${search}`,
       });
       const data = await response.data;
