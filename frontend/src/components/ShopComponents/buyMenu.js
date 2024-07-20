@@ -10,7 +10,9 @@ export default function BuyMenu({
   userCoins,
   updatePigs,
   models,
-  ownedPigs
+  ownedPigs,
+  setLastBoughtPig,
+  setShowPigReveal
 }) {
   const generateMysteryPig = () => {
     const ownedNames = ownedPigs.map((pig) => pig.modelName);
@@ -23,10 +25,12 @@ export default function BuyMenu({
     try {
       let name = pigName;
       let price = pigPrice;
+      let mystery = false;
       if (name === "Mystery") {
         const generatedPig = generateMysteryPig();
         name = generatedPig.name;
         price = generatedPig.price;
+        mystery = true;
       }
       const userObj = await getUser();
       const userId = userObj.user.username;
@@ -36,30 +40,61 @@ export default function BuyMenu({
         pigPrice: price
       });
       if (response) {
-        Toastify({
-          text: response.data.message,
-          duration: 2000,
-          gravity: "top",
-          position: "center",
-          offset: {
-            y: 10,
-          },
-          style: {
-            fontSize: "18px",
-            fontWeight: "bold",
-            backgroundColor: "#4bb543",
-            color: "#fff",
-            boxShadow: "0px 0px 4px #888888",
-            width: "fit-content",
-            height: "48px",
-            position: "absolute",
-            left: "calc(50vw - 50px)",
-            borderRadius: "6px",
-            padding: "10px 15px",
-            textAlign: "center",
-            zIndex: "100",
-          },
-        }).showToast();
+        setLastBoughtPig(name);
+        if (mystery) {
+          setShowPigReveal(true);
+          setTimeout(() => {
+            Toastify({
+              text: response.data.message,
+              duration: 2000,
+              gravity: "top",
+              position: "center",
+              offset: {
+                y: 10,
+              },
+              style: {
+                fontSize: "18px",
+                fontWeight: "bold",
+                backgroundColor: "#4bb543",
+                color: "#fff",
+                boxShadow: "0px 0px 4px #888888",
+                width: "fit-content",
+                height: "48px",
+                position: "absolute",
+                left: "calc(60vw - 75px)",
+                borderRadius: "6px",
+                padding: "10px 15px",
+                textAlign: "center",
+                zIndex: "100",
+              },
+            }).showToast();
+          }, 5000);
+        } else {
+          Toastify({
+            text: response.data.message,
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            offset: {
+              y: 10,
+            },
+            style: {
+              fontSize: "18px",
+              fontWeight: "bold",
+              backgroundColor: "#4bb543",
+              color: "#fff",
+              boxShadow: "0px 0px 4px #888888",
+              width: "fit-content",
+              height: "48px",
+              position: "absolute",
+              left: "calc(60vw - 75px)",
+              borderRadius: "6px",
+              padding: "10px 15px",
+              textAlign: "center",
+              zIndex: "100",
+            },
+          }).showToast();
+        }
         updatePigs((prev) => !prev);
         closeBuyMenu();
       }
@@ -91,7 +126,7 @@ export default function BuyMenu({
     }
   };
 
-  const affordable = userCoins >= pigPrice;
+  const affordable = pigName === "Mystery" ? userCoins >= 30000:userCoins >= pigPrice;
 
   return (
     <BuyMenuBackdrop onclick={closeBuyMenu}>

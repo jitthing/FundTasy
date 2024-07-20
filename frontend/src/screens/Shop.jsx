@@ -9,6 +9,7 @@ import getOwnedPigs from "../utils/getOwnedPigs.js";
 import FilterPigs from "../components/ShopComponents/filterPigs.js";
 import BuyMenu from "../components/ShopComponents/buyMenu.js";
 import getUser from "../utils/getUser.js";
+import RevealPig from "../components/ShopComponents/revealPig.js";
 
 // TODO:
 // 1. Fetch the list of owned pigs from the backend
@@ -27,6 +28,8 @@ export default function Shop() {
   const [lastPreviewedPigPrice, setLastPreviewedPigPrice] = useState(0); // For buy menu
   const [userCoins, setUserCoins] = useState(0);
   const [updatePigs, setUpdatePigs] = useState(false);
+  const [showPigReveal, setShowPigReveal] = useState(false);
+  const [lastBoughtPig, setLastBoughtPig] = useState("");
 
   useEffect(() => {
     async function fetchPigs() {
@@ -83,6 +86,10 @@ export default function Shop() {
       !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
   );
 
+  const pigReveal = () => {
+    setShowPigReveal(true);
+  }
+
   return (
     <PageContainer>
       <Navbar page="shop" />
@@ -104,8 +111,11 @@ export default function Shop() {
           updatePigs={setUpdatePigs}
           models={models}
           ownedPigs={ownedPigs}
+          setLastBoughtPig={setLastBoughtPig}
+          setShowPigReveal={setShowPigReveal}
         />
       )}
+      {showPigReveal && (<RevealPig pig={lastBoughtPig} setShowPigReveal={setShowPigReveal} />)}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
