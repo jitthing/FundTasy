@@ -85,11 +85,7 @@ export default function Shop() {
     (model) =>
       !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
   );
-
-  const pigReveal = () => {
-    setShowPigReveal(true);
-  }
-
+  
   return (
     <PageContainer>
       <Navbar page="shop" />

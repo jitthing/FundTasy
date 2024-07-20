@@ -46,7 +46,17 @@ export default function Social({ userInfo }) {
       try {
         const friends = await getFriends();
         if (friends) {
-          setFriends(friends.allFriends);
+          let allFriends = friends.allFriends;
+          let allOwned = friends.allOwned;
+          allFriends.forEach((friend) => {
+            friend.owned = [];
+            allOwned.forEach((pig) => {
+              if (friend.username === pig.username) {
+                friend.owned.push(pig.modelName);
+              }
+            })
+          });
+          setFriends(allFriends);
         }
       } catch (error) {
         console.log("Unable to get friends: " + error);

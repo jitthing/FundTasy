@@ -27,7 +27,6 @@ TODO
    const [hasEdited, setHasEdited] = React.useState(false);
    const [displayPig, setdisplayPig] = useState("Basic");
    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const audioRef = useRef(null);
   const audioObjectRef = useRef(null);
 
   //for oink sound effect
@@ -343,30 +342,26 @@ TODO
    flex-grow: 1;
  `;
  
- const Space = styled.div`
-   width: 20%;
-   height: 100%;
- `
  const EditButton = styled.button`
- display: flex;
- justify-content: center;
- align-items: center;
- border-radius: 8px;
- height: 30px;
- width: fit-content;
- padding: 0px 10px;
- background-color: #645df2;
- color: #fff;
- cursor: pointer;
- font-weight: bold;
- font-size: 14px;
- border: none;
- position: absolute;
- right: 200px;
- top: 100px; 
- &:hover {
-   filter: brightness(0.9);
- }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  height: 30px;
+  width: fit-content;
+  padding: 0px 10px;
+  background-color: #645df2;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  position: absolute;
+  right: 200px;
+  top: 100px; 
+  &:hover {
+    filter: brightness(0.9);
+  }
 `;
  
  export default Profile;

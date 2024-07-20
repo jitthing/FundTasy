@@ -16,10 +16,6 @@ export default function UserModal({ info, closeModal }) {
                     <PigImage srcSet={`images/${info.displayPig}.png`} />
                     <InfoDiv>
                         <InfoCell>
-                            <CellTitle>User ID: </CellTitle>
-                            <CellValue>{info._id}</CellValue>
-                        </InfoCell>
-                        <InfoCell>
                             <CellTitle>Username: </CellTitle>
                             <CellValue>{info.username}</CellValue>
                         </InfoCell>
@@ -34,6 +30,17 @@ export default function UserModal({ info, closeModal }) {
                         <InfoCell>
                             <CellTitle>Monthly Income: </CellTitle>
                             <CellValue>{formatCurrency(info.income)}</CellValue>
+                        </InfoCell>
+                        <InfoCell>
+                            <PigTitle>Owned Pigs: </PigTitle>
+                            <PigDiv>
+                                {info.owned.map((pig) => 
+                                    (<PigPic 
+                                        srcSet={`images/${pig.charAt(0).toLowerCase() + pig.slice(1, pig.length)}.png`}
+                                        active={(pig.charAt(0).toLowerCase() + pig.slice(1, pig.length)) === info.displayPig}
+                                    />))
+                                }
+                            </PigDiv>
                         </InfoCell>
                     </InfoDiv>
                 </Body>
@@ -129,4 +136,28 @@ const CellValue = styled.div`
     width: fit-content;
     text-align: left;
     font-weight: bold;
+`
+
+const PigTitle = styled.div`
+    width: 40%;
+    text-align: left;
+`
+
+const PigPic = styled.img`
+    height:40px;
+    width: 40px;
+    object-fit: contain;
+    border-radius: 40px;
+    background-color: ${(props) => props.active ? "#bbf7d0":"#ececec"};
+    border: ${(props) => props.active ? "1px solid #22c55e":"none"};
+`
+
+const PigDiv = styled.div`
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 `

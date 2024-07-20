@@ -22,7 +22,7 @@ export default function TransactionCard({ transactions }) {
           <TransactionAmount>{formatCurrency(transaction.amount)}</TransactionAmount>
         </TransactionBody>
       ))}
-      {transactions.length == 0 && (<EmptyList>No transactions made yet</EmptyList>)}
+      {transactions.length === 0 && (<EmptyList>No transactions made yet</EmptyList>)}
     </TransactionContainer>
   );
 }

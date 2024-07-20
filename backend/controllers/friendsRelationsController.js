@@ -1,5 +1,6 @@
 const FriendsRelations = require("../models/friendsRelationsModel");
 const Users = require("../models/userModel");
+const ownedPigs = require("../models/ownedPigsModel");
 const { getUserFromToken, checkIfUserExists } = require("./userController");
 
 // TODO: 
@@ -126,7 +127,8 @@ const fetchFriends = async (req, res) => {
         })
         usernames.push(user.username);
         const allFriends = await Users.find({ username: {$in: usernames} }).sort({totalSaving: -1});
-        return res.status(200).json({ message: "Friends fetched!", friends, allFriends });
+        const allOwned = await ownedPigs.find({ username: {$in: usernames} });
+        return res.status(200).json({ message: "Friends fetched!", friends, allFriends, allOwned });
     } catch (error) {
         console.error("Unable to fetch friends: " + error);
     }
