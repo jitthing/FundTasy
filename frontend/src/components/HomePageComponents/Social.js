@@ -50,7 +50,7 @@ export default function Social({ userInfo }) {
               if (friend.username === pig.username) {
                 friend.owned.push(pig.modelName);
               }
-            })
+            });
           });
           setFriends(allFriends);
         }
@@ -77,7 +77,7 @@ export default function Social({ userInfo }) {
       }
     }
     fetchUsers();
-  }, [usernames]);
+  }, [usernames, friends]);
 
   useEffect(() => {
     function filterSearch() {
@@ -87,7 +87,7 @@ export default function Social({ userInfo }) {
       setSearchResults(results);
     }
     filterSearch();
-  }, [userQuery]);
+  }, [userQuery, usernames]);
 
   const updateSentRequest = (username) => {
     usernames.forEach((user) => {
@@ -182,7 +182,7 @@ export default function Social({ userInfo }) {
       <SocialTitle>Friends</SocialTitle>
       <SearchBar
         onKeyDown={(e) => {
-            if (e.key === "Enter") handleSendFriendRequest(e.target.value);
+          if (e.key === "Enter") handleSendFriendRequest(e.target.value);
         }}
         placeholder="Find a friend"
         value={userQuery}
@@ -239,13 +239,13 @@ export default function Social({ userInfo }) {
         </ToggleButton>
       </ToggleBar>
       {showList === "leaderboard" && (
-        <FriendList 
-          friends={friends} 
-          currentUser={userInfo} 
-          setFriendModal={setFriendModal} 
-          showFriendModal={showFriendModal} 
-          currentFriendInfo={currentFriendInfo} 
-          setCurrentFriendInfo={setCurrentFriendInfo} 
+        <FriendList
+          friends={friends}
+          currentUser={userInfo}
+          setFriendModal={setFriendModal}
+          showFriendModal={showFriendModal}
+          currentFriendInfo={currentFriendInfo}
+          setCurrentFriendInfo={setCurrentFriendInfo}
           showFullLeaderBoard={showFullLeaderBoard}
           setShowFullLeaderBoard={setShowFullLeaderBoard}
         />
@@ -255,7 +255,16 @@ export default function Social({ userInfo }) {
   );
 }
 
-function FriendList({ currentUser, friends, setFriendModal, showFriendModal, currentFriendInfo, setCurrentFriendInfo, showFullLeaderBoard, setShowFullLeaderBoard }) {
+function FriendList({
+  currentUser,
+  friends,
+  setFriendModal,
+  showFriendModal,
+  currentFriendInfo,
+  setCurrentFriendInfo,
+  showFullLeaderBoard,
+  setShowFullLeaderBoard,
+}) {
   function getName(first, last, iscurrentuser) {
     var name = iscurrentuser
       ? truncateText(first + " " + last, 11)
@@ -282,80 +291,108 @@ function FriendList({ currentUser, friends, setFriendModal, showFriendModal, cur
 
   const closeUserModal = () => {
     setFriendModal(false);
-  }
+  };
 
   return (
     <>
-    {showFriendModal && (<UserModal closeModal={closeUserModal} info={currentFriendInfo} />)}
-    {showFullLeaderBoard && (<LeaderboardModal setShowFullLeaderBoard={setShowFullLeaderBoard} friends={friends} closeUserModal={closeUserModal} 
-      setFriendModal={setFriendModal} getName={getName} setCurrentFriendInfo={setCurrentFriendInfo} currentUser={currentUser} />)}
-    <Leaderboard>
-      <LeaderboardRow style={{ height: "30px" }}>
-        <LeaderboardStat style={{ width: "15%" }}>Rank</LeaderboardStat>
-        <LeaderboardStat
-          style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
-        >
-          Fund
-        </LeaderboardStat>
-        <LeaderboardStat style={{ width: "25%" }}>PiggyBank</LeaderboardStat>
-        <LeaderboardStat style={{ width: "15%" }}>Total</LeaderboardStat>
-      </LeaderboardRow>
-      {friends.length > 1 &&
-        displayedFriends.map((friend, index) => (
-          <LeaderboardRow
-            isCurrentUser={friend.username === currentUser.username}
-          >
-            <LeaderboardCell style={{ width: "15%" }}>
-              {friend.username === currentUser.username
-                ? currentUserIndex + 1
-                : index + 1}
-            </LeaderboardCell>
-            <LeaderboardCell
-              style={{ width: "45%", textAlign: "left", paddingLeft: "5px", cursor:"pointer" }}
-              onClick={() => {setFriendModal(true);setCurrentFriendInfo(friend)}}
-            >
-              {getName(
-                friend.firstName,
-                friend.lastName,
-                friend.username === currentUser.username
-              )}
-            </LeaderboardCell>
-            <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
-              {parseFloat(friend.bankBalance).toFixed(0)}
-            </LeaderboardCell>
-            <LeaderboardCell style={{ width: "15%" }}>
-              {parseFloat(friend.totalSaving).toFixed(0)}
-            </LeaderboardCell>
-          </LeaderboardRow>
-        ))}
-      {friends.length === 1 && (
-        <>
-          <EmptyList>{`You have no friends :(`}</EmptyList>
-          <LeaderboardRow
-            isCurrentUser
-            style={{ marginTop: "auto" }}
-          >
-            <LeaderboardCell style={{ width: "15%" }}>-</LeaderboardCell>
-            <LeaderboardCell
-              style={{ width: "45%", textAlign: "left", paddingLeft: "5px", cursor:"pointer" }}
-              onClick={() => setFriendModal(true)}
-            >
-              {truncateText(
-                currentUser.firstName + " " + currentUser.lastName + " (me)",
-                17
-              )}
-            </LeaderboardCell>
-            <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
-              {parseFloat(currentUser.bankBalance).toFixed(0)}
-            </LeaderboardCell>
-            <LeaderboardCell style={{ width: "15%" }}>
-              {parseFloat(currentUser.totalSaving).toFixed(0)}
-            </LeaderboardCell>
-          </LeaderboardRow>
-        </>
+      {showFriendModal && (
+        <UserModal closeModal={closeUserModal} info={currentFriendInfo} />
       )}
-      <LeaderboardEnd expandable={friends.length > 7} onClick={() => friends.length > 7 ? setShowFullLeaderBoard(true):null}>View Full</LeaderboardEnd>
-    </Leaderboard>
+      {showFullLeaderBoard && (
+        <LeaderboardModal
+          setShowFullLeaderBoard={setShowFullLeaderBoard}
+          friends={friends}
+          closeUserModal={closeUserModal}
+          setFriendModal={setFriendModal}
+          getName={getName}
+          setCurrentFriendInfo={setCurrentFriendInfo}
+          currentUser={currentUser}
+        />
+      )}
+      <Leaderboard>
+        <LeaderboardRow style={{ height: "30px" }}>
+          <LeaderboardStat style={{ width: "15%" }}>Rank</LeaderboardStat>
+          <LeaderboardStat
+            style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
+          >
+            Fund
+          </LeaderboardStat>
+          <LeaderboardStat style={{ width: "25%" }}>PiggyBank</LeaderboardStat>
+          <LeaderboardStat style={{ width: "15%" }}>Total</LeaderboardStat>
+        </LeaderboardRow>
+        {friends.length > 1 &&
+          displayedFriends.map((friend, index) => (
+            <LeaderboardRow
+              isCurrentUser={friend.username === currentUser.username}
+            >
+              <LeaderboardCell style={{ width: "15%" }}>
+                {friend.username === currentUser.username
+                  ? currentUserIndex + 1
+                  : index + 1}
+              </LeaderboardCell>
+              <LeaderboardCell
+                style={{
+                  width: "45%",
+                  textAlign: "left",
+                  paddingLeft: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setFriendModal(true);
+                  setCurrentFriendInfo(friend);
+                }}
+              >
+                {getName(
+                  friend.firstName,
+                  friend.lastName,
+                  friend.username === currentUser.username
+                )}
+              </LeaderboardCell>
+              <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
+                {parseFloat(friend.bankBalance).toFixed(0)}
+              </LeaderboardCell>
+              <LeaderboardCell style={{ width: "15%" }}>
+                {parseFloat(friend.totalSaving).toFixed(0)}
+              </LeaderboardCell>
+            </LeaderboardRow>
+          ))}
+        {friends.length === 1 && (
+          <>
+            <EmptyList>{`You have no friends :(`}</EmptyList>
+            <LeaderboardRow isCurrentUser style={{ marginTop: "auto" }}>
+              <LeaderboardCell style={{ width: "15%" }}>-</LeaderboardCell>
+              <LeaderboardCell
+                style={{
+                  width: "45%",
+                  textAlign: "left",
+                  paddingLeft: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() => setFriendModal(true)}
+              >
+                {truncateText(
+                  currentUser.firstName + " " + currentUser.lastName + " (me)",
+                  17
+                )}
+              </LeaderboardCell>
+              <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
+                {parseFloat(currentUser.bankBalance).toFixed(0)}
+              </LeaderboardCell>
+              <LeaderboardCell style={{ width: "15%" }}>
+                {parseFloat(currentUser.totalSaving).toFixed(0)}
+              </LeaderboardCell>
+            </LeaderboardRow>
+          </>
+        )}
+        <LeaderboardEnd
+          expandable={friends.length > 7}
+          onClick={() =>
+            friends.length > 7 ? setShowFullLeaderBoard(true) : null
+          }
+        >
+          View Full
+        </LeaderboardEnd>
+      </Leaderboard>
     </>
   );
 }
@@ -497,7 +534,7 @@ function RequestList({ requests }) {
 
   return (
     <>
-    <LeaderboardRow style={{ height: "30px" }}>
+      <LeaderboardRow style={{ height: "30px" }}>
         <LeaderboardStat
           style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
         >
@@ -506,37 +543,37 @@ function RequestList({ requests }) {
         <LeaderboardStat style={{ width: "25%" }}>Date</LeaderboardStat>
         <LeaderboardStat style={{ width: "30%" }}>Request</LeaderboardStat>
       </LeaderboardRow>
-    <RequestBoard>
-      {requests
-        .slice()
-        .reverse()
-        .map((request) => (
-          <LeaderboardRow>
-            <LeaderboardCell
-              style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
-            >
-              {request.user1}
-            </LeaderboardCell>
-            <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
-              {moment(request.date_requested).format("DD/MM/YYYY")}
-            </LeaderboardCell>
-            <RequestCell style={{ width: "30%" }}>
-              <div onClick={() => handleDeleteFriendRequest(request.user1)}>
-                <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-50 on" />
-              </div>
-              <div onClick={() => handleAcceptFriendRequest(request.user1)}>
-                <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-200 on" />
-              </div>
-            </RequestCell>
-          </LeaderboardRow>
-        ))}
-      {requests.length === 0 && (
-        <EmptyList style={{ height: "305px" }}>
-          No outstanding friend requests
-        </EmptyList>
-      )}
-    </RequestBoard>
-    <RequestRowEnd style={{ marginTop:"0px" }}>All Requests</RequestRowEnd>
+      <RequestBoard>
+        {requests
+          .slice()
+          .reverse()
+          .map((request) => (
+            <LeaderboardRow>
+              <LeaderboardCell
+                style={{ width: "45%", textAlign: "left", paddingLeft: "5px" }}
+              >
+                {request.user1}
+              </LeaderboardCell>
+              <LeaderboardCell style={{ width: "25%", fontWeight: "normal" }}>
+                {moment(request.date_requested).format("DD/MM/YYYY")}
+              </LeaderboardCell>
+              <RequestCell style={{ width: "30%" }}>
+                <div onClick={() => handleDeleteFriendRequest(request.user1)}>
+                  <IoClose className="h-6 w-6 text-red-500 cursor-pointer hover:brightness-50 on" />
+                </div>
+                <div onClick={() => handleAcceptFriendRequest(request.user1)}>
+                  <IoCheckmark className="h-6 w-6 text-green-700 cursor-pointer hover:brightness-200 on" />
+                </div>
+              </RequestCell>
+            </LeaderboardRow>
+          ))}
+        {requests.length === 0 && (
+          <EmptyList style={{ height: "305px" }}>
+            No outstanding friend requests
+          </EmptyList>
+        )}
+      </RequestBoard>
+      <RequestRowEnd style={{ marginTop: "0px" }}>All Requests</RequestRowEnd>
     </>
   );
 }
@@ -573,9 +610,9 @@ const SocialTitle = styled.div`
 `;
 
 const SearchBar = styled.input`
-  spellCheck: false;
-  autoCapitalize: none;
-  autoCorrect: off;
+  spellcheck: false;
+  autocapitalize: none;
+  autocorrect: off;
   width: 100%;
   height: 30px;
   border: 1px solid #bdbdbd;
@@ -723,8 +760,8 @@ const LeaderboardCell = styled.div`
 const LeaderboardEnd = styled.div`
   width: 100%;
   height: 30px;
-  background-color: ${(props) => props.expandable ? "#1e293b":"#cecece"};
-  color: ${(props) => props.expandable ? "#fff":"#f1f1f1"};
+  background-color: ${(props) => (props.expandable ? "#1e293b" : "#cecece")};
+  color: ${(props) => (props.expandable ? "#fff" : "#f1f1f1")};
   font-size: 14px;
   font-weight: bold;
   border-radius: 0px 0px 20px 20px;
@@ -732,11 +769,11 @@ const LeaderboardEnd = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: auto;
-  cursor: ${(props) => props.expandable ? "pointer":"auto"};
+  cursor: ${(props) => (props.expandable ? "pointer" : "auto")};
   &:hover {
-      color: ${(props) => props.expandable ? "#fff":"#f1f1f1"};
-      background-color: ${(props) => props.expandable ? "#645df2":"#1e293b"};
-      transition: 0.1s;
+    color: ${(props) => (props.expandable ? "#fff" : "#f1f1f1")};
+    background-color: ${(props) => (props.expandable ? "#645df2" : "#1e293b")};
+    transition: 0.1s;
   }
 `;
 

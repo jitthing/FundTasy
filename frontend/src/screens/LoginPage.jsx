@@ -249,10 +249,11 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
       callback: handleCallbackResponse,
       autoSelect: false,
     });
+    // eslint-disable-next-line
   }, []);
 
   const handleSignInClick = () => {
-    console.log("google clicked")
+    console.log("google clicked");
     window.google.accounts.id.prompt();
   };
 
@@ -277,14 +278,14 @@ const ContinueWithGoogle = ({ setValidCredentials, navigate }) => {
 
 // ContinueWithApple component
 const ContinueWithApple = () => (
-  <button class="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
-    <div class="relative flex items-center space-x-4 justify-center">
+  <button className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
+    <div className="relative flex items-center space-x-4 justify-center">
       <img
         src="https://www.svgrepo.com/show/511330/apple-173.svg"
-        class="absolute left-0 w-5"
+        className="absolute left-0 w-5"
         alt="apple logo"
       />
-      <span class="block w-max font-semibold tracking-wide text-gray-700 dark:text-gray-900 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
+      <span className="block w-max font-semibold tracking-wide text-gray-700 dark:text-gray-900 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
         Continue with Apple
       </span>
     </div>
@@ -301,6 +302,7 @@ export default function LoginPage() {
   const query = useQuery();
   const [showSignUp, setShowSignUp] = useState(false);
   const [showForget, setForget] = useState(false);
+  // eslint-disable-next-line
   const [validCredentials, setValidCredentials] = useState(false);
   const [error, setError] = useState("");
   const [signUpError, setSignUpError] = useState("");
@@ -314,7 +316,7 @@ export default function LoginPage() {
 
   // if user clicked change password from settings page
   useEffect(() => {
-    if (query.get('resetPassword') === 'true') {
+    if (query.get("resetPassword") === "true") {
       setForget(true);
     }
   }, [query]);
@@ -382,7 +384,8 @@ export default function LoginPage() {
   const handleSignUp = async (e) => {
     // Modify this such that it pulls data from the form instead of the state variables
     e.preventDefault();
-    const { email, password, firstName, lastName, username } = e.target.elements;
+    const { email, password, firstName, lastName, username } =
+      e.target.elements;
     const inputUsername = username.value.trim().toLowerCase();
     const inputEmail = email.value.trim().toLowerCase();
     const inputPassword = password.value;
@@ -425,8 +428,11 @@ export default function LoginPage() {
       if (errorResponse === "Password is too short") {
         setSignUpPasswordInvalid(true);
       } else if (errorResponse === "Email already exists") {
-        setSignUpInputInvalid(true)
-      } else if (errorResponse === "Username already exists" || errorResponse === "Username cannot be empty") {
+        setSignUpInputInvalid(true);
+      } else if (
+        errorResponse === "Username already exists" ||
+        errorResponse === "Username cannot be empty"
+      ) {
         setSignUpUsernameInvalid(true);
       }
     }
@@ -434,61 +440,63 @@ export default function LoginPage() {
 
   return (
     <>
-    <BackgroundDisplay srcSet="assets/piggies-small.png" />
-    <Body className="flex min-h-full flex-1 flex-col justify-end px-6 py-12 lg:px-8 w-1/2 bg-white">
-      {/* <Logo /> */}
-      <Title>Welcome to FundTasy</Title>
-      <Instruction className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</Instruction>
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleLogin}>
-          <EmailInput isInvalid={isLoginInputInvalid} />
-          <PasswordInput
-            isInvalid={isLoginInputInvalid}
-            text="Forgot password?"
-            toggleForget={toggleForget}
-          />
-          <br />
-          <p className="text-red-500 mb-5">{error}</p>
-          <SubmitButton text="Sign in" />
-        </form>
-        <SignUp showSignUp={toggleSignUp} />
-        <p className="mt-3">OR</p>
-        <div class="mt-10 grid space-y-4">
-          <ContinueWithGoogle
-            setValidCredentials={setValidCredentials}
-            navigate={navigate}
-          />
-          <ContinueWithApple />
+      <BackgroundDisplay srcSet="assets/piggies-small.png" />
+      <Body className="flex min-h-full flex-1 flex-col justify-end px-6 py-12 lg:px-8 w-1/2 bg-white">
+        {/* <Logo /> */}
+        <Title>Welcome to FundTasy</Title>
+        <Instruction className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Sign in to your account
+        </Instruction>
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form onSubmit={handleLogin}>
+            <EmailInput isInvalid={isLoginInputInvalid} />
+            <PasswordInput
+              isInvalid={isLoginInputInvalid}
+              text="Forgot password?"
+              toggleForget={toggleForget}
+            />
+            <br />
+            <p className="text-red-500 mb-5">{error}</p>
+            <SubmitButton text="Sign in" />
+          </form>
+          <SignUp showSignUp={toggleSignUp} />
+          <p className="mt-3">OR</p>
+          <div className="mt-10 grid space-y-4">
+            <ContinueWithGoogle
+              setValidCredentials={setValidCredentials}
+              navigate={navigate}
+            />
+            <ContinueWithApple />
+          </div>
         </div>
-      </div>
-      {showSignUp && (
-        <Modal
-          closeModal={toggleSignUp}
-          handleSubmit={handleSignUp}
-          isSignUpEmailInvalid={isSignUpEmailInvalid}
-          isSignUpPasswordInvalid={isSignUpPasswordInvalid}
-          isSignUpUsernameInvalid={isSignUpUsernameInvalid}
-          error={signUpError}
-          title="Register"
-          description="It's quick and easy."
-          textButton="Sign up"
-          statusCode={statusCode}
-          loading={loading}
-        />
-      )}
-      {showForget && (
-        <Modal
-          closeModal={toggleForget}
-          handleSubmit={handleResetPassword}
-          error={forgetError}
-          title="Reset Password"
-          description="Enter your email to reset your password."
-          textButton="Reset"
-          statusCode={statusCode}
-          loading={loading}
-        />
-      )}
-    </Body>
+        {showSignUp && (
+          <Modal
+            closeModal={toggleSignUp}
+            handleSubmit={handleSignUp}
+            isSignUpEmailInvalid={isSignUpEmailInvalid}
+            isSignUpPasswordInvalid={isSignUpPasswordInvalid}
+            isSignUpUsernameInvalid={isSignUpUsernameInvalid}
+            error={signUpError}
+            title="Register"
+            description="It's quick and easy."
+            textButton="Sign up"
+            statusCode={statusCode}
+            loading={loading}
+          />
+        )}
+        {showForget && (
+          <Modal
+            closeModal={toggleForget}
+            handleSubmit={handleResetPassword}
+            error={forgetError}
+            title="Reset Password"
+            description="Enter your email to reset your password."
+            textButton="Reset"
+            statusCode={statusCode}
+            loading={loading}
+          />
+        )}
+      </Body>
     </>
   );
 }
@@ -499,19 +507,19 @@ const BackgroundDisplay = styled.img`
   opacity: 0.9;
   filter: brightness(0.9);
   background-color: #fcfcfc;
-`
+`;
 
 const Body = styled.div`
   position: absolute;
   top: 0px;
   left: 50%;
-`
+`;
 
 const Instruction = styled.div`
   text-align: center;
-`
+`;
 
 const Title = styled.div`
   font-size: 40px;
   font-weight: bold;
-`
+`;

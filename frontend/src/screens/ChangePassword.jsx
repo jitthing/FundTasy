@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const ChangePasswordForm = () => {
   const { userId, token } = useParams();
   const [user, setUser] = useState(null);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [statusCode, setStatusCode] = useState(null);
 
   const handleSubmit = async (event) => {
@@ -19,17 +19,18 @@ const ChangePasswordForm = () => {
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
-    }
-    else if (String(password).trim().length < 4) {
+    } else if (String(password).trim().length < 4) {
       setError("Password should be at least 4 characters long");
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8000/updatepassword', {
-        userId: user._id,
-        password: password
-
-      });
+      const response = await axios.post(
+        "http://localhost:8000/updatepassword",
+        {
+          userId: user._id,
+          password: password,
+        }
+      );
       if (response.status === 200) {
         setError(response.data.message);
         setStatusCode(response.status);
@@ -41,12 +42,14 @@ const ChangePasswordForm = () => {
       setError(error.response.data.message);
       setStatusCode(error.response.status);
     }
-  }
+  };
 
   const validateToken = async (userId, token) => {
     try {
       console.log(userId, token);
-      const response = await axios.get(`http://localhost:8000/validate_reset_token/${userId}/${token}`);
+      const response = await axios.get(
+        `http://localhost:8000/validate_reset_token/${userId}/${token}`
+      );
       if (response.status === 200) {
         console.log(response.data.user);
         setUser(response.data.user);
@@ -57,9 +60,10 @@ const ChangePasswordForm = () => {
     } catch (error) {
       console.log(error.response.data.message);
     }
-  }
+  };
   useEffect(() => {
     validateToken(userId, token);
+    // eslint-disable-next-line
   }, []); // run once
 
   return (
@@ -78,37 +82,92 @@ const ChangePasswordForm = () => {
               <h2 class="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                 Change Password
               </h2>
-              <form onSubmit={handleSubmit} class="mt-4 space-y-4 lg:mt-5 md:space-y-5" >
+              <form
+                onSubmit={handleSubmit}
+                class="mt-4 space-y-4 lg:mt-5 md:space-y-5"
+              >
                 <div>
-                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
-                  <div id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" tabindex="0"> {user.email} </div>
+                  <label
+                    for="email"
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Your email
+                  </label>
+                  <div
+                    id="email"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    tabindex="0"
+                  >
+                    {" "}
+                    {user.email}{" "}
+                  </div>
                 </div>
                 <div>
-                  <label for="password" class="block mb-2 text-sm font-medium text-gray-900">New Password</label>
-                  <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="" />
+                  <label
+                    for="password"
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    New Password
+                  </label>
+                  <input
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="••••••••"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    required=""
+                  />
                 </div>
                 <div>
-                  <label for="confirm-password" class="block mb-2 text-sm font-medium text-gray-900">Confirm password</label>
-                  <input onChange={(e) => setConfirmPassword(e.target.value)} type="password" name="confirm-password" id="confirm-password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" required="" />
+                  <label
+                    for="confirm-password"
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Confirm password
+                  </label>
+                  <input
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    type="password"
+                    name="confirm-password"
+                    id="confirm-password"
+                    placeholder="••••••••"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    required=""
+                  />
                 </div>
-                {statusCode === 200 
-                ? <div className='mb-5 font-semibold text-green-700'><p>{error}</p> <br/> <a href='/' class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</a> </div>
-                : <><p className='mb-5 font-semibold text-red-500'>{error}</p> <button type="submit" class="w-full font-semibold text-base leading-6 text-indigo-600 hover:text-indigo-500">Reset password</button>  </>
-                }
-                
+                {statusCode === 200 ? (
+                  <div className="mb-5 font-semibold text-green-700">
+                    <p>{error}</p> <br />{" "}
+                    <a
+                      href="/"
+                      class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    >
+                      Login
+                    </a>{" "}
+                  </div>
+                ) : (
+                  <>
+                    <p className="mb-5 font-semibold text-red-500">{error}</p>{" "}
+                    <button
+                      type="submit"
+                      class="w-full font-semibold text-base leading-6 text-indigo-600 hover:text-indigo-500"
+                    >
+                      Reset password
+                    </button>{" "}
+                  </>
+                )}
               </form>
             </div>
           </div>
         </section>
       ) : (
-        <div
-          class="relative block w-full p-4 mb-4 text-base leading-5 text-white bg-blue-500 rounded-lg opacity-100 font-regular">
+        <div class="relative block w-full p-4 mb-4 text-base leading-5 text-white bg-blue-500 rounded-lg opacity-100 font-regular">
           <p>Invalid token or token has expired. Please try again.</p>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ChangePasswordForm;
-
