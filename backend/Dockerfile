@@ -1,0 +1,43 @@
+# Use the official Node.js image as the base image
+FROM node:22-bullseye
+
+# Install nodemon globally
+RUN npm install -g nodemon
+
+# Install necessary dependencies for Puppeteer
+RUN apt-get update && apt-get install -y \
+    libnss3 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libxcomposite1 \
+    libxrandr2 \
+    libxdamage1 \
+    libxkbcommon0 \
+    libpango-1.0-0 \
+    libxshmfence1 \
+    libgbm1 \
+    libasound2 \
+    libpangocairo-1.0-0 \
+    libatspi2.0-0 \
+    libgtk-3-0 \
+    libdrm2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json ./
+
+# Install the dependencies
+RUN npm install
+
+# Copy the rest of the application code to the working directory
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 8000
+
+# Start the application
+CMD ["npm", "run", "devStart"]

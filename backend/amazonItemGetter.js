@@ -2,7 +2,9 @@ const puppeteer = require("puppeteer");
 
 const getAmazon = async (req, res) => {
   const url = req.body.url;
-  const browser = await puppeteer.launch({ headless: true });
+  const browser = await puppeteer.launch({
+    headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
   const page = await browser.newPage();
   await page.goto(url, {
     waitUntil: "domcontentloaded",
