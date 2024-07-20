@@ -74,7 +74,6 @@ const authenticateUser = async (req, res) => {
 // Shared function to get user from token
 const getUserFromToken = async (req) => {
   try {
-    // console.log("working");
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
@@ -289,7 +288,6 @@ const forgotPassword = async (req, res) => {
             .status(500)
             .json({ message: `Encountered error sending email to ${email}` });
         } else {
-          // console.log('Email sent: ' + info.response);
           return res
             .status(200)
             .json({ message: `Email has been sent to ${email}` });
@@ -304,8 +302,6 @@ const forgotPassword = async (req, res) => {
 const google_login = async (req, res) => {
   try {
     const { token } = req.body;
-    // console.log("Received token");
-    // console.log(req.body);
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,
@@ -315,7 +311,6 @@ const google_login = async (req, res) => {
     const email = payload["email"];
     const firstName = payload["given_name"];
     const lastName = payload["family_name"];
-    // console.log("Ticket:", ticket);
 
     let user = await Users.findOne({ email: email });
     if (!user) {
@@ -356,7 +351,6 @@ const validateResetToken = async (req, res) => {
   const { userId, token } = req.params;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    // console.log("Decoded token:", decoded);
     if (decoded.id === userId) {
       user = await Users.findById(userId).select("-password");
       return res
@@ -379,8 +373,6 @@ const updateDisplayPig = async (req, res) => {
         { $set: { displayPig: updated } },
         { new: true }
       );
-      //console.log("changed db");
-      //console.log(updatedDP);
       if (updatedDP) {
         return res.status(200).json({
           message: "Display pig updated successfully",
@@ -460,7 +452,6 @@ const getAllUsernames = async(req, res) => {
     allUsernames.forEach((user) => {
       user.sentRequest = sentRequestUsernames.has(user.username);
     })
-    //console.log(allUsernames[0]);
     return res.status(200).json({ message: "Usernames retrieved", allUsernames });
   } catch (error) {
     return res.status(400).json({ message: "Unable to get usernames" })

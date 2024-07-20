@@ -11,7 +11,6 @@ import formatCurrency from "../../utils/formatCurrency";
 const moment = require("moment");
 
 export default function GoalCard({ goals, updateGoals, userIncome }) {
-  // console.log(goals);
   const numActiveGoals = goals.length;
   const numEmptyGoals = 3 - numActiveGoals;
   return (
@@ -199,7 +198,6 @@ function GoalBox(props) {
             dropdownItems={wishlistItems}
             updateGoals={props.updateGoals}
           />
-          //<NewRecordForm />
         )}
       </>
     );
@@ -213,7 +211,6 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
 
   const handleSelectChange = (event) => {
     const foundItem = dropdownItems.find(
-      //changed it to id instead cause of string slicing
       (dropdownItem) => dropdownItem._id === event.target.value
     );
     if (foundItem) {
@@ -238,7 +235,6 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
     const title = selectItem === "others" ? customItem : selectItem;
     try {
       const body = { title: title, price: price, username: userId };
-      // console.log(body);
       const response = await axios.post(
         "http://localhost:8000/add_active_goal",
         body

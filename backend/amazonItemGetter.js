@@ -41,7 +41,6 @@ const getAmazon = async (req, res) => {
     });
     return items;
   });
-  // console.log(results.slice(0, 6));
   await browser.close();
   return res.status(200).json(results.slice(0, 19));
 };

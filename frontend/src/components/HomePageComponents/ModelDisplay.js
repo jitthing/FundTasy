@@ -44,7 +44,7 @@ function Loading() {
         style={{
           position: "absolute",
           font: "700 20px Inter, sans-serif",
-          zIndex: "0",
+          zIndex: "-1",
         }}
       >
         Loading...

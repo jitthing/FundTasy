@@ -12,10 +12,6 @@ import UserModal from "./UserModal";
 import LeaderboardModal from "./FullLeaderBoard";
 const moment = require("moment");
 
-// TODO:
-// 1. Change leaderboard to show a user's friends
-// 2. Show friend requests. Allow user to accept or reject friend requests
-
 export default function Social({ userInfo }) {
   const [showList, setShowList] = useState("leaderboard");
   const [allRequests, setAllRequests] = useState([]);
@@ -438,8 +434,6 @@ function RequestList({ requests }) {
     const userObj = await getUser();
     const userId = userObj.user.username;
     try {
-      // console.log("Attempting to accept friend request from " + friendName);
-      // alert("accepting friend request");
       const response = await axios.post(
         "http://localhost:8000/accept_friend_request",
         {

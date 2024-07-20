@@ -3,13 +3,11 @@ const { getUserFromToken } = require("./userController");
 const User = require("../models/userModel");
 
 const newTransaction = async (req, res) => {
-    // console.log(req.body);
     const { formData, username } = req.body;
     try {
         const createTransaction = await transaction.create({
             title: formData.title,
             category: formData.category,
-            // goal: formData.goal,
             amount: formData.amount,
             username: username,
         });
@@ -32,7 +30,6 @@ const allTransactions = async (req, res) => {
         return res.status(200).json({ message: "all transactions ", transactions });
     } catch (error) {
         console.error(" hahaha Error getting transactions:", error);
-        // console.log("Error getting transactions:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 

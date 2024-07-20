@@ -4,18 +4,10 @@ import Navbar from "../components/Navbar.js";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import getOwnedPigs from "../utils/getOwnedPigs.js";
-// import { calcPosFromAngles } from "@react-three/drei";
-// import { flushGlobalEffects } from "@react-three/fiber";
 import FilterPigs from "../components/ShopComponents/filterPigs.js";
 import BuyMenu from "../components/ShopComponents/buyMenu.js";
 import getUser from "../utils/getUser.js";
 import RevealPig from "../components/ShopComponents/revealPig.js";
-
-// TODO:
-// 1. Fetch the list of owned pigs from the backend
-// 2. Filter menu
-// 3. Filter form
-// 4. Buy menu
 
 export default function Shop() {
   const [unownedFilter, setUnownedFilter] = useState(true); // Filter for unowned pigs
@@ -37,7 +29,6 @@ export default function Shop() {
         const response = await getOwnedPigs();
         const user = await getUser();
         setUserCoins(user.user.coinBalance);
-        // console.log(wishlistResponse);
         setOwnedPigs(response.want);
       } catch (error) {
         console.error("Failed to fetch data", error);

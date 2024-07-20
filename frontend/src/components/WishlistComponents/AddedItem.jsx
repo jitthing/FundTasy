@@ -7,7 +7,6 @@ import formatCurrency from "../../utils/formatCurrency";
 export const AddedItem = ({ item, updateWishlist }) => {
   console.log(item.status);
   const handleDeleteItem = async (id) => {
-    // console.log(id);
     try {
       const response = await axios.delete(
         `http://localhost:8000/delete_wishlist_item/${id}`

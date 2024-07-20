@@ -215,7 +215,6 @@ export default function HomePage() {
         <PiggyBankCard
           bankBalance={bankBalance}
           openContributeForm={openContributeForm}
-          closeContributeForm={closeContributeForm}
           currentTime={currentTime}
           activeGoals={activeGoals}
           updateBankBalance={setBankBalance}

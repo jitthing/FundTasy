@@ -137,7 +137,6 @@ export default function BuyMenu({
         </BuyMenuHead>
         <BuyMenuBody>
           <PigCard pigname={pigName} pigTitle={pigName} />
-          {/* <BuyMenuLabel>Are you sure you want to buy {pigName} Pig?</BuyMenuLabel> */}
         </BuyMenuBody>
         <BalanceLabel>Final Balance {userCoins - pigPrice} Coinks</BalanceLabel>
         <BuyMenuBottom>
@@ -219,9 +218,8 @@ const BuyMenuBody = styled.div`
   justify-content: center;
   align-items: center;
   padding: 20px 0px;
-  //   border-width: 2px;
-  //   border-color: red;
 `;
+
 const BuyMenuBottom = styled.div`
   display: flex;
   justify-content: center;
@@ -264,12 +262,6 @@ const CardPrice = styled.div`
   margin-left: 5px;
 `;
 
-// const BuyMenuLabel = styled.div`
-//   text-align: center;
-//   font-weight: 600;
-//   font-size: 14px;
-// `;
-
 const InsufficientLabel = styled.div`
   text-align: center;
   font-weight: bold;
@@ -309,7 +301,6 @@ const CardInfo = styled.div`
   font-size: 20px;
   align-items: center;
   vertical-align: middle;
-  //   border: 1px solid red;
 `;
 
 const CardTitle = styled.div`
@@ -319,5 +310,4 @@ const CardTitle = styled.div`
   text-align: middle;
   vertical-align: middle;
   padding: 0px 10px;
-  //   border: 1px solid red;
 `;

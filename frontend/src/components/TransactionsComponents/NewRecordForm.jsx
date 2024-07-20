@@ -3,18 +3,10 @@ import styled from "styled-components";
 import Toastify from "toastify-js";
 import getUser from "../../utils/getUser";
 import axios from "axios";
-// import truncateText from "../utils/truncateText";
-
-/*
- TODO
- - Add a calendar pciker for the date
- - Create a banner instead of using alert
-*/
 
 export default function NewRecordForm({
   closeForm,
   updateTransactions,
-  allGoals,
   editTransaction,
 }) {
   const [title, setTitle] = useState(
@@ -63,7 +55,6 @@ export default function NewRecordForm({
           },
         }
       );
-      // console.log(response.data);
       if (
         transactionResponse &&
         updateBalanceResponse &&

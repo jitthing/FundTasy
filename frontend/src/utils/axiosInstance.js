@@ -1,7 +1,6 @@
 import axios from "axios";
 
 /**
- * Workshop Content:
  * Creates an instance of axios, basically something that acts like
  * Postman, to help send requests to our backend
  */

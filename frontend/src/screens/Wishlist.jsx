@@ -26,7 +26,6 @@ export default function Wishlist() {
         const userResponse = await getUser();
         setUsername(userResponse.user.username);
         const wishlistResponse = await getWishlist();
-        // console.log(wishlistResponse);
         setItems(wishlistResponse.items);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -89,11 +88,6 @@ const SearchWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   min-width: 200px;
-`;
-
-const WishlistItemHeader = styled.div`
-  height: 10%;
-  font-size: 20px;
 `;
 
 const SearchAndItemsWrapper = styled.div`

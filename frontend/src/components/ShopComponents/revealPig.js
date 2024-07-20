@@ -27,7 +27,7 @@ export default function RevealPig({ pig, setShowPigReveal }) {
 
     return (
         <Container>
-            {isRevealingBackground && (<SpeedLines srcSet="speed-lines.gif" />)}
+            {isRevealingBackground && (<SpeedLines srcSet="assets/speed-lines.gif" />)}
             {!isRevealingBackground && (<EndBackground onClick={() => setShowPigReveal(false)} />)}
             {showBlankPig && (<BlankPig srcSet="images/mystery.png" />)}
             {!showBlankPig && (<ActualPig srcSet={`images/${pig}.png`} />)}
