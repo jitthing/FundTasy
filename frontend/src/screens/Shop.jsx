@@ -4,17 +4,10 @@ import Navbar from "../components/Navbar.js";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import getOwnedPigs from "../utils/getOwnedPigs.js";
-// import { calcPosFromAngles } from "@react-three/drei";
-// import { flushGlobalEffects } from "@react-three/fiber";
-import FilterPigs from "../components/filterPigs.js";
-import BuyMenu from "../components/buyMenu.js";
+import FilterPigs from "../components/ShopComponents/filterPigs.js";
+import BuyMenu from "../components/ShopComponents/buyMenu.js";
 import getUser from "../utils/getUser.js";
-
-// TODO:
-// 1. Fetch the list of owned pigs from the backend
-// 2. Filter menu
-// 3. Filter form
-// 4. Buy menu
+import RevealPig from "../components/ShopComponents/revealPig.js";
 
 export default function Shop() {
   const [unownedFilter, setUnownedFilter] = useState(true); // Filter for unowned pigs
@@ -27,6 +20,8 @@ export default function Shop() {
   const [lastPreviewedPigPrice, setLastPreviewedPigPrice] = useState(0); // For buy menu
   const [userCoins, setUserCoins] = useState(0);
   const [updatePigs, setUpdatePigs] = useState(false);
+  const [showPigReveal, setShowPigReveal] = useState(false);
+  const [lastBoughtPig, setLastBoughtPig] = useState("");
 
   useEffect(() => {
     async function fetchPigs() {
@@ -34,7 +29,6 @@ export default function Shop() {
         const response = await getOwnedPigs();
         const user = await getUser();
         setUserCoins(user.user.coinBalance);
-        // console.log(wishlistResponse);
         setOwnedPigs(response.want);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -79,9 +73,10 @@ export default function Shop() {
   }
 
   const unownedPigs = models.filter(
-    (model) => !ownedPigs.includes(model.modelName)
+    (model) =>
+      !ownedPigs.some((ownedPig) => ownedPig.modelName === model.modelName)
   );
-
+  
   return (
     <PageContainer>
       <Navbar page="shop" />
@@ -101,8 +96,13 @@ export default function Shop() {
           pigPrice={lastPreviewedPigPrice}
           userCoins={userCoins}
           updatePigs={setUpdatePigs}
+          models={models}
+          ownedPigs={ownedPigs}
+          setLastBoughtPig={setLastBoughtPig}
+          setShowPigReveal={setShowPigReveal}
         />
       )}
+      {showPigReveal && (<RevealPig pig={lastBoughtPig} setShowPigReveal={setShowPigReveal} />)}
       <ShopContainer>
         <ShopHead>
           <ShopTitle>Shop</ShopTitle>
@@ -118,16 +118,11 @@ export default function Shop() {
           </div>
         </ShopHead>
         <ShopBody>
-          {/* <PigCard pigname="basic" pigTitle="Basic" owned />
-          <PigCard pigname="ninja" pigTitle="Ninja" owned /> */}
-          {/* {Object.keys(mypigs).map((model) => (
-            <PigCard pigname={model} pigTitle={mypigs[model]} />
-          ))} */}
           {ownedFilter &&
             ownedPigs.map((model) => (
               <PigCard
-                pigname={model.toLowerCase()}
-                pigTitle={model}
+                pigname={model.modelName.toLowerCase()}
+                pigTitle={model.modelName}
                 owned={true}
                 openBuyMenu={openBuyMenu}
               />
@@ -143,6 +138,16 @@ export default function Shop() {
                 openBuyMenu={openBuyMenu}
               />
             ))}
+            {ownedPigs.length < models.length && 
+              (<PigCard
+                  pigimg="mystery"
+                  pigname="Mystery"
+                  pigTitle="Mystery"
+                  pigPrice={30000}
+                  owned={false}
+                  openBuyMenu={openBuyMenu}
+              />)
+            }
         </ShopBody>
       </ShopContainer>
     </PageContainer>
@@ -201,11 +206,13 @@ const ShopTitle = styled.div`
 
 const Moneybar = styled.div`
   display: flex;
-  width: 120px;
+  width: fit-content;
   height: 40px;
   border-radius: 20px;
   background-color: #ececec;
   justify-content: space-between;
+  align-items:center;
+  gap: 10px;
 `;
 
 const BigCoin = styled.img`
@@ -271,7 +278,7 @@ const CardInfo = styled.div`
 `;
 
 const CardTitle = styled.div`
-  width: 60%;
+  width: 50%;
   font-weight: bold;
   margin-right: auto;
   text-align: left;
@@ -292,7 +299,8 @@ const OwnedOption = styled.div`
 `;
 
 const BuyOption = styled.div`
-  width: 40%;
+  width: fit-content;
+  max-width: 50%;
   height: 70%;
   font-weight: bold;
   background-color: #645df2;
@@ -312,6 +320,7 @@ const BuyText = styled.div`
   margin-right: auto;
   font-size: 16px;
   vertical-align: middle;
+  padding-right: 10px;
 `;
 
 const FilterButton = styled.div`

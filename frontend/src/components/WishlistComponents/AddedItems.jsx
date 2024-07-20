@@ -4,6 +4,8 @@ import { AddedItem } from "./AddedItem";
 
 export const AddedItems = ({ items, updateWishlist }) => {
   return (
+    <>
+    {items.length === 0 && (<EmptyItems>No items added to Wishlist yet</EmptyItems>)}
     <ItemsWrapper>
       {items.map((item, id) => {
         return (
@@ -11,12 +13,13 @@ export const AddedItems = ({ items, updateWishlist }) => {
         );
       })}
     </ItemsWrapper>
+    </>
   );
 };
 
 const ItemsWrapper = styled.div`
   display: flex;
-
+  z-index: 0;
   flex-wrap: wrap;
   gap: 10px; // Maintain space between items
   align-items: stretch; // Align items to stretch to fill the container height
@@ -27,3 +30,14 @@ const ItemsWrapper = styled.div`
   justify-content: start;
   margin-top: 20px;
 `;
+
+const EmptyItems = styled.div`
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: grey;
+  font-style: italic;
+`

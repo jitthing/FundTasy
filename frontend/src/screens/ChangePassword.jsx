@@ -31,7 +31,6 @@ const ChangePasswordForm = () => {
 
       });
       if (response.status === 200) {
-        // setError(<><Link to="/login">{response.data.message} Click here to login: Login</Link></>)
         setError(response.data.message);
         setStatusCode(response.status);
       } else {

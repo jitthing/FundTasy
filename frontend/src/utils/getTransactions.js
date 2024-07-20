@@ -1,6 +1,5 @@
 import axios from "axios";
-// Takes in _id and returns all wishlist items
-export default async function getTransactions(username) {
+export default async function getTransactions() {
   try {
     const response = await axios.get("http://localhost:8000/all_transactions", {
       headers: {

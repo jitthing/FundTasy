@@ -1,4 +1,5 @@
 const ActiveGoals = require("../models/activeGoalsModel.js");
+const WishlistItems = require("../models/wishlistModel.js");
 const Users = require("../models/userModel.js");
 const CoinTransactions = require("../models/coinTransactionModel.js");
 const { getUserFromToken, updateCoinBalance } = require("./userController.js");
@@ -49,6 +50,7 @@ const addActiveItem = async (req, res) => {
   const response = await ActiveGoals.findOne({
     username: username,
     title: req.body.title,
+    status: "In Progress"
   });
 
   if (response !== null) {
@@ -61,6 +63,7 @@ const addActiveItem = async (req, res) => {
     price: req.body.price,
     startDate: new Date().toISOString().slice(0, 10),
     saved: 0,
+    status: "In Progress"
   });
 
   return res.status(200).json({ message: "Goal added succesfully!" });
@@ -109,6 +112,10 @@ const updateSavedValue = async (req, res) => {
   );
   if (updated) {
     if (parseFloat(updated.price).toFixed(2) === parseFloat(updated.saved).toFixed(2)) {
+      await WishlistItems.findOneAndUpdate(
+        { username: user.username, name: updated.title },
+        { status: "Completed" },
+      );
       const completed = await ActiveGoals.findOneAndUpdate(
         { _id: req.body.goalId },
         { status: "Completed" },
@@ -127,14 +134,14 @@ const updateSavedValue = async (req, res) => {
         { new: true }
       )
       if (completed && awarded && updatedCoins) {
-        return res.status(200).json({ message: "Saved value updated and coins awarded" });
+        return res.status(200).json({ message: "Saved value updated and coins awarded", goalComplete: true, coinsAwarded: (updated.price*100).toFixed(0) });
       } else {
         return res
           .status(500)
-          .json({ message: "Unable to update saved value" });
+          .json({ message: "Unable to update saved value", goalComplete: false });
       }
     } else {
-      return res.status(200).json({ message: "updated saved value is ok" })
+      return res.status(200).json({ message: "updated saved value is ok", goalComplete: false })
     }
   } else {
     return res.status(404).json({ message: "Something went wrong" });

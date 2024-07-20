@@ -2,7 +2,8 @@ require("dotenv").config();
 require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const Users = require("../models/userModel");
-let firstIncomeUpdate = true;
+const ownedPigs = require("../models/ownedPigsModel");
+const FriendsRelations = require("../models/friendsRelationsModel");
 
 const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.REACT_APP_JWT_SECRET;
@@ -73,7 +74,6 @@ const authenticateUser = async (req, res) => {
 // Shared function to get user from token
 const getUserFromToken = async (req) => {
   try {
-    // console.log("working");
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
     const user = await Users.findById(decoded.id);
@@ -118,10 +118,6 @@ const updateUserInfo = async (req, res) => {
           return res.status(400).json({ message: "Invalid email address" });
         }
       }
-      if (firstIncomeUpdate && income !== 0 && user.income === 0) {
-        fieldsToUpdate.bankBalance = income / 30;
-        firstIncomeUpdate = false;
-      }
       const updateUser = await Users.updateOne(
         { _id: user._id },
         { $set: fieldsToUpdate }
@@ -132,6 +128,54 @@ const updateUserInfo = async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ message: error.name + error.message });
+  }
+};
+
+const updateIncome = async (req, res) => {
+  try {
+    const { user, error } = await getUserFromToken(req);
+    const newIncome = req.body.income;
+    const firstTime = user.isFirstTime;
+    if (firstTime) {
+      const updateUser = await Users.findOneAndUpdate(
+        { _id: user._id },
+        {
+          income: newIncome,
+          bankBalance: (newIncome / 30).toFixed(2),
+          totalSaving: (newIncome / 30).toFixed(2),
+          isFirstTime: false,
+        },
+        { new: true }
+      );
+
+      const assignedPig = await ownedPigs.create({
+        username: user.username,
+        modelName: "Basic"
+      });
+
+      if (updateUser) {
+        return res
+          .status(200)
+          .json({ message: "successfully updated income", updateUser, assignedPig });
+      }
+    } else {
+      const updateUser = await Users.findOneAndUpdate(
+        { _id: user._id },
+        {
+          income: newIncome,
+        },
+        { new: true }
+      );
+      if (updateUser) {
+        return res
+          .status(200)
+          .json({ message: "successfully updated income", updateUser });
+      }
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Unable to update income: " + error });
   }
 };
 
@@ -178,6 +222,7 @@ const create_account = async (req, res) => {
     JWT_SECRET,
     { expiresIn: "1hr" }
   );
+
   return res
     .status(200)
     .json({ message: "Account created succesfully", authToken });
@@ -243,7 +288,6 @@ const forgotPassword = async (req, res) => {
             .status(500)
             .json({ message: `Encountered error sending email to ${email}` });
         } else {
-          // console.log('Email sent: ' + info.response);
           return res
             .status(200)
             .json({ message: `Email has been sent to ${email}` });
@@ -258,8 +302,6 @@ const forgotPassword = async (req, res) => {
 const google_login = async (req, res) => {
   try {
     const { token } = req.body;
-    // console.log("Received token");
-    // console.log(req.body);
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: CLIENT_ID,
@@ -269,7 +311,6 @@ const google_login = async (req, res) => {
     const email = payload["email"];
     const firstName = payload["given_name"];
     const lastName = payload["family_name"];
-    // console.log("Ticket:", ticket);
 
     let user = await Users.findOne({ email: email });
     if (!user) {
@@ -310,7 +351,6 @@ const validateResetToken = async (req, res) => {
   const { userId, token } = req.params;
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    // console.log("Decoded token:", decoded);
     if (decoded.id === userId) {
       user = await Users.findById(userId).select("-password");
       return res
@@ -333,8 +373,6 @@ const updateDisplayPig = async (req, res) => {
         { $set: { displayPig: updated } },
         { new: true }
       );
-      //console.log("changed db");
-      //console.log(updatedDP);
       if (updatedDP) {
         return res.status(200).json({
           message: "Display pig updated successfully",
@@ -383,6 +421,43 @@ const updateCoinBalance = async (req, res) => {
   }
 };
 
+const updateTotalSaving = async(req, res) => {
+  const amount = req.body.amount;
+  const { user } = await getUserFromToken(req);
+  const userObj = await Users.findOne({ username: user.username });
+  const newSaving = userObj.totalSaving - amount;
+  const updated = await Users.findOneAndUpdate(
+    { username: userObj.username },
+    { totalSaving: newSaving },
+    { new: true }
+  );
+  if (updated) {
+    return res.status(200).json({ message: "Total saving updated" });
+  } else {
+    return res.status(400).json({ message: "Unable to update total saving" });
+  }
+}
+
+const checkIfUserExists = async (username) => {
+  return await Users.exists({ username: username });
+}
+
+const getAllUsernames = async(req, res) => {
+  const { user } = await getUserFromToken(req);
+  try {
+    const allUsernames = await Users.find({ username: { $ne: user.username } }, { username: 1, displayPig: 1 }).lean();
+    const sentRequests = await FriendsRelations.find({ user1: user.username, pending: true });
+    
+    const sentRequestUsernames = new Set(sentRequests.map((request) => request.user2));
+    allUsernames.forEach((user) => {
+      user.sentRequest = sentRequestUsernames.has(user.username);
+    })
+    return res.status(200).json({ message: "Usernames retrieved", allUsernames });
+  } catch (error) {
+    return res.status(400).json({ message: "Unable to get usernames" })
+  }
+}
+
 module.exports = {
   authenticateUser,
   create_account,
@@ -397,4 +472,8 @@ module.exports = {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
+  updateTotalSaving,
+  updateIncome,
+  checkIfUserExists,
+  getAllUsernames
 };

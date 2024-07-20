@@ -13,7 +13,7 @@ export default function TransactionCard({ transactions }) {
         <div>Transactions</div>
         <a href="/transactions" style={{ fontWeight: "normal", color: "#645df2" }}>See all</a>
       </TransactionHead>
-      {transactions.map((transaction, index) => (
+      {transactions.length > 0 && transactions.map((transaction, index) => (
         <TransactionBody key={index}>
           <TransactionInfo>
             <div>{formatTitle(transaction.title)}</div>
@@ -22,6 +22,7 @@ export default function TransactionCard({ transactions }) {
           <TransactionAmount>{formatCurrency(transaction.amount)}</TransactionAmount>
         </TransactionBody>
       ))}
+      {transactions.length === 0 && (<EmptyList>No transactions made yet</EmptyList>)}
     </TransactionContainer>
   );
 }
@@ -65,4 +66,12 @@ const TransactionInfo = styled.div`
 const TransactionAmount = styled.div`
   font-size: 16px;
   text-align: right;
+`
+
+const EmptyList = styled.div`
+  font-style: italic;
+  color: grey;
+  font-size: 16px;
+  width: 100%;
+  padding: 30px 10px;
 `

@@ -1,5 +1,6 @@
 import axios from "axios";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import formatCurrency from "../../utils/formatCurrency";
 
 export const SearchResult = ({ result, updateWishlist, username }) => {
@@ -12,9 +13,55 @@ export const SearchResult = ({ result, updateWishlist, username }) => {
       );
       // console.log(body);
       updateWishlist();
-      alert(`${response.data.message}`);
+      Toastify({
+        text: `${response.data.message}!`,
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10 
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "#4bb543",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "fit-content",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px 15px",
+          textAlign: "center",
+          zIndex: "100"
+        }
+      }).showToast();
     } catch (error) {
-      alert("Item already in wishlist!");
+      Toastify({
+        text: "Item already in wishlist!",
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10 
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "fit-content",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px 15px",
+          textAlign: "center",
+          zIndex: "100"
+        }
+      }).showToast();
     }
   };
   return (

@@ -19,6 +19,7 @@ export const SearchResults = ({ results, updateWishlist, username }) => {
 };
 
 const SearchResultsWrapper = styled.div`
+  z-index: 10;
   width: 64%;
   background-color: white;
   font-color: black;

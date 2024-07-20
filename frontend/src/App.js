@@ -4,8 +4,6 @@ import './styles/App.css';
 
 import HomePage from './screens/HomePage';
 import LoginPage from './screens/LoginPage';
-import MyPigs from './screens/MyPigs';
-import NewRecord from './screens/NewRecord';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import Shop from './screens/Shop';
@@ -22,8 +20,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />   {/* Don't comment this line out */}
           <Route path="/resetpassword/:userId/:token" element={<ChangePassword/>} />
 
-          {/* <Route path="/my-pigs" element={<MyPigs />} />
-          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/transactions" element={<Transactions />} />
@@ -37,7 +34,6 @@ export default function App() {
            */}
 
 
-          <Route path="/my-pigs" element={<PrivateRoute><MyPigs /></PrivateRoute>} />
           <Route path="/profile" element={<PrivateRoute><Profile/> </PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute> <Settings/> </PrivateRoute>} />
           <Route path="/shop" element={<PrivateRoute> <Shop/> </PrivateRoute>} />

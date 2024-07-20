@@ -1,0 +1,62 @@
+[
+  {
+    "modelName": "Basic",
+    "price": 10000
+  },
+  {
+    "modelName": "Copper",
+    "price": 10000
+  },
+  {
+    "modelName": "Steel",
+    "price": 10000
+  },
+  {
+    "modelName": "24K",
+    "price": 25000
+  },
+  {
+    "modelName": "Conjoined",
+    "price": 25000
+  },
+  {
+    "modelName": "Green",
+    "price": 10000
+  },
+  {
+    "modelName": "Panda",
+    "price": 10000
+  },
+  {
+    "modelName": "Coke",
+    "price": 25000
+  },
+  {
+    "modelName": "Fanta",
+    "price": 25000
+  },
+  {
+    "modelName": "Ninja",
+    "price": 50000
+  },
+  {
+    "modelName": "Santa",
+    "price": 25000
+  },
+  {
+    "modelName": "Chef",
+    "price": 50000
+  },
+  {
+    "modelName": "Angel",
+    "price": 50000
+  },
+  {
+    "modelName": "Cowboy",
+    "price": 50000
+  },
+  {
+    "modelName": "Evil",
+    "price": 50000
+  }
+]

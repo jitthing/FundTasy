@@ -1,15 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import Toastify from "toastify-js";
 import getUser from "../../utils/getUser";
 import getWishlist from "../../utils/getWishlist";
+import getInProgressItems from "../../utils/getInProgressWishlistItem";
 import truncateText from "../../utils/truncateText";
 import { IoClose } from "react-icons/io5";
 import formatCurrency from "../../utils/formatCurrency";
 const moment = require("moment");
 
-export default function GoalCard({ goals, updateGoals }) {
-  // console.log(goals);
+export default function GoalCard({ goals, updateGoals, userIncome }) {
   const numActiveGoals = goals.length;
   const numEmptyGoals = 3 - numActiveGoals;
   return (
@@ -25,7 +26,7 @@ export default function GoalCard({ goals, updateGoals }) {
               toSave={goal.price}
               startDate={goal.startDate}
               currentSaved={goal.saved}
-              rate="20"
+              rate={(userIncome / 30).toFixed(2)}
               lastTopUpAmt={goal.lastUpdatedAmount}
               lastTopUpDate={goal.lastUpdatedDate}
               daysLeft="1"
@@ -44,24 +45,23 @@ export default function GoalCard({ goals, updateGoals }) {
 function GoalBox(props) {
   const title = props.title;
   const isActive = props.active;
-  const danger = props.danger;
   const toSave = props.toSave;
   const startDate = props.startDate;
   const currentSaved = props.currentSaved;
-  const rate = props.rate;
+  const rate = formatCurrency(props.rate);
   const lastTopUpAmt = props.lastTopUpAmt;
-  const lastTopUpDate = lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY"):"-";
-  const daysLeft = props.daysLeft;
+  const lastTopUpDate =
+    lastTopUpAmt > 0 ? moment(props.lastTopUpDate).format("MM/DD/YYYY") : "-";
   const percentage =
-    (parseFloat(currentSaved) / parseFloat(toSave)) * 100 + "%";
-
+    ((parseFloat(currentSaved) / parseFloat(toSave)) * 100).toFixed(2) + "%";
+  const danger = parseFloat(currentSaved) / parseFloat(toSave) < 0.5;
   const [isModalOpen, setModalOpen] = React.useState(false);
   const [wishlistItems, setItems] = React.useState([]);
 
   React.useEffect(() => {
     async function fetchData() {
       try {
-        const wishlistData = await getWishlist();
+        const wishlistData = await getInProgressItems();
         setItems(wishlistData.items);
       } catch (error) {
         console.error("Failed to fetch data", error);
@@ -90,7 +90,30 @@ function GoalBox(props) {
       );
       if (response) {
         props.updateGoals((prev) => !prev);
-        alert("Item deleted!");
+        Toastify({
+          text: "Item deleted!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#efc576",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "fit-content",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px 15px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
       }
     } catch (error) {
       alert(`${error.response.data.message}`);
@@ -149,14 +172,16 @@ function GoalBox(props) {
           </Saved>
           <Details>
             <LastAdded>
-              {lastTopUpAmt > 0 ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`:"No funds allocated yet"}
+              {lastTopUpAmt > 0
+                ? `+${formatCurrency(lastTopUpAmt)} on ${lastTopUpDate}`
+                : "No funds allocated yet"}
             </LastAdded>
-            <Rate>${rate}/day</Rate>
+            <Rate>Earn {rate}/day</Rate>
           </Details>
         </GoalInfo>
         <ProgressDiv>
           <ProgressBar percentage={percentage} />
-          <TimeLeft danger={danger}>{daysLeft}d</TimeLeft>
+          <TimeLeft danger={danger}>{percentage}</TimeLeft>
         </ProgressDiv>
       </ActiveGoal>
     );
@@ -173,7 +198,6 @@ function GoalBox(props) {
             dropdownItems={wishlistItems}
             updateGoals={props.updateGoals}
           />
-          //<NewRecordForm />
         )}
       </>
     );
@@ -187,7 +211,6 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
 
   const handleSelectChange = (event) => {
     const foundItem = dropdownItems.find(
-      //changed it to id instead cause of string slicing
       (dropdownItem) => dropdownItem._id === event.target.value
     );
     if (foundItem) {
@@ -212,17 +235,63 @@ const Modal = ({ onClose, dropdownItems, updateGoals }) => {
     const title = selectItem === "others" ? customItem : selectItem;
     try {
       const body = { title: title, price: price, username: userId };
-      // console.log(body);
       const response = await axios.post(
         "http://localhost:8000/add_active_goal",
         body
       );
       if (response.status === 200) {
         onClose();
+        Toastify({
+          text: "Goal created!",
+          duration: 1000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "fit-content",
+            height: "48px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px 15px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
         updateGoals((prev) => !prev);
       }
     } catch (error) {
-      alert(`${error.response.data.message}`);
+      Toastify({
+        text: `${error.response.data.message}`,
+        duration: 2000,
+        gravity: "top",
+        position: "center",
+        offset: {
+          y: 10,
+        },
+        style: {
+          fontSize: "18px",
+          fontWeight: "bold",
+          backgroundColor: "red",
+          color: "#fff",
+          boxShadow: "0px 0px 4px #888888",
+          width: "fit-content",
+          height: "48px",
+          position: "absolute",
+          left: "calc(50vw - 50px)",
+          borderRadius: "6px",
+          padding: "10px 15px",
+          textAlign: "center",
+          zIndex: "100",
+        },
+      }).showToast();
     }
   };
   return (
@@ -441,12 +510,12 @@ const ProgressFill = styled.div`
 
 const TimeLeft = styled.div`
   height: 16px;
-  width: 15%;
+  width: 18%;
   border-radius: 8px;
   background-color: ${(props) => (props.danger ? "#ffbaba" : "#a5cda5")};
   color: ${(props) => (props.danger ? "#c23434" : "#138513")};
   font-weight: bold;
-  font-size: 12px;
+  font-size: 11px;
 `;
 
 const ModalBackdrop = styled.div`

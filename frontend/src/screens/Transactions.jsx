@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
-import NewRecordForm from "../components/NewRecordForm";
+import NewRecordForm from "../components/TransactionsComponents/NewRecordForm";
 import getTransactions from "../utils/getTransactions";
 import formatCurrency from "../utils/formatCurrency";
 import getAllGoals from "../utils/getAllGoals";
@@ -19,6 +20,8 @@ export default function Transactions() {
   const [allGoals, setAllGoals] = useState([]);
   const [editTransaction, setEditTransaction] = useState(null);
   const [coinTransactions, setCoinTransactions] = useState([]);
+  const [transFilterList, setTransFilter] = useState([]);
+  const [coinFilterList, setCoinFilter] = useState([]);
 
   useEffect(() => {
     const fetchCoinTransactions = async () => {
@@ -30,7 +33,7 @@ export default function Transactions() {
       }
     };
     fetchCoinTransactions();
-  });
+  }, []);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -50,31 +53,69 @@ export default function Transactions() {
     try {
       const deletedTransaction = await axios.get(
         `http://localhost:8000/fetch_transaction/${id}`
-      );    
+      );
       const response = await axios.delete(
         `http://localhost:8000/delete_transaction/${id}`
       );
-      const deletedTransactionAmount = deletedTransaction.data.foundTransaction.amount;
+      const deletedTransactionAmount =
+        deletedTransaction.data.foundTransaction.amount;
       const formData = {
         amount: -deletedTransactionAmount,
       };
       try {
         const response2 = await axios.post(
-            "http://localhost:8000/update_bankbalance",
-            formData,
-            {
-                headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                },
-            }
-            );
+          "http://localhost:8000/update_bankbalance",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        if (response2) console.log("updated bankbalance");
       } catch (error) {
-        console.error("Unable to update bank balance")
+        console.error("Unable to update bank balance");
+      }
+      try {
+        const response3 = await axios.post(
+          "http://localhost:8000/update_totalsaving",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        if (response3) console.log("updated totalsaving");
+      } catch (error) {
+        console.error("Unable to update bank balance");
       }
       if (response.status === 200) {
-        alert("Transaction successfully deleted");
+        Toastify({
+          text: "Transaction successfully deleted!",
+          duration: 2000,
+          gravity: "top",
+          position: "center",
+          offset: {
+            y: 10,
+          },
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            backgroundColor: "#4bb543",
+            color: "#fff",
+            boxShadow: "0px 0px 4px #888888",
+            width: "fit-content",
+            height: "50px",
+            position: "absolute",
+            left: "calc(50vw - 50px)",
+            borderRadius: "6px",
+            padding: "10px 15px",
+            textAlign: "center",
+            zIndex: "100",
+          },
+        }).showToast();
         setUpdateTransactions((prev) => !prev);
-
       } else {
         alert(
           "Failed to delete transaction: Server responded with status " +
@@ -95,8 +136,10 @@ export default function Transactions() {
   const toggleType = (type) => {
     if (type === "spending") {
       changeType("coins");
+      setCoinFilter([]);
     } else {
       changeType("spending");
+      setTransFilter([]);
     }
   };
 
@@ -111,6 +154,20 @@ export default function Transactions() {
 
   function findGoal(goalId) {
     return allGoals.find((goal) => goal._id === goalId);
+  }
+
+  function removeFilter(filterName) {
+    const idx = transFilterList.indexOf(filterName);
+    if (idx > -1) {
+      transFilterList.splice(idx, 1);
+    }
+  }
+
+  function removeCoinFilter(coinFilter) {
+    const idx = coinFilterList.indexOf(coinFilter);
+    if (idx > -1) {
+      coinFilterList.splice(idx, 1);
+    }
   }
 
   return (
@@ -147,10 +204,32 @@ export default function Transactions() {
               Oink Coins
             </ToggleButton>
           </ToggleBar>
-          <FilterButton>
-            <FilterIcon srcSet="icons/filter.png" />
-            <FilterText>Filter</FilterText>
-          </FilterButton>
+          {type === "spending" && (
+            <FilterBar>
+              {transFilterList.map((filterName) => (
+                <FilterButton>
+                  {filterName}
+                  <IoClose
+                    onClick={() => removeFilter(filterName)}
+                    className="h-5 w-6 text-white cursor-pointer hover:brightness-90"
+                  />
+                </FilterButton>
+              ))}
+            </FilterBar>
+          )}
+          {type === "coins" && (
+            <FilterBar>
+              {coinFilterList.map((filterName) => (
+                <FilterButton>
+                  {filterName}
+                  <IoClose
+                    onClick={() => removeCoinFilter(filterName)}
+                    className="h-5 w-6 text-white cursor-pointer hover:brightness-90"
+                  />
+                </FilterButton>
+              ))}
+            </FilterBar>
+          )}
         </TransactionNeck>
 
         {type === "spending" && (
@@ -158,12 +237,14 @@ export default function Transactions() {
             transactions={transactions}
             deleteTransaction={deleteTransaction}
             toggleEditModal={toggleEditModal}
+            transFilterList={transFilterList}
           />
         )}
         {type === "coins" && (
           <CoinsTable
             allCoinTransactions={coinTransactions}
             findGoal={findGoal}
+            coinFilterList={coinFilterList}
           />
         )}
       </TransactionContainer>
@@ -175,7 +256,19 @@ const SpendingTable = ({
   transactions,
   deleteTransaction,
   toggleEditModal,
+  transFilterList,
 }) => {
+  const containsCategory = (t) => {
+    if (transFilterList.length === 0) return true;
+    return transFilterList.includes(t.category);
+  };
+
+  const handleFilterClick = (cat) => {
+    if (!transFilterList.includes(cat)) {
+      transFilterList.push(cat);
+    }
+  };
+
   return (
     <>
       <TransactionBody>
@@ -191,13 +284,20 @@ const SpendingTable = ({
         {transactions.length > 0 && (
           <TransactionListWrapper>
             {transactions
+              .filter(containsCategory)
               .slice()
               .reverse()
               .map((transaction) => (
                 <TransactionDiv key={transaction.id}>
-                  <TransactionTitle>{formatTitle(transaction.title)}</TransactionTitle>
+                  <TransactionTitle>
+                    {formatTitle(transaction.title)}
+                  </TransactionTitle>
                   <TransactionCategory>
-                    <CategoryButton>{transaction.category}</CategoryButton>
+                    <CategoryButton
+                      onClick={() => handleFilterClick(transaction.category)}
+                    >
+                      {transaction.category}
+                    </CategoryButton>
                   </TransactionCategory>
                   <TransactionDateTime>
                     {moment(transaction.date).format("DD MMM YYYY HH:mm")}
@@ -229,9 +329,9 @@ const SpendingTable = ({
   );
 };
 
-const CoinsTable = ({ allCoinTransactions, findGoal }) => {
+const CoinsTable = ({ allCoinTransactions, findGoal, coinFilterList }) => {
   const coinTransactions = allCoinTransactions;
-  coinTransactions.map((ct) => {
+  coinTransactions.forEach((ct) => {
     if (ct.goal != null && findGoal(ct.goal).status === "Completed") {
       const g = findGoal(ct.goal);
       ct.status = g.status;
@@ -243,6 +343,18 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
       ct.status = "-";
     }
   });
+
+  const containsType = (ct) => {
+    if (coinFilterList.length === 0) return true;
+    return coinFilterList.includes(ct.type);
+  };
+
+  const handleTypeClick = (type) => {
+    if (!coinFilterList.includes(type)) {
+      coinFilterList.push(type);
+    }
+  };
+
   return (
     <>
       <TransactionBody>
@@ -257,8 +369,9 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
           <EmptyList>No Oink Coins earned or spent yet</EmptyList>
         )}
         {coinTransactions.length > 0 && (
-          <>
+          <TransactionListWrapper>
             {coinTransactions
+              .filter(containsType)
               .slice()
               .reverse()
               .map((ct) => (
@@ -269,7 +382,9 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
                       : `Completed "${ct.title}"`}
                   </CoinTitle>
                   <CoinType>
-                    <CoinTypeButton>{ct.type}</CoinTypeButton>
+                    <CoinTypeButton onClick={() => handleTypeClick(ct.type)}>
+                      {ct.type}
+                    </CoinTypeButton>
                   </CoinType>
                   <CoinGoal>
                     <CoinGoalName>{ct.price}</CoinGoalName>
@@ -285,7 +400,7 @@ const CoinsTable = ({ allCoinTransactions, findGoal }) => {
                   </CoinAmount>
                 </TransactionDiv>
               ))}
-          </>
+          </TransactionListWrapper>
         )}
       </TransactionBody>
     </>
@@ -363,7 +478,7 @@ const AddIcon = styled.img`
 `;
 const TransactionNeck = styled.div`
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   width: 90%;
   height: 10vh;
@@ -395,51 +510,29 @@ const ToggleButton = styled.div`
   transition: 0.1s;
 `;
 
-// const ToolBar = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   width: 60vw;
-//   height: 36px;
-//   align-items: center;
-// `;
-
-// const SearchBar = styled.input`
-//   margin: 0px 0px 0px auto;
-//   width: 20%;
-//   height: 36px;
-//   box-shadow: 0px 0px 3px #adadad;
-//   border-radius: 8px;
-//   font-size: 16px;
-//   padding: 0px 15px;
-// `;
+const FilterBar = styled.div`
+  width: calc(100% - 200px);
+  height: 100%;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+  background-color: #fff;
+`;
 
 const FilterButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80px;
-  height: 36px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 0px 3px #adadad;
-  padding: 0px 5px;
-  margin: 0px 0px 0px auto;
-  cursor: pointer;
-  &:hover {
-    background-color: #f2f2f2;
-    transition: 0.1s;
-  }
-`;
-
-const FilterIcon = styled.img`
-  height: 14px;
-  width: 14px;
-`;
-
-const FilterText = styled.div`
-  font-size: 14px;
-  width: 60%;
+  height: 34px;
+  color: #fff;
+  background-color: #645df2;
+  border-radius: 20px;
   text-align: right;
+  padding: 5px 10px 5px 15px;
+  font-weight: 600;
+  font-size: 14px;
 `;
 
 const TransactionBody = styled.div`

@@ -5,7 +5,6 @@ export default function PiggyBankCard({
   bankBalance,
   currentTime,
   openContributeForm,
-  closeContributeForm,
   activeGoals,
 }) {
   var valid = bankBalance > 0 && activeGoals.length > 0;

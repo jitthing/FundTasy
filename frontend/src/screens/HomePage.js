@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Toastify from "toastify-js";
 import Navbar from "../components/Navbar";
-import Social from "../components/Social";
-import ModelDisplay from "../components/ModelDisplay";
-import mypigs from "../modelinfo";
-import SkinSection from "../components/SkinSection";
+import Social from "../components/HomePageComponents/Social";
+import ModelDisplay from "../components/HomePageComponents/ModelDisplay";
+import SkinSection from "../components/HomePageComponents/SkinSection";
 import GoalCard from "../components/HomePageComponents/GoalCard";
 import TransactionCard from "../components/HomePageComponents/TransactionCard";
 import BarChartCard from "../components/HomePageComponents/BarChartCard";
 import getActiveGoals from "../utils/getActiveGoals";
 import updatePig from "../utils/updatePig";
 import getUser from "../utils/getUser";
-import ContributeForm from "../components/ContributeForm";
+import ContributeForm from "../components/HomePageComponents/ContributeForm";
 import PiggyBankCard from "../components/HomePageComponents/PiggyBankCard";
 import getTransactions from "../utils/getTransactions";
+import getAllOwnedPigs from "../utils/getOwnedPigs";
+import IncomeModal from "../components/HomePageComponents/IncomeModal";
 
 export default function HomePage() {
   const [modelUrl, setModelUrl] = useState("models/basic.glb");
@@ -28,17 +30,25 @@ export default function HomePage() {
   const [contributeFormActive, showContributeForm] = useState(false);
   const [bankBalance, setBankBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [myPigs, setMyPigs] = useState([]);
   const currentTime = new Date().toLocaleString();
   const [userIncome, setUserIncome] = useState(0);
+  const [showIncomeModal, setIncomeModal] = useState(userInfo.isFirstTime);
+  const [earnedOn, setEarnedOn] = useState(currentTime);
 
   useEffect(() => {
     async function getUserId() {
       const userObj = await getUser();
       setUserInfo(userObj.user);
+      setIncomeModal(userObj.user.isFirstTime);
       setUserId(userObj.user.username);
       setBankBalance(userObj.user.bankBalance);
       setModelUrl(`models/${userObj.user.displayPig}.glb`);
       updateModel(`models/${userObj.user.displayPig}.glb`);
+      setModelName(
+        userObj.user.displayPig.charAt(0).toUpperCase() +
+          userObj.user.displayPig.slice(1)
+      );
       setUserIncome(userObj.user.income);
     }
     getUserId();
@@ -62,6 +72,8 @@ export default function HomePage() {
     async function fetchTransactions() {
       try {
         const transactionResponse = await getTransactions();
+        const myPigsResponse = await getAllOwnedPigs();
+        setMyPigs(myPigsResponse.want);
         setTransactions(transactionResponse.transactions.reverse().slice(0, 2));
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
@@ -72,8 +84,8 @@ export default function HomePage() {
   }, []);
 
   const selectModel = (model) => {
-    setModelUrl("models/" + model + ".glb");
-    setModelName(mypigs[model]);
+    setModelUrl("models/" + model.toLowerCase() + ".glb");
+    setModelName(model);
   };
 
   const getImagePath = (model) => {
@@ -100,6 +112,30 @@ export default function HomePage() {
           const response = await updatePig(userId, modelUrl, currentModel);
           console.log(response);
           updateModel(`models/${response.displayPig}.glb`);
+          Toastify({
+            text: "Display pig updated!",
+            duration: 2000,
+            gravity: "top",
+            position: "center",
+            offset: {
+              y: 10,
+            },
+            style: {
+              fontSize: "18px",
+              fontWeight: "bold",
+              backgroundColor: "#4bb543",
+              color: "#fff",
+              boxShadow: "0px 0px 4px #888888",
+              width: "fit-content",
+              height: "50px",
+              position: "absolute",
+              left: "calc(50vw - 50px)",
+              borderRadius: "6px",
+              padding: "10px 15px",
+              textAlign: "center",
+              zIndex: "100",
+            },
+          }).showToast();
         } catch (error) {
           console.log("Failed to update pig: " + error);
           alert("Failed to update pig: " + error);
@@ -126,6 +162,10 @@ export default function HomePage() {
     showContributeForm(false);
   };
 
+  const closeIncomeModal = () => {
+    setIncomeModal(false);
+  };
+
   return (
     <PageContainer>
       {contributeFormActive && (
@@ -137,15 +177,28 @@ export default function HomePage() {
           updateBankBalance={setBankBalance}
         />
       )}
+      {showIncomeModal && (
+        <IncomeModal
+          closeModal={closeIncomeModal}
+          setUserIncome={setUserIncome}
+          update={setUpdateGoals}
+        />
+      )}
       <Navbar page="home" />
       <Display>
-        <GoalCard goals={activeGoals} updateGoals={setUpdateGoals} />
+        <GoalCard
+          goals={activeGoals}
+          updateGoals={setUpdateGoals}
+          userIncome={userIncome}
+        />
         <PigDisplay>
           <ModelDisplay modelUrl={modelUrl} show={show} />
           <SkinSection
             getModelName={getModelName}
             getImagePath={getImagePath}
-            mypigs={mypigs}
+            mypigs={myPigs}
+            earnedOn={earnedOn}
+            setEarnedOn={setEarnedOn}
             selectModel={selectModel}
             show={show}
             toggle={toggleShow}
@@ -162,7 +215,6 @@ export default function HomePage() {
         <PiggyBankCard
           bankBalance={bankBalance}
           openContributeForm={openContributeForm}
-          closeContributeForm={closeContributeForm}
           currentTime={currentTime}
           activeGoals={activeGoals}
           updateBankBalance={setBankBalance}

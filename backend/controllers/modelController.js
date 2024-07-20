@@ -2,7 +2,6 @@ const Models = require("../models/modelModel");
 
 const getAllModels = async (req, res) => {
   const cursor = await Models.find({});
-  //   const dbModels = await cursor.toArray();
   if (cursor === null) {
     return res.status(400).json({ message: "No Models Found" });
   }

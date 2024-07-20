@@ -11,6 +11,9 @@ const {
   updateDisplayPig,
   updateCoinBalance,
   updateBankBalance,
+  updateTotalSaving,
+  updateIncome,
+  getAllUsernames,
 } = require("../controllers/userController");
 
 const {
@@ -19,11 +22,12 @@ const {
 } = require("../controllers/modelController");
 
 const { protect } = require("../middleware/authMiddleware");
-const { scrapeAmazon } = require("../webScraper");
+const { getAmazon } = require("../amazonItemGetter.js");
 const {
   getAllItems,
   addItem,
   deleteItem,
+  getInProgressItems,
 } = require("../controllers/wishlistController");
 
 const {
@@ -52,6 +56,14 @@ const {
   getCoinTransactions,
 } = require("../controllers/coinTransactionController");
 
+const {
+  newFriendRequest,
+  fetchFriendRequests,
+  acceptFriendRequest,
+  fetchFriends,
+  deleteFriendRequest,
+} = require("../controllers/friendsRelationsController");
+
 const router = express.Router();
 
 // User Routers
@@ -59,11 +71,14 @@ router.post("/login", authenticateUser);
 router.post("/google_login", google_login);
 router.post("/create_account", create_account);
 router.post("/update_user_info", updateUserInfo);
+router.post("/update_income", updateIncome);
 router.get("/user_info", userInfo);
+router.get("/get_usernames", getAllUsernames);
 
 router.post("/update_display_pig", updateDisplayPig);
 router.post("/update_coinbalance", updateCoinBalance);
 router.post("/update_bankbalance", updateBankBalance);
+router.post("/update_totalsaving", updateTotalSaving);
 
 // Model Router
 router.post("/all_models", getAllModels);
@@ -74,12 +89,13 @@ router.get("/get_owned_pigs", getAllOwnedPigs);
 router.post("/buy_pig", buyPig);
 
 // Amazon Scraper Router
-router.post("/scrape_amazon", scrapeAmazon);
+router.post("/scrape_amazon", getAmazon);
 
 // Wishlist Router
 router.get("/all_wishlist_items", getAllItems);
 router.post("/add_wishlist_item", addItem);
 router.delete("/delete_wishlist_item/:id", deleteItem);
+router.get("/all_in_progress_items", getInProgressItems);
 
 // Active Goals Router
 router.get("/all_active_items", getActiveItems);
@@ -99,6 +115,14 @@ router.get("/fetch_transaction/:id", fetchTransaction);
 router.get("/all_coin_transactions", getCoinTransactions);
 router.post("/new_coin_transaction", newCoinTransaction);
 
+// Friends Relations Router
+router.post("/new_friend_request", newFriendRequest);
+router.get("/fetch_friend_requests", fetchFriendRequests);
+router.post("/accept_friend_request", acceptFriendRequest);
+router.get("/fetch_friends", fetchFriends);
+router.delete("/delete_friend_request", deleteFriendRequest);
+
+// Protected Route
 router.get("/protected", protect, (req, res) => {
   res.json({ message: "On the protected route", user: req.user });
 });

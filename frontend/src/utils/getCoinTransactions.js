@@ -1,5 +1,4 @@
 import axios from "axios";
-// Takes in _id and returns all wishlist items
 export default async function getCoinTransactions() {
   try {
     const response = await axios.get("http://localhost:8000/all_coin_transactions", {
