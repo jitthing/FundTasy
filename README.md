@@ -16,7 +16,7 @@ With every cent saved, we reward our users with 1 Coink, which is FundTasy's ver
 FundTasy doubles up as a social platform, where users can find their peers and add them as friends, creating a friendly and competitive environment which promotes saving money.
 
 ### Honesty Is Our Best Policy
-Our app is centered around individual integrity, and is targeted at young people who are looking for solutions to help them actively save money.
+FundTasy is centered around individual integrity, and is targeted at young people who are looking for solutions to help them actively save money.
 
 
 
