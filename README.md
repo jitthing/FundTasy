@@ -63,3 +63,6 @@ The page will reload when you make changes.
 You may also see any lint errors in the console.
 
 7. Set up an account with FundTasy and begin your saving journey to financial freedom!
+
+## Try It Live!
+Want to experience FundTasy as a real user? Visit [FundTasy](http://fundtasy.bchwy.com/) and try it out for free!

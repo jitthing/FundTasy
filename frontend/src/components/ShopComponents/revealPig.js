@@ -30,7 +30,7 @@ export default function RevealPig({ pig, setShowPigReveal }) {
             {isRevealingBackground && (<SpeedLines srcSet="assets/speed-lines.gif" />)}
             {!isRevealingBackground && (<EndBackground onClick={() => setShowPigReveal(false)} />)}
             {showBlankPig && (<BlankPig srcSet="images/mystery.png" />)}
-            {!showBlankPig && (<ActualPig srcSet={`images/${pig}.png`} />)}
+            {!showBlankPig && (<ActualPig srcSet={`images/${pig.toLowerCase()}.png`} />)}
             {isFlash ? <Flash />:null}
         </Container>
     )

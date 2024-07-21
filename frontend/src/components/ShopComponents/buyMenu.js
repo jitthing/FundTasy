@@ -136,7 +136,7 @@ export default function BuyMenu({
           <BuyMenuTitle>Confirm Purchase</BuyMenuTitle>
         </BuyMenuHead>
         <BuyMenuBody>
-          <PigCard pigname={pigName} pigTitle={pigName} />
+          <PigCard pigname={pigName.toLowerCase()} pigTitle={pigName} />
         </BuyMenuBody>
         <BalanceLabel>Final Balance {userCoins - pigPrice} Coinks</BalanceLabel>
         <BuyMenuBottom>

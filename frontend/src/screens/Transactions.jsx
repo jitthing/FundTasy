@@ -33,7 +33,7 @@ export default function Transactions() {
       }
     };
     fetchCoinTransactions();
-  }, []);
+  }, [coinTransactions]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -47,7 +47,7 @@ export default function Transactions() {
       }
     };
     fetchTransactions();
-  }, [updateTransactions]);
+  }, [updateTransactions, transactions]);
 
   const deleteTransaction = async (id) => {
     try {
