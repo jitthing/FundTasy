@@ -130,8 +130,7 @@ export default function Shop() {
           {unownedFilter &&
             unownedPigs.map((model) => (
               <PigCard
-                pigimg={model.modelName.toLowerCase()}
-                pigname={model.modelName}
+                pigname={model.modelName.toLowerCase()}
                 pigTitle={model.modelName}
                 pigPrice={model.price}
                 owned={false}
@@ -166,7 +165,7 @@ function PigCard(props) {
           <OwnedOption>Owned</OwnedOption>
         ) : (
           <BuyOption
-            onClick={() => props.openBuyMenu(props.pigname, props.pigPrice)}
+            onClick={() => props.openBuyMenu(props.pigTitle, props.pigPrice)}
           >
             <BuyText>Buy</BuyText>
             <SmallCoin srcSet="icons/coin.png" />
