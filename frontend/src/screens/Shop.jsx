@@ -298,7 +298,7 @@ const OwnedOption = styled.div`
 
 const BuyOption = styled.div`
   width: fit-content;
-  max-width: 50%;
+  max-width: 60%;
   height: 70%;
   font-weight: bold;
   background-color: #645df2;
