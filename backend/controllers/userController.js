@@ -82,7 +82,6 @@ const getUserFromToken = async (req) => {
     }
     return { user }; // Return an object with the user
   } catch (error) {
-    console.error("Error in getUserFromToken:", error);
     return { error: "Error verifying token or fetching user or token" }; // Return an object with the error
   }
 };
@@ -96,7 +95,6 @@ const userInfo = async (req, res) => {
     }
     return res.status(200).json({ user, message: "User info retrieved" });
   } catch (error) {
-    console.error("Error getting user info:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -334,7 +332,6 @@ const google_login = async (req, res) => {
     );
     return res.status(200).json({ message: "Successful login", authToken });
   } catch (error) {
-    console.error("Error receiving token:", error);
     res.status(500).send("Internal Server Error");
   }
 };
