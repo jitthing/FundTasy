@@ -29,7 +29,7 @@ export default function SkinSection({
         <SkinButtons>
           {mypigs.map((model) => (
             <SkinImg
-              srcSet={getImagePath(model.modelName)}
+              srcSet={getImagePath(model.modelName.toLowerCase())}
               onClick={() => {selectModel(model.modelName); setEarnedOn(model.dateEarned)}}
             />
           ))}
