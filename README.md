@@ -22,10 +22,13 @@ FundTasy is centered around individual integrity, and is targeted at young peopl
 
 ## Getting Started
 
-1. Clone the repository in your favourite IDE
+1. Clone the repository in your favourite IDE and enter the repository's directory
 
 ```
 git clone https://github.com/jitthing/FundTasy.git
+```
+```
+cd FundTasy
 ```
 
 2. Enter the frontend directory and install the necessary dependencies
