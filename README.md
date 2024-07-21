@@ -67,5 +67,9 @@ You may also see any lint errors in the console.
 
 7. Set up an account with FundTasy and begin your saving journey to financial freedom!
 
+<em>Note: On your local machine (localhost:3000), only Google OAuth sign-in service is available.</em>
+
 ## Try It Live!
 Want to experience FundTasy as a real user? Visit [FundTasy](http://fundtasy.bchwy.com/) and try it out for free!
+
+<em>Note: Google OAuth and Apple ID sign-in services are currently unavailable on the live version of FundTasy.</em>
