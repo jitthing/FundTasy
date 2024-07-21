@@ -139,8 +139,7 @@ export default function Shop() {
             ))}
             {ownedPigs.length < models.length && 
               (<PigCard
-                  pigimg="mystery"
-                  pigname="Mystery"
+                  pigname="mystery"
                   pigTitle="Mystery"
                   pigPrice={30000}
                   owned={false}
