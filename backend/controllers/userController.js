@@ -277,7 +277,7 @@ const forgotPassword = async (req, res) => {
         from: "smufundtasy@gmail.com",
         to: email,
         subject: "FundTasy password reset",
-        text: `Click on the link to reset your password: http://localhost:3000/resetpassword/${user._id}/${token} This link will expire in 1 hour.`,
+        text: `Click on the link to reset your password: http://fundtasy.bchwy.com/resetpassword/${user._id}/${token} This link will expire in 1 hour.`,
       };
 
       transporter.sendMail(mailOptions, function (error, info) {
