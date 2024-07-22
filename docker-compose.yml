@@ -10,6 +10,8 @@ services:
     command: npm run devStart
     depends_on:
       - mongo
+    networks:
+      - dbnet
 
   # This one is for development, notice it takes very long to spin up
   frontend:
@@ -40,6 +42,11 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - dbnet
 
 volumes:
   mongo-data:
+
+networks:
+  dbnet:
